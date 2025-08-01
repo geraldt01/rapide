@@ -1,0 +1,320 @@
+/*
+* demo.css
+* File include item demo only specific css only
+******************************************************************************/
+
+.light-style .menu .app-brand.demo {
+  height: 64px;
+}
+.sk-primary.sk-plane, .sk-primary .sk-chase-dot:before, .sk-primary .sk-bounce-dot, .sk-primary .sk-wave-rect, .sk-primary.sk-pulse, .sk-primary .sk-swing-dot, .sk-primary .sk-circle-dot:before, .sk-primary .sk-circle-fade-dot:before, .sk-primary .sk-grid-cube, .sk-primary .sk-fold-cube:before {
+      background-color: #fce800 !important;
+}
+.dark-style .menu .app-brand.demo {
+  height: 64px;
+}
+.d-none {
+  display: none !important;
+}
+.app-brand-logo.demo svg {
+  width: 38px;
+  height: 20px;
+}
+input.disabled {
+   pointer-events: none;
+   background-color: #ebebeb;
+}
+.app-brand-text.demo {
+  font-size: 1.25rem;
+}
+
+/* ! For .layout-navbar-fixed added fix padding top tpo .layout-page */
+.layout-navbar-fixed .layout-wrapper:not(.layout-without-menu) .layout-page {
+  padding-top: 64px !important;
+}
+
+/* Navbar page z-index issue solution */
+.content-wrapper .navbar {
+  z-index: auto;
+}
+
+/*
+* Content
+******************************************************************************/
+
+.demo-blocks > * {
+  display: block !important;
+}
+
+.demo-inline-spacing > * {
+  margin: 1rem 0.375rem 0 0 !important;
+}
+
+/* ? .demo-vertical-spacing class is used to have vertical margins between elements. To remove margin-top from the first-child, use .demo-only-element class with .demo-vertical-spacing class. For example, we have used this class in forms-input-groups.html file. */
+.demo-vertical-spacing > * {
+  margin-top: 1.25rem !important;
+  margin-bottom: 0 !important;
+}
+.demo-vertical-spacing.demo-only-element > :first-child {
+  margin-top: 0 !important;
+}
+.app-brand.demo {
+  background-color: #fce800;
+}
+.menu-vertical .menu-inner {
+  background-color: #ffffff;
+}
+.demo-vertical-spacing-lg > * {
+  margin-top: 1.875rem !important;
+  margin-bottom: 0 !important;
+}
+.demo-vertical-spacing-lg.demo-only-element > :first-child {
+  margin-top: 0 !important;
+}
+
+.demo-vertical-spacing-xl > * {
+  margin-top: 5rem !important;
+  margin-bottom: 0 !important;
+}
+.demo-vertical-spacing-xl.demo-only-element > :first-child {
+  margin-top: 0 !important;
+}
+
+.rtl-only {
+  display: none !important;
+  text-align: left !important;
+  direction: ltr !important;
+}
+
+[dir='rtl'] .rtl-only {
+  display: block !important;
+}
+
+/* Dropdown buttons going out of small screens */
+@media (max-width: 576px) {
+  #dropdown-variation-demo .btn-group .text-truncate {
+    width: 300px;
+    position: relative;
+  }
+  #dropdown-variation-demo .btn-group .text-truncate::after {
+    position: absolute;
+    top: 45%;
+    right: 0.65rem;
+  }
+}
+/*
+* Layout demo
+******************************************************************************/
+
+.layout-demo-wrapper {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  margin-top: 1.25rem;
+}
+.layout-demo-placeholder img {
+  width: 900px;
+}
+.layout-demo-info {
+  text-align: center;
+  margin-top: 1.25rem;
+}
+
+.alert-success, .alert-danger {
+  position: fixed !important;
+  bottom: 0;
+  right: 10px;
+  background-color: #ffffff;
+  z-index: 99999;
+}
+.section-add-car {
+  background: #f3f3f3;
+  min-height: 167px;
+}
+
+.nav-pills .nav-link.active, .nav-pills .nav-link.active:hover, .nav-pills .nav-link.active:focus, .btn-primary, .bg-menu-theme .menu-item.active > .menu-link:not(.menu-toggle) {
+  background-color: #fce800 !important;
+  color: #000000 !important;
+  border-color: #fce800 !important; 
+}
+a, .color-black {
+      color: #000000 !important;
+}
+a:hover {
+      color: #fce800 !important;
+}
+.text-right {
+  text-align: right;
+}
+.capital-letter {
+  text-transform: uppercase;
+}
+.color-white {
+  color: #ffffff;
+}
+.border-0 {
+  border: 0;
+}
+.pe-none {
+  pointer-events: none;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.hover-effect {
+  border: 2px solid white !important;
+}
+.hover-effect:hover, .selected-highlight {
+  border: 2px solid #fce800 !important;
+}
+
+.disabled-preview {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  pointer-events: none;
+    border: none !important;
+}
+.authentication-wrapper {
+background-image: url('/assets/img/pages/rapide-loginpage.jpg');
+background-size: auto;
+background-position: right;
+background-attachment: fixed;
+background-repeat: no-repeat;
+}
+#job-order-status {
+  border: 1px solid transparent;
+}
+#job-order-status #option1 {
+    background-color: #fff4df !important;
+    color: #fdb528 !important;
+    padding: 5px;
+    border-radius: 50rem !important;
+}
+.page-item.active .page-link {
+  border-color: #fdb528 !important;
+    background-color: #fdb528 !important;
+    color: #fff !important;
+}
+.text-uppercase {
+  text-transform: uppercase;
+}
+.m-0-auto {
+  margin: 0 auto;
+  display: block;
+}
+.invoice-edit .btn-outline-primary  {
+  max-width: 20px !important;
+  height: 40px;
+  margin-bottom: 0px !important; 
+  color: #ffffff;
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+}
+.invoice-edit .btn-outline-primary:hover {
+  background-color: #fce800 !important;
+} 
+
+.dropdown-con {
+  position: absolute;
+  font-size: 10px;
+  color: #8a8985 !important;
+  padding-left: 3px;
+}
+.input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+    margin-left: 0 !important;
+    padding: 0 0 0 5px !important;
+}
+.invoice-edit .input-group, .invoice-item-text {
+  min-width: 190px;
+}
+.fixed-section {
+  position: fixed;
+    right: 0;
+    max-width: 20% !important;
+}
+.js-copytextarea {
+  border: none;
+
+}
+.alert-coppied {
+  display: none;
+  position: absolute;
+    left: -34px;
+    color: #72e128;
+}
+p.special-notes {
+  font-size: 12px;
+  display: flex;
+}
+p.special-notes input {
+  color: red !important;
+  width: 100%;
+}
+p i span {
+  position: absolute;
+  color: #828393;
+}
+.input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+  padding: 0 0 0 0px !important;
+}
+.width-95px {
+  width: 95px;
+}
+.font-bold, .font-bold input {
+  font-weight: 800 !important; 
+}
+.bt-save-changes.disabled {
+    background-color: #e9ebee !important;
+    border-color: #b6bcc6 !important;
+}
+#status-text {
+  padding-left: 5px !important;
+}
+#upgrade-status {
+  padding: 5px 10px;
+  border-radius: 9px;
+}
+.loader {
+   position: fixed;
+    top: 0;
+    z-index: 99999999999;
+    height: 100%;
+    background: #eaeaecad;
+    width: 100%;
+    left: 0;
+}
+.loader .sk-wave {
+    margin: 24% auto;
+}
+.form-control {
+  padding: 5px !important;
+}
+.bg-yellow {
+  background-color: #fce800 !important;
+}
+.c-yellow {
+  color: #fce800 !important;
+}
+.tbl-daily-sales .add-new {
+  display: none;
+}
+.btn-success-pay {
+      background-color: #72e128 !important;
+          border-color: #72e128 !important;
+          color: #ffffff !important;
+}
+.click-disabled {
+   pointer-events: none;
+}
+ .confirm-body .mdi:before {
+    font-size: 52px;
+    background: #72e128;
+    color: white;
+    border-radius: 38px;
+    padding: 10px;
+}
+input, select {
+  text-transform: uppercase;
+}
