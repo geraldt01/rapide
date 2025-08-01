@@ -11,7 +11,7 @@ $(function () {
   $("#month-sales").html("₱ 0.00");
   $("#total-cars").html("0");
   $(".add-new").css("display", "none");
-  
+    
 
 
 
@@ -22,7 +22,7 @@ $(function () {
 
   const dateToday = `${year}-${month}-${day}`;
 
-
+console.log(dateToday);
   // Example usage:
     var pathArray = window.location.pathname.split('/');
     const dateYmd = pathArray[3];
