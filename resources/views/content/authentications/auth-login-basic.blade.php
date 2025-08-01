@@ -16,7 +16,11 @@ $customizerHidden = 'customizer-hide';
 <!-- Page -->
 <link rel="stylesheet" href="{{asset('assets/vendor/css/pages/page-auth.css')}}">
 @endsection
-
+<style type="text/css">
+input, select {
+  text-transform: initial !important;
+}
+  </style>
 @section('vendor-script')
 <script src="{{asset('assets/vendor/libs/@form-validation/umd/bundle/popular.min.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-bootstrap5/index.min.js')}}"></script>
