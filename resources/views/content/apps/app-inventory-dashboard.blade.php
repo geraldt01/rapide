@@ -124,7 +124,7 @@
 <!--/ Card Border Shadow -->
 <div class="row">
   <!-- Vehicles overview -->
-  <div class="col-xxl-6 mb-4 order-5 order-xxl-0">
+  <!-- <div class="col-xxl-6 mb-4 order-5 order-xxl-0">
     <div class="card h-100">
       <div class="card-header d-flex align-items-center justify-content-between">
         <h5 class="card-title mb-0 me-2">Vehicles overview</h5>
@@ -223,10 +223,10 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!--/ Vehicles overview -->
   <!-- Shipment statistics-->
-  <div class="col-lg-6 col-xxl-6 mb-4 order-3 order-xxl-1">
+  <!-- <div class="col-lg-6 col-xxl-6 mb-4 order-3 order-xxl-1">
     <div class="card">
       <div class="card-header d-flex align-items-center justify-content-between">
         <div class="card-title mb-0">
@@ -255,10 +255,10 @@
         <div id="shipmentStatisticsChart"></div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!--/ Shipment statistics -->
   <!-- Delivery Performance -->
-  <div class="col-lg-6 col-xxl-4 mb-4 order-2 order-xxl-2">
+  <!-- <div class="col-lg-6 col-xxl-4 mb-4 order-2 order-xxl-2">
     <div class="card h-100">
       <div class="card-header d-flex align-items-center justify-content-between">
         <div class="card-title mb-0">
@@ -383,10 +383,10 @@
         </ul>
       </div>
     </div>
-  </div>
+  </div> -->
   <!--/ Delivery Performance -->
   <!-- Reasons for delivery exceptions -->
-  <div class="col-md-6 col-xxl-4 mb-4 order-1 order-xxl-3">
+  <!-- <div class="col-md-6 col-xxl-4 mb-4 order-1 order-xxl-3">
     <div class="card h-100">
       <div class="card-header d-flex align-items-center justify-content-between">
         <div class="card-title mb-0">
@@ -407,10 +407,10 @@
         <div id="deliveryExceptionsChart"></div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!--/ Reasons for delivery exceptions -->
   <!-- Orders by Countries -->
-  <div class="col-md-6 col-xxl-4 mb-4 order-0 order-xxl-4">
+  <!-- <div class="col-md-6 col-xxl-4 mb-4 order-0 order-xxl-4">
     <div class="card h-100">
       <div class="card-header d-flex align-items-center justify-content-between">
         <div class="card-title mb-0">
@@ -611,7 +611,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!--/ Orders by Countries -->
 
 <!-- DataTable with Buttons -->

@@ -11,6 +11,18 @@
       ]
     },
     {
+      "url": "app/sales-report",
+      "name": "Daily Sales Report",
+      "icon": "menu-icon tf-icons mdi mdi-chart-bar",
+      "slug": "app-sales-report"
+    },
+    {
+      "url": "app/inventory/dashboard",
+      "name": "Inventory",
+      "icon": "menu-icon tf-icons mdi mdi-archive-outline",
+      "slug": "layouts"
+    },
+    {
       "name": "Gobal Settings",
       "icon": "menu-icon tf-icons mdi mdi-cog",
       "slug": "global settings",
@@ -22,18 +34,6 @@
           "slug": "app-ecommerce-dashboard"
         }
       ]
-    },
-    {
-      "url": "app/sales-report",
-      "name": "Daily Sales Report",
-      "icon": "menu-icon tf-icons mdi mdi-chart-bar",
-      "slug": "app-sales-report"
-    },
-    {
-      "url": "app/inventory/dashboard",
-      "name": "Inventory",
-      "icon": "menu-icon tf-icons mdi mdi-archive-outline",
-      "slug": "layouts"
     }
   ]
 }
