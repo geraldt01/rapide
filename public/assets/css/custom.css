@@ -178,7 +178,7 @@ a:hover {
 }
 .authentication-wrapper {
 background-image: url('/assets/img/pages/rapide-loginpage.jpg');
-background-size: auto;
+background-size: 100%;
 background-position: right;
 background-attachment: fixed;
 background-repeat: no-repeat;
