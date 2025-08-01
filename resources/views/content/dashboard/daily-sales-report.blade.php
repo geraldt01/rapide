@@ -31,6 +31,7 @@
 @endsection
 
 @section('content')
+<div class="daily-sales-section d-none">
 <h4 class="py-3 mb-4">
   <span class="text-muted fw-light"> Daily Sales Report
 </h4>
@@ -142,6 +143,7 @@
       </thead>
     </table>
   </div>
+</div>
 </div>
 
 

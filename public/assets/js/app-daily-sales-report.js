@@ -15,6 +15,10 @@ $(function () {
 
 
 
+  setTimeout(() => {
+    $('.daily-sales-section').removeClass("d-none");
+  }, 700);
+
   const today = new Date();
   const year = today.getFullYear();
   const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed, so add 1
@@ -32,6 +36,7 @@ console.log(dateToday);
       const formattedDate = convertDateFormat(dateYmd);
       document.getElementById("flatpickr-date").value = formattedDate;
     } else {
+      window.location.pathname = '/app/sales-report/'+dateToday;
       document.getElementById("flatpickr-date").value = dateToday;
 
     }
