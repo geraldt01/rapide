@@ -5,6 +5,13 @@
 'use strict';
 
 (function () {
+
+  
+
+   var invoice_date = document.getElementById("hidden-invoice-date").value;
+
+  
+
   const invoiceItemPriceList = document.querySelectorAll('.invoice-item-price'),
     invoiceItemQtyList = document.querySelectorAll('.invoice-item-qty'),
     date = new Date(),
@@ -34,14 +41,17 @@
   // Datepicker
   if (invoiceDate) {
     invoiceDate.flatpickr({
+      dateFormat: "m/d/Y",
       monthSelectorType: 'static',
-      defaultDate: date
+      defaultDate: invoice_date,
     });
   }
   if (dueDate) {
     dueDate.flatpickr({
+      dateFormat: "m/d/Y",
       monthSelectorType: 'static',
-      defaultDate: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 5)
+      defaultDate: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 30),
+       altFormat: "F j, Y - h:i", 
     });
   }
 })();
@@ -221,8 +231,8 @@ calculateAll();
             setTimeout(function(){ 
               $(".alert-success").addClass("d-none");
               const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
-              form.reset();
-              location.reload();
+              // form.reset();
+              // location.reload();
           }, 3000);
         },
       error: function (result, textStatus, errorThrown) {
@@ -232,15 +242,20 @@ calculateAll();
             setTimeout(function(){ 
               $(".alert-danger").addClass("d-none");
               const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
-              form.reset();
-              location.reload();
+              // form.reset();
+              // location.reload();
           }, 3000);
       },
     });
   }
 
   function calculatePackage(option_id) {
-    var package_id = document.getElementById('package-'+option_id).value ;
+    // var package_id = document.getElementById('package-'+option_id).value ;
+
+  const inputElements  =  document.getElementsByName('group-a['+option_id+'][package-option]');
+  var package_id = inputElements[0].value;
+
+
     $.ajax({
       type: "get",
       url: '/app/get-job-order-item-package-price/'+ package_id,
@@ -260,24 +275,31 @@ calculateAll();
 
 
   function calculatePart(option_id) {
-    var job_order_id = document.getElementById('part-option-'+option_id).value ;
+    // var job_order_id = document.getElementById('part-option-'+option_id).value ;
     var part_qty = document.getElementById('part-qty-'+option_id).value ;
-    $.ajax({
-      type: "get",
-      url: '/app/get-job-order-item-price/'+ job_order_id,
-        data:  $("").serialize(),
-        success: function (result) {
+    var part_price = document.getElementById('part-price-'+option_id).value ;
 
-                 const amount = result.price * part_qty;
-                document.getElementById('part-price-'+option_id).value = result.price;
-                document.getElementById('part-amount-'+option_id).value = amount;
-                calculateAll();
+    const amount =part_price * part_qty;
+    document.getElementById('part-amount-'+option_id).value = amount;
+    calculateAll();
 
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
+
+    // $.ajax({
+    //   type: "get",
+    //   url: '/app/get-job-order-item-price/'+ job_order_id,
+    //     data:  $("").serialize(),
+    //     success: function (result) {
+
+    //              const amount = result.price * part_qty;
+    //             document.getElementById('part-price-'+option_id).value = result.price;
+    //             document.getElementById('part-amount-'+option_id).value = amount;
+    //             calculateAll();
+
+    //     },
+    //   error: function (result, textStatus, errorThrown) {
+    //       console.log(result.success);
+    //   },
+    // });
 
   }
   function calculateLabor(option_id) {
@@ -308,6 +330,46 @@ calculateAll();
     //   },
     // });
   }
+  function copyPayment() {
+    $(".bt-save-changes").removeClass("disabled");
+    sessionStorage.setItem("updateTriggered", "true");
+   document.getElementById("payment").value = document.getElementById("total-amount").value;
+  }
+
+  function duplicateParts(job_order_id) {
+         saveInvoice(job_order_id)
+
+   var job_order_id = document.getElementById("hidden-job-order-id").value;
+     $.ajax({
+      type: "get",
+      url: '/app/duplicate-parts/'+ job_order_id,
+        data:  $("").serialize(),
+        success: function (result) {
+            console.log(result.jobOrderPartDuplicate);
+          
+
+
+        result.jobOrderPartDuplicate.forEach((value, index, self) => {
+          console.log(value.part_value);
+          const count = index+1;
+          console.log(count);
+
+          if(value.part_value > '') {
+            document.getElementById('labor-text-'+count).value = value.part_value;
+            document.getElementById('labor-part-number-'+count).value = value.part_number;
+          }
+        });
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+
+
+  }
+
+  
+
 
    function showCurrentStatus() {
     var status_id = document.getElementById('hidden-job-order-current-status').value ;
@@ -428,17 +490,21 @@ calculateAll();
 
   function populateOption(element) {
     var id = element.id; 
-    var part_id = document.getElementById(element.id).value ;
+    // var part_id = document.getElementById(element.id).value ;
     let numberValue = Number(element.id);
 
-    var text_field_id = id.replace(/\D/g, "");
 
+
+    // var text_field_id = id.replace(/\D/g, "");
+const first = element -1;
+  const inputElements  =  document.getElementsByName('group-c['+first+'][part-option]');
+  const inputValue = inputElements[0].value;
     $.ajax({
     type: "get",
-    url: '/app/job-order/get-selected-part/'+ part_id,
+    url: '/app/job-order/get-selected-part/'+ inputValue,
       data:  $("").serialize(),
       success: function (result) {
-        document.getElementById("part-text-"+text_field_id).value = result.value;
+        document.getElementById("part-text-"+element).value = result.value;
         },
       error: function (result, textStatus, errorThrown) {
           console.log(result.success);
@@ -470,16 +536,16 @@ calculateAll();
     }, 1000);
 
       var copyTextarea = document.querySelector('#js-copytextarea-'+int);
-  copyTextarea.focus();
-  copyTextarea.select();
+      copyTextarea.focus();
+      copyTextarea.select();
 
-  try {
-    var successful = document.execCommand('copy');
-    var msg = successful ? 'successful' : 'unsuccessful';
-    console.log('Copying text command was ' + msg);
-  } catch (err) {
-    console.log('Oops, unable to copy');
-  }
+      try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('Copying text command was ' + msg);
+      } catch (err) {
+        console.log('Oops, unable to copy');
+      }
 
 
 
@@ -520,6 +586,68 @@ calculateAll();
 
   
 
+  // setInterval(function(){
+  // var job_order_id = document.getElementById("hidden-job-order-id").value;
+  // console.log("test");
+  //   saveInvoice(job_order_id)
+  // }, 10000)
+
+    
+  function copyParts(element) {
+    const first = element -1;
+    const inputElements  =  document.getElementsByName('group-c['+first+'][part-option]');
+    const inputValue = inputElements[0].value;
+
+
+    $.ajax({
+    type: "get",
+    url: '/app/job-order/get-selected-part/'+ inputValue,
+      data:  $("").serialize(),
+      success: function (result) {
+        // document.getElementById("part-text-"+element).value = result.value;
+
+
+          let myVariableValue = result.value;
+
+          // 2. Use navigator.clipboard.writeText() to copy the value
+          navigator.clipboard.writeText(myVariableValue)
+            .then(() => {
+              // Optional: Provide feedback to the user that the copy was successful
+              console.log('Text copied to clipboard successfully!');
+            })
+            .catch(err => {
+              // Optional: Handle any errors during the copy operation
+              console.error('Failed to copy text: ', err);
+            });
+
+
+
+         $("#icon-part-"+element).css("display", "block");
+          setTimeout(function(){ 
+            $("#icon-part-"+element).css("display", "none");
+          }, 1000);
+
+            // var inputElements  =  document.getElementsByName('group-c['+first+'][part-option]');
+       
+                 
+
+            try {
+              var successful = document.execCommand('copy');
+              var msg = successful ? 'successful' : 'unsuccessful';
+              console.log('Copying text command was ' + msg);
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+
+
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+
+
+  }
   function calculateAll() {
 
   const options = {

@@ -6,6 +6,15 @@
 
 // Datatable (jquery)
 $(function () {
+
+    const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed, so add 1
+  const day = String(today.getDate()).padStart(2, '0');
+
+  const dateToday = `${year}-${month}-${day}`;
+
+  getDashboard(dateToday);
   let borderColor, bodyBg, headingColor;
 
   if (isDarkStyle) {
@@ -19,7 +28,7 @@ $(function () {
   }
 
   // Variable declaration for table
-  var dt_product_table = $('.datatables-products'),
+  var dt_product_table = $('.datatables-products-dashboard'),
     productAdd = baseUrl + 'app/car/add',
     statusObj = {
       1: { title: 'Estimate', class: 'bg-label-warning' },
@@ -54,7 +63,6 @@ $(function () {
         { data: 'id' },
         { data: 'id' },
         { data: 'product_name' },
-        { data: 'category' },
         { data: 'stock' },
         { data: 'sku' },
         // { data: 'price' },
@@ -141,40 +149,10 @@ $(function () {
             return $row_output;
           }
         },
-        {
-          // Product Category
 
-          targets: 3,
-          responsivePriority: 5,
-          render: function (data, type, full, meta) {
-            var $category = full['category'];
-            var categoryBadgeObj = {
-              Sedan:
-                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-warning me-2"><i class="mdi mdi-car-outline"></i></span>',
-              SUV:
-                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-warning me-2"><i class="mdi mdi-car-outline"></i></span>',
-              Hatchback:
-                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-warning me-2"><i class="mdi mdi-car-outline"></i></span>',
-              Pickup:
-                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-info me-2"><i class="mdi mdi-car-outline"></i></span>',
-              MPV:
-                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-secondary me-2"><i class="mdi mdi-car"></i></span>',
-              
-                Others: '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-dark me-2"><i class="mdi mdi-car-outline"></i></span>'
-            };
-
-            
-            return (
-              "<h6 class='text-truncate d-flex align-items-center mb-0'>" +
-              categoryBadgeObj[$category] +
-              $category +
-              '</h6>'
-            );
-          }
-        },
         {
           // Stock
-          targets: 4,
+          targets: 3,
           orderable: false,
           responsivePriority: 3,
           render: function (data, type, full, meta) {
@@ -210,7 +188,7 @@ $(function () {
         },
         {
           // Sku
-          targets: 5,
+          targets:4,
           render: function (data, type, full, meta) {
             var $sku = full['sku'];
 
@@ -532,13 +510,7 @@ $(function () {
                 column.search(val ? '^' + val + '$' : '', true, false).draw();
               });
 
-            column
-              .data()
-              .unique()
-              .sort()
-              .each(function (d, j) {
-                select.append('<option value="' + stockObj[d].title + '">' + stockFilterValObj[d].title + '</option>');
-              });
+            
           });
       }
     });
@@ -555,3 +527,25 @@ $(function () {
     $('.dataTables_length .form-select').removeClass('form-select-sm');
   }, 300);
 });
+
+
+function getDashboard(dateToday) {
+ $.ajax({
+    type: "get",
+    url: '/app/get/dashboard/total/'+dateToday,
+      data:  $("#editCashBalanceForm").serialize(),
+      success: function (result) {
+        console.log(result);
+          if(result.success == true) {
+          $("#total-estimate").html(result.total_estimate);
+          $("#total-job-order").html(result.total_job_order);
+          $("#total-cars").html(result.total_cars);
+   
+          } 
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+}
+ 

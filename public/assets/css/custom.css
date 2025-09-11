@@ -6,11 +6,28 @@
 .light-style .menu .app-brand.demo {
   height: 64px;
 }
+.c-black {
+  color: #828393 !important;
+}
 .sk-primary.sk-plane, .sk-primary .sk-chase-dot:before, .sk-primary .sk-bounce-dot, .sk-primary .sk-wave-rect, .sk-primary.sk-pulse, .sk-primary .sk-swing-dot, .sk-primary .sk-circle-dot:before, .sk-primary .sk-circle-fade-dot:before, .sk-primary .sk-grid-cube, .sk-primary .sk-fold-cube:before {
       background-color: #fce800 !important;
 }
 .dark-style .menu .app-brand.demo {
   height: 64px;
+}
+.new-car-alert {
+  position: relative !important;
+  display: block;
+  background-color: #eefbe5 !important;
+    border-color: #eefbe5 !important;
+    color: #67cb24 !important;
+}
+.new-car-alert a {
+    color: #67cb24 !important;
+}
+.new-car-alert a:hover {
+    color: #2e7200 !important;
+
 }
 .d-none {
   display: none !important;
@@ -142,7 +159,7 @@ input.disabled {
 a, .color-black {
       color: #000000 !important;
 }
-a:hover {
+a:hover{
       color: #fce800 !important;
 }
 .text-right {
@@ -317,4 +334,73 @@ p i span {
 }
 input, select {
   text-transform: uppercase;
+}
+#part-icon {
+  color: gray;
+}
+.light-style .select2-container--default .select2-results__option {
+  color: #000000;
+}
+#part-duplicate {
+  display: block;
+  position: absolute;
+  left: -51px;
+  z-index: 999999;
+  background: #fce800;
+  padding: 11px;
+  color: gray;
+  cursor: pointer;
+}
+#part-duplicate:hover {
+  color: #ffffff;
+
+}
+.datatables-products thead th {
+  padding: 5px !important;
+   text-align: right !important;
+}
+
+.datatables-products td {
+  padding: 5px !important;
+   text-align: right !important;
+}
+
+.datatables-products tfoot th {
+  text-align: right !important;
+  padding: 5px !important;
+  font-size: 18px;
+}
+#tblcashbalancehtml td {
+  padding: 10px 8px 10px 6px !important;
+}
+.ml-4 {
+  margin-left: 20px;
+}
+.dashboard .bg-label-warning, .dashboard .bg-label-info {
+  font-size: 18px;
+}
+.btn-floating-add-car {
+  background: #fce800;
+    height: 40px;
+    width: 60px;
+    padding: 10px;
+    position: fixed;
+    right: 10px;
+    bottom: 58px;
+}
+.btn-floating-add-car i, .btn-floating-add-car a {
+  color: #000000;
+}
+.btn-floating-add-car:hover i, .btn-floating-add-car:hover a{
+  color: #ffffff !important;
+}
+.tbl-ds td {
+  text-align: right !important;
+}
+#DataTables_Table_0 td, .datatables-customer-order th {
+  text-align: center;
+}
+.invoice-item-note {
+  border: 1px solid #fce800 !important;
+    background-color: #fce8002e !important;
 }

@@ -41,6 +41,9 @@ use App\Http\Controllers\apps\EcommerceReferrals;
 use App\Http\Controllers\apps\EcommerceSettingsDetails;
 use App\Http\Controllers\apps\EcommerceSettingsCarManufacturer;
 use App\Http\Controllers\apps\EcommerceSettingsCarVehicleType;
+use App\Http\Controllers\apps\EcommerceSettingsPartsAndServices;
+use App\Http\Controllers\apps\EcommerceSettingsPackage;
+
 use App\Http\Controllers\apps\EcommerceSettingsPayments;
 use App\Http\Controllers\apps\EcommerceSettingsCheckout;
 use App\Http\Controllers\apps\EcommerceSettingsShipping;
@@ -210,6 +213,8 @@ Route::get('/app/ecommerce/product/list', [EcommerceProductList::class, 'index']
 Route::get('/app/car/add', [EcommerceProductAdd::class, 'index'])->name('app-ecommerce-product-add');
 Route::get('app/save/car', [EcommerceProductAdd::class, 'EcommerceProductAdd']);
 Route::get('app/search/car', [EcommerceProductAdd::class, 'searchCar']);
+Route::get('app/get/dashboard/total/{date}', [EcommerceProductAdd::class, 'dashboardData']);
+
 
 Route::get('/app/car/view/{car_id}', [EcommerceCustomerDetailsOverview::class, 'index'])->name('app-ecommerce-customer-details-overview');
 Route::get('/app/save-job-order/{car_id}', [EcommerceCustomerDetailsOverview::class, 'saveJobOrder']);
@@ -226,6 +231,7 @@ Route::get('/app/get-job-order-item-price/{job_order_id}', [InvoiceEdit::class, 
 Route::get('/app/get-job-order-item-package-price/{job_order_id}', [InvoiceEdit::class, 'getJobOrderItemPackagePrice'])->middleware('auth');
 Route::get('/app/job-order/change-status/{status_id}', [InvoiceEdit::class, 'changeStatus'])->middleware('auth');
 Route::get('/app/job-order/status-upgrade/{job_order_id}', [InvoiceEdit::class, 'upgradeNewStatus'])->middleware('auth');
+Route::get('/app/duplicate-parts/{job_order_id}', [InvoiceEdit::class, 'duplicateParts'])->middleware('auth');
 
 
 Route::get('/app/job-order/preview/{job_order_id}', [InvoicePreview::class, 'index'])->name('app-invoice-preview')->middleware('auth');
@@ -250,6 +256,17 @@ Route::get('/app/car-vehicle-type/save/', [EcommerceSettingsCarVehicleType::clas
 Route::get('/app/car-vehicle-type/show/', [EcommerceSettingsCarVehicleType::class, 'showVehicleType'])->name('app-settings-details')->middleware('auth');
 Route::get('/app/car-vehicle-type/delete/{vehicle_type_id}', [EcommerceSettingsCarVehicleType::class, 'deleteVehicleType'])->name('app-settings-details')->middleware('auth');
 
+Route::get('/app/parts-and-services/get/{vehicle_type_id}', [EcommerceSettingsPartsAndServices::class, 'getPartsAndServices'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/parts-and-services/update/{vehicle_type_id}', [EcommerceSettingsPartsAndServices::class, 'updatePartsAndServices'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/parts-and-services/save/', [EcommerceSettingsPartsAndServices::class, 'savePartsAndServices'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/parts-and-services/show/', [EcommerceSettingsPartsAndServices::class, 'showPartsAndServices'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/parts-and-services/delete/{vehicle_type_id}', [EcommerceSettingsPartsAndServices::class, 'deletePartsAndServices'])->name('app-settings-details')->middleware('auth');
+
+Route::get('/app/package/get/{package_id}', [EcommerceSettingsPackage::class, 'getPackage'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/package/update/{package_id}', [EcommerceSettingsPackage::class, 'updatePackage'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/package/save/', [EcommerceSettingsPackage::class, 'savePackage'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/package/show/', [EcommerceSettingsPackage::class, 'showPackage'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/package/delete/{package_id}', [EcommerceSettingsPackage::class, 'deletePackage'])->name('app-settings-details')->middleware('auth');
 
 
 Route::get('/app/inventory/dashboard', [InventoryDashboard::class, 'index'])->name('app-inventory-dashboard')->middleware('auth');
@@ -261,10 +278,19 @@ Route::post('/user-list/store', [UserManagement::class, 'store'])->name('laravel
 Route::get('/app/sales-report', [SalesReport::class, 'index'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/app/sales-report/{date}', [SalesReport::class, 'index'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/json/sales-report/', [SalesReport::class, 'jsonSalesReportList'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/create/cash-balance/{date}', [SalesReport::class, 'createCashBalance'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/get/cash-balance/{date}', [SalesReport::class, 'getCashBalance'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/get-form/cash-balance/{date}', [SalesReport::class, 'getFormCashBalance'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/update/cash-balance/{date}', [SalesReport::class, 'updateCashBalance'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/get/total/{date}', [SalesReport::class, 'getTotal'])->name('laravel-example-user-management')->middleware('auth');
+
+
 
 Route::get('/app/ecommerce/settings/details', [EcommerceSettingsDetails::class, 'index'])->name('app-ecommerce-settings-details');
 Route::get('/app/ecommerce/settings/car-manufacturer', [EcommerceSettingsCarManufacturer::class, 'index'])->name('app-ecommerce-settings-car-manufacturer');
 Route::get('app/ecommerce/settings/car-vehicle-type', [EcommerceSettingsCarVehicleType::class, 'index'])->name('app-ecommerce-settings-car-manufacturer');
+Route::get('/app/ecommerce/settings/parts-and-services', [EcommerceSettingsPartsAndServices::class, 'index'])->name('app-ecommerce-settings-part-and-services');
+Route::get('/app/ecommerce/settings/package', [EcommerceSettingsPackage::class, 'index'])->name('app-ecommerce-settings-package');
 
 
 Route::get('/monthly-subscription', [Gcash::class, 'index'])->name('pages-misc-under-maintenance');

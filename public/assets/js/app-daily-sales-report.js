@@ -11,10 +11,6 @@ $(function () {
   $("#month-sales").html("₱ 0.00");
   $("#total-cars").html("0");
   $(".add-new").css("display", "none");
-    
-
-
-
   setTimeout(() => {
     $('.daily-sales-section').removeClass("d-none");
   }, 700);
@@ -30,17 +26,97 @@ console.log(dateToday);
   // Example usage:
     var pathArray = window.location.pathname.split('/');
     const dateYmd = pathArray[3];
-
-
     if(dateYmd) {
       const formattedDate = convertDateFormat(dateYmd);
       document.getElementById("flatpickr-date").value = formattedDate;
+      var getDate = dateYmd;
     } else {
       window.location.pathname = '/app/sales-report/'+dateToday;
       document.getElementById("flatpickr-date").value = dateToday;
+      var getDate = dateToday;
 
     }
-   
+    $(".btn-date-edit").attr("onclick", "getFormCashBalance('"+getDate+"')");
+
+    getCashBlance(getDate);
+    // function getCashBlance(getDate) {
+    //     $.ajax({
+    // type: "get",
+    // url: '/app/get/cash-balance/'+getDate,
+    //   data:  $("#editCashBalanceForm").serialize(),
+    //   success: function (result) {
+    //     console.log(result);
+    //       if(result.success == true) {
+    //           $("#tblcashbalancehtml").html(result.htmlCashBalance);
+    //         $(".btn-date").removeClass("disabled");
+    //         $(".btn-date-edit").removeClass("d-none");
+    //         $(".btn-date").addClass("d-none");
+    //       } else {
+    //         $(".btn-date").removeClass("d-none");
+    //         $(".btn-date").removeClass("disabled");
+    //         $(".btn-date-edit").addClass("d-none");
+
+    //       }
+    //     },
+    //   error: function (result, textStatus, errorThrown) {
+    //       console.log(result.success);
+    //   },
+    // });
+
+    // }
+
+// let nf = new Intl.NumberFormat('en-US');
+
+function numberWithCommas(n) {
+    var parts=n.toString().split(".");
+    return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+}
+
+
+var nf = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'PHP',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+});
+nf.format(123456.789); // ‘$123,456.79’
+
+
+
+
+  $.ajax({
+    type: "get",
+    url: '/app/get/total/'+getDate,
+      data:  $("#editCashBalanceForm").serialize(),
+      success: function (result) {
+        console.log(result);
+          if(result.success == true) {
+          $("#total-sales").html(nf.format(result.total_sales));
+          $("#total-cars").html(result.total_cars);
+          $("#month-sales").html( nf.format(result.total_monthly_sales));
+          $("#total-month-cars").html(result.total_monthly_cars);
+          $("#total-cash").html(result.total_cash);
+          $("#total-gcash").html(result.total_gcash);
+          $("#total-mobile-check").html(result.total_mobile_check);
+          $("#total-others").html(result.total_others);
+          $("#grand-total").html(result.grand_total);
+
+          
+          
+          } else {
+            $(".btn-date").removeClass("d-none");
+            $(".btn-date").removeClass("disabled");
+            $(".btn-date-edit").addClass("d-none");
+
+          }
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+
+
+
   if (isDarkStyle) {
     borderColor = config.colors_dark.borderColor;
     bodyBg = config.colors_dark.bodyBg;
@@ -86,12 +162,11 @@ console.log(dateToday);
       ajax: '/json/sales-report/?date='+ date, // JSON file to add data
       columns: [
         // columns according to JSON
-        { data: 'id' },
-        { data: 'id' },
+        { data: 'job_order_number' },
         { data: 'product_name' },
-        { data: 'stock' },
-        // { data: 'price' },
-        // { data: 'quantity' },
+        { data: 'cash' },
+        { data: 'gcash' },
+        { data: 'mobile_check' },
         { data: 'status' },
         { data: 'amount' },
         // { data: 'today_total_sales' },
@@ -99,32 +174,18 @@ console.log(dateToday);
         { data: '' }
       ],
       columnDefs: [
-        {
-          // For Responsive
-          className: 'control',
-          searchable: false,
-          orderable: false,
-          responsivePriority: 2,
+
+       {
+          // Sku
           targets: 0,
           render: function (data, type, full, meta) {
-            return '';
+            var $job_order_number = full['job_order_number'];
+            return '<span>' + $job_order_number + '</span>';
           }
         },
         {
-          // For Checkboxes
-          targets: 1,
-          orderable: false,
-          checkboxes: {
-            selectAllRender: '<input type="checkbox" class="form-check-input">'
-          },
-          render: function () {
-            return '<input type="checkbox" class="dt-checkboxes form-check-input" >';
-          },
-          searchable: false
-        },
-        {
           // Product name and product_brand
-          targets: 2,
+          targets: 1,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $name = full['product_name'],
@@ -132,8 +193,6 @@ console.log(dateToday);
               $product_brand = full['product_brand'],
               $car_overview_link = full['car_overview_link'],
               $image = full['image'];
-                
-
             if ($image) {
               // For Product image
 
@@ -159,13 +218,11 @@ console.log(dateToday);
             }
             // Creates full output for Product name and product_brand
             var $row_output =
-              '<a href="'+$car_overview_link+'"><div class="d-flex justify-content-start align-items-center product-name">' +
+              '<a href="'+$car_overview_link+'"><div class=" justify-content-end align-items-center product-name">' +
               '<div class="avatar-wrapper me-3">' +
-              '<div class="avatar rounded-2 bg-label-secondary">' +
-              $output +
+            
               '</div>' +
-              '</div>' +
-              '<div class="d-flex flex-column">' +
+              '<div class=" flex-column">' +
               '<span class="text-nowrap text-heading fw-medium">' +
               $name +
               '</span>' +
@@ -177,79 +234,72 @@ console.log(dateToday);
             return $row_output;
           }
         },
-        // {
-        //   // Product Category
 
-        //   targets: 3,
-        //   responsivePriority: 5,
-        //   render: function (data, type, full, meta) {
-        //     var $category = categoryObj[full['category']].title;
-        //     var categoryBadgeObj = {
-        //       Sedan:
-        //         '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-warning me-2"><i class="mdi mdi-car-outline"></i></span>',
-        //       SUV:
-        //         '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-warning me-2"><i class="mdi mdi-car-outline"></i></span>',
-        //       Hatchback:
-        //         '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-warning me-2"><i class="mdi mdi-car-outline"></i></span>',
-        //       Pickup:
-        //         '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-info me-2"><i class="mdi mdi-car-outline"></i></span>',
-        //       MPV:
-        //         '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-secondary me-2"><i class="mdi mdi-car"></i></span>',
-              
-        //         Others: '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-dark me-2"><i class="mdi mdi-car-outline"></i></span>'
-        //     };
-
-            
-        //     return (
-        //       "<h6 class='text-truncate d-flex align-items-center mb-0'>" +
-        //       categoryBadgeObj[$category] +
-        //       $category +
-        //       '</h6>'
-        //     );
-        //   }
-        // },
-        {
-          // Stock
-          targets: 4,
-          orderable: false,
-          responsivePriority: 3,
+         {
+          // Sku
+          targets: 2,
           render: function (data, type, full, meta) {
+            var $cash = full['cash'];
+            if($cash > 0) {
+              $cash = "₱"+$cash.toLocaleString()+".00";
+            } else {
+              $cash = "";
+            }
+            return '<span>' + $cash + '</span>';
+          }
+        },
 
-              const options = {
-                minimumFractionDigits: 2, // Ensures at least two decimal places
-                maximumFractionDigits: 2, // Limits to a maximum of two decimal places
-                style: 'decimal'          // Specifies decimal formatting
-              };
-
-            var $stock = full['amount'];
-            var $total_cars = full['total_cars'];
-            var $today_total_sales = full['today_total_sales'];
-            var $month_sales = full['month_sales'];
-              
-            $("#total-sales").html("₱ " + $today_total_sales.toLocaleString(undefined, options));
-              $("#total-cars").html($total_cars);
-              $("#month-sales").html("₱ " + $month_sales.toLocaleString(undefined, options));
-
-            // return (
-            //   "<span class='text-truncate'>" +
-            //   stockSwitchObj[stockObj[$stock].title] +
-            //   '<span class="d-none">' +
-            //   stockObj[$stock].title +
-            //   '</span>' +
-            //   '</span>'
-            // );
-                 return "";
+         {
+          // Sku
+          targets: 3,
+          render: function (data, type, full, meta) {
+            var $gcash = full['gcash'];
+            if($gcash > 0) {
+              $gcash = "₱"+$gcash.toLocaleString()+".00";
+            } else {
+              $gcash = "";
+            }
+            return '<span>' + $gcash + '</span>';
           }
         },
         {
           // Sku
+          targets: 4,
+          render: function (data, type, full, meta) {
+            var $mobile_check = full['mobile_check'];
+             if($mobile_check > 0) {
+              $mobile_check = "₱"+$mobile_check.toLocaleString()+".00";
+            } else {
+              $mobile_check = "";
+            }
+            return '<span>' + $mobile_check + '</span>';
+          }
+        },
+          {
+          // Sku
           targets: 5,
+          render: function (data, type, full, meta) {
+            var $others = full['others'];
+            if($others > 0) {
+              $others = "₱"+$others.toLocaleString()+".00";
+            } else {
+              $others = "";
+            }
+            return '<span>' + $others + '</span>';
+          }
+        },
+
+         {
+          // Sku
+          targets: 6,
           render: function (data, type, full, meta) {
             var $amount = full['amount'];
 
             return '<span>' + $amount + '</span>';
           }
         },
+
+        
         // {
         //   // price
         //   targets: 6,
@@ -627,3 +677,148 @@ function convertDateFormat(dateString) {
   };
   return date.toLocaleDateString('en-US', options);
 }
+
+
+function addNewCashBalance() {
+   var pathArray = window.location.pathname.split('/');
+  const dateYmd = pathArray[3];
+
+
+  $.ajax({
+    type: "get",
+    url: '/app/create/cash-balance/'+dateYmd,
+      data:  $("#editCashBalanceForm").serialize(),
+      success: function (result) {
+          if(result.success == true) {
+           getCashBlance(dateYmd);
+              $('#createCashBalance').modal('hide');
+            $(".alert-success p").html(result.message);
+              $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+          }, 3000);
+          }
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+}
+
+function getFormCashBalance(date) {
+$.ajax({
+    type: "get",
+    url: '/app/get-form/cash-balance/'+date,
+      data:  $("#editCashBalanceForm").serialize(),
+      success: function (result) {
+          if(result.success == true) {
+            console.log(result);
+             document.getElementById("modaladdCash1000").value = result.cashData.cash_1000;
+             document.getElementById("modaladdCash500").value = result.cashData.cash_500;
+             document.getElementById("modaladdCash200").value = result.cashData.cash_200;
+             document.getElementById("modaladdCash100").value = result.cashData.cash_100;
+             document.getElementById("modaladdCash50").value = result.cashData.cash_50;
+             document.getElementById("modaladdCash20").value = result.cashData.cash_20;
+             document.getElementById("modaladdCash10").value = result.cashData.cash_10;
+             document.getElementById("modaladdCash5").value = result.cashData.cash_5;
+             document.getElementById("modaladdLooseCoins").value = result.cashData.loose_coins;
+             document.getElementById("modaladdLooseChange").value = result.cashData.change;
+            $(".btn-submit").attr("onclick", "updateCashBalance('"+date+"')");
+          }
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+}
+
+function updateCashBalance(date) {
+  $.ajax({
+    type: "get",
+    url: '/app/update/cash-balance/'+date,
+      data:  $("#editCashBalanceForm").serialize(),
+      success: function (result) {
+          if(result.success == true) {
+            reloadCashBalance(date);
+               $('#createCashBalance').modal('hide');
+            $(".alert-success p").html(result.message);
+              $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+          }, 3000);
+          }
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+}
+
+
+function reloadCashBalance(getDate) {
+$.ajax({
+    type: "get",
+    url: '/app/get/cash-balance/'+getDate,
+      data:  $("#editCashBalanceForm").serialize(),
+      success: function (result) {
+        console.log(result);
+          if(result.success == true) {
+              $("#tblcashbalancehtml").html(result.htmlCashBalance);
+            $(".btn-date").removeClass("disabled");
+            $(".btn-date-edit").removeClass("d-none");
+            $(".btn-date").addClass("d-none");
+            
+          } else {
+            $(".btn-date").removeClass("d-none");
+            $(".btn-date").removeClass("disabled");
+            $(".btn-date-edit").addClass("d-none");
+
+          }
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+}
+
+
+ 
+   var pathArray = window.location.pathname.split('/');
+    const dateYmd = pathArray[3];
+    if(dateYmd) {
+      const formattedDate = convertDateFormat(dateYmd);
+      document.getElementById("flatpickr-date").value = formattedDate;
+      var getDate = dateYmd;
+    } else {
+      window.location.pathname = '/app/sales-report/'+dateToday;
+      document.getElementById("flatpickr-date").value = dateToday;
+      var getDate = dateToday;
+
+    }
+    $(".btn-date-edit").attr("onclick", "getFormCashBalance('"+getDate+"')");
+
+    function getCashBlance(getDate) {
+        $.ajax({
+    type: "get",
+    url: '/app/get/cash-balance/'+getDate,
+      data:  $("#editCashBalanceForm").serialize(),
+      success: function (result) {
+        console.log(result);
+          if(result.success == true) {
+              $("#tblcashbalancehtml").html(result.htmlCashBalance);
+            $(".btn-date").removeClass("disabled");
+            $(".btn-date-edit").removeClass("d-none");
+            $(".btn-date").addClass("d-none");
+          } else {
+            $(".btn-date").removeClass("d-none");
+            $(".btn-date").removeClass("disabled");
+            $(".btn-date-edit").addClass("d-none");
+
+          }
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+
+    }

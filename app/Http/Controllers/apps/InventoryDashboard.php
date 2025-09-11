@@ -45,7 +45,8 @@ class InventoryDashboard extends Controller
 
   public function saveInventory($item_id) {
 
-    if($item_id) {
+    if($item_id !== 'undefined') {
+
       Inventory::where("id", $item_id)->update(
       [
         "name" => ((isset($_GET['modalItemName'])) ? $_GET['modalItemName'] : ''),
@@ -55,14 +56,13 @@ class InventoryDashboard extends Controller
      $message = 'Inventory edited successfully!';
     } else {
       $c = new Inventory();
-      $c->name    = $_GET['car_id'] ? $_GET['car_id'] : "";
-      $c->stock    = $_GET['car_id'] ? $_GET['car_id'] : "";
-      $c->price    = $_GET['car_id'] ? $_GET['car_id'] : "";
+      $c->name    = $_GET['modalItemName'] ? $_GET['modalItemName'] : "";
+      $c->stock    = $_GET['modalStock'] ? $_GET['modalStock'] : "";
+      $c->price    = $_GET['modalPrice'] ? $_GET['modalPrice'] : "";
       $c->save();
        $message = 'Inventory added successfully!';
 
     }
-   
      return response()->json(['success'=> true, 'message' => $message]);
   }
   

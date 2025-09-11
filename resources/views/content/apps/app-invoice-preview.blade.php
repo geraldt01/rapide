@@ -66,13 +66,13 @@
                 <span class="fw-normal">Date:</span>
               </div>
               <div class="col-sm-6 align-items-right">
-                <input type="text" class="form-control invoice-date disabled-preview text-right" placeholder="DD-MM-YYY" />
+                <input type="text" class="form-control disabled-preview text-right" placeholder="" value="{{$invoice_date}}" />
               </div>
               <div class="col-sm-6 mb-2 d-md-flex align-items-right justify-content-end pt-2">
                 <span class="fw-normal">Expires:</span>
               </div>
               <div class="col-sm-6 align-items-right">
-                <input type="text" class="form-control due-date disabled-preview text-right" placeholder="YYYY-MM-DD" />
+                <input type="text" class="form-control due-date disabled-preview text-right" placeholder="" value="{{$expire_date}}" />
               </div>
             </div>
           </div>
@@ -104,8 +104,7 @@
                 </tr>
                 <tr>
                   <td class="pe-3 fw-medium">{{$data->mobile_number}}</td>
-                  <td>{{$data->manufacturer}} {{$data->vehicle_model}} {{$data->year}}</td>
-                  <td></td>
+                  <td colspan="2" class="capital-letter">{{$data->manufacturer}} {{$data->vehicle_model}} {{$data->transmission}} {{$data->fuel_type}}</td>
                   <td></td>
                 </tr>
                 
@@ -154,7 +153,7 @@
           @foreach($jobOrderLaborSelected as $klabor => $labor)
             <tr>
               <td  style="width: 10%" class="text-nowrap text-heading">{{$klabor + 1}}</td>
-              <td style="width: 55%">{{$labor->labor_value}}</td>
+              <td style="width: 55%" class="capital-letter">{{$labor->labor_value}}</td>
               <td class="text-center">{{(($labor->labor_value) ? $labor->labor_qty : '' )}}</td>
               <td class="text-right">{{(($labor->labor_value) ? number_format($labor->labor_price, 2) : '' )}}</td>
               <td class="text-right">{{(($labor->labor_value) ?  number_format($labor->labor_amount, 2) : '' )}}</td>
@@ -295,8 +294,8 @@
           </div>
           <div class="col-md-6  justify-content-md-start ">
             <div class="form-floating form-floating-outline mb-4">
-              <input type="text" class="form-control" id="invoiceMsg" placeholder="Gerald Tejero" value="Gerald Tejero" />
-              <label for="invoiceMsg">Customer Signature</label>
+              <input type="text" class="form-control" id="invoiceMsg" placeholder="Gerald Tejero" value="{{$data->customer_name}}" />
+              <label for="invoiceMsg">Customer Name</label>
             </div>
           </div>
         </div>

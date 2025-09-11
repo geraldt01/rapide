@@ -53,10 +53,13 @@
 <input type="hidden" name="hidden-selected-car-plate-number" id="hidden-selected-car-plate-number" value="{{$customerInfo->plate_number}}" />
 <input type="hidden" name="hidden-selected-car-id" id="hidden-selected-car-id" value="{{$customerInfo->car_id}}" />
 <input type="hidden" name="hidden-selected-vehicle-model" id="hidden-selected-vehicle-model" value="{{$customerInfo->vehicle_model}}" />
+<input type="hidden" name="hidden-selected-transmission" id="hidden-selected-transmission" value="{{$customerInfo->transmission}}" />
+<input type="hidden" name="hidden-selected-fuel-type" id="hidden-selected-fuel-type" value="{{$customerInfo->fuel_type}}" />
 <input type="hidden" name="hidden-selected-vehicle-manufacturer" id="hidden-selected-vehicle-manufacturer" value="{{$customerInfo->manufacturer}}" />
 <input type="hidden" name="hidden-selected-vehicle-type" id="hidden-selected-vehicle-type" value="{{$customerInfo->vehicle_type}}" />
 <input type="hidden" name="hidden-selected-mileage" id="hidden-selected-mileage" value="{{$customerInfo->mileage}}" />
 <input type="hidden" name="hidden-selected-year" id="hidden-selected-year" value="{{$customerInfo->year}}" />
+<input type="hidden" name="hidden-selected-invoice-number" id="hidden-selected-invoice-number" value="{{$invoice_number}}" />
 
 
 <h4 class="py-3 mb-4">
@@ -193,7 +196,7 @@
                 <h4 class="card-title mb-3">{{$firstCar->plate_number}}</h4>
                 <div class="d-flex align-items-end mb-1 gap-1">
                   <h4 class="text-primary mb-0">{{$firstCar->manufacturer}}</h4>
-                  <p class="mb-0"> {{$firstCar->vehicle_model}}  {{$firstCar->year}} </p>
+                  <p class="mb-0 capital-letter"> {{$firstCar->vehicle_model}}  {{$firstCar->transmission}}  {{$firstCar->fuel_type}}  {{$firstCar->year}} </p>
                 </div>
               </div>
             </div>
@@ -249,10 +252,10 @@
             <tr>
               <th></th>
               <th></th>
-              <th>Order</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th style="text-align: center">Order</th>
+              <th style="text-align: center">Date</th>
+              <th style="text-align: center">Status</th>
+              <th style="text-align: center">Actions</th>
             </tr>
           </thead>
         </table>

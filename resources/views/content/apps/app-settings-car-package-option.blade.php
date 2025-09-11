@@ -18,7 +18,7 @@
 
 @section('content')
 <h4 class="py-3 mb-4">
-  <span class="text-muted fw-light">Global Settings /</span> Car Manufacturers
+  <span class="text-muted fw-light">Global Settings /</span> Package
 </h4>
 
 <div class="row g-4">
@@ -34,7 +34,7 @@
           </a>
         </li>
         <li class="nav-item mb-1">
-          <a class="nav-link active" href="{{url('/app/ecommerce/settings/car-manufacturer')}}">
+          <a class="nav-link " href="{{url('/app/ecommerce/settings/car-manufacturer')}}">
             <i class="mdi mdi-credit-car-outline me-2"></i>
             <span class="align-middle">Car Manufacturer</span>
           </a>
@@ -51,8 +51,8 @@
             <span class="align-middle">Parts and Services</span>
           </a>
         </li>
-          <li class="nav-item mb-1">
-          <a class="nav-link " href="{{url('/app/ecommerce/settings/package')}}">
+         <li class="nav-item mb-1">
+          <a class="nav-link active" href="{{url('/app/ecommerce/settings/package')}}">
             <i class="mdi mdi-credit-car-outline me-2"></i>
             <span class="align-middle">Package</span>
           </a>
@@ -87,7 +87,7 @@
         <div class="card mb-4">
           <div class="card-header d-flex justify-content-between align-items-start">
             <div class="card-title m-0">
-              <h5 class="m-0">Car Manufacturers</h5>
+              <h5 class="m-0">Packages</h5>
               <!-- <p class="text-body mb-0">Choose where you ship and how much you charge for shipping at check out.</p> -->
             </div>
           </div>
@@ -98,21 +98,23 @@
                   <thead class="table-light">
                     <tr>
                       <th>#</th>
-                      <th>Manufacturer</th>
+                      <th>Package</th>
+                      <th>Price</th>
                       <th class="text-end">Actions</th>
                     </tr>
                   </thead>
-                  <tbody id="tbl-manufacturer-body">
-                @foreach($ManufacturerData  as $k => $manufacturer)
+                  <tbody id="tbl-package-body">
+                @foreach($PackageData  as $k => $package)
                     <tr>
                       <td>{{$k +1}}</td>
-                      <td>{{$manufacturer->value}}</td>
+                      <td>{{$package->value}}</td>
+                      <td>{{$package->package_price}}</td>
                       <td class="text-end">
                         <div class="dropdown pe-3">
                           <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></button>
                           <div class="dropdown-menu">
-                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addNewManufacturerOption" onclick="editManufacturer({{$manufacturer->id}})"><i class="mdi mdi-pencil-outline me-1"></i> Edit</a>
-                            <a class="dropdown-item" onclick="promptDeleteManufacturer({{$manufacturer->id}})"><i class="mdi mdi-delete-outline me-1" ></i> Delete</a>
+                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addNewPackageOption" onclick="editPackage({{$package->id}})"><i class="mdi mdi-pencil-outline me-1"></i> Edit</a>
+                            <a class="dropdown-item" onclick="promptDeletePackage({{$package->id}})"><i class="mdi mdi-delete-outline me-1" ></i> Delete</a>
                           </div>
                         </div>
                       </td>
@@ -122,7 +124,7 @@
                 </table>
               </div>
             </div>
-            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addNewManufacturerOption" onclick="createManufacturer()">Add Manufacturer</button>
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addNewPackageOption" onclick="createPackage()">Add Package</button>
           </div>
         </div>
       </div>
@@ -130,5 +132,5 @@
     <!-- /Options-->
 </div>
 
-@include('_partials/_modals/modal-add-new-manufacturer-option')
+@include('_partials/_modals/modal-add-new-package-option')
 @endsection

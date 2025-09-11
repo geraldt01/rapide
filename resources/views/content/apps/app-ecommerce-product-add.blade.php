@@ -74,7 +74,7 @@
             </div>
           </div>
           <!-- Vehicle Type -->
-          <div class="mb-4 col ecommerce-select2-dropdown d-flex justify-content-between">
+          <!-- <div class="mb-4 col ecommerce-select2-dropdown d-flex justify-content-between">
             <div class="form-floating form-floating-outline w-100 me-3">
               <select id="select-vehicle-type" class="select2 form-select" name="vehicleType" data-placeholder="Select Vehicle Type">
                 <option value="">Select Vehicle Type</option>
@@ -89,24 +89,55 @@
                 <i class="mdi mdi-plus"></i>
               </button>
             </div>
-          </div>
+          </div> -->
            <!-- Vehicle Model -->
            <div class="form-floating form-floating-outline mb-4">
             <input type="text" class="form-control" id="ecommerce-vehicle-model" placeholder="Vehicle Model" name="vehicleModel" aria-label="Vehicle Model">
             <label for="ecommerce-plate-number">Vehicle Model</label>
           </div>
-
-          <!-- Year Model -->
+               <!-- Vehicle Model -->
            <div class="form-floating form-floating-outline mb-4">
-            <input type="number" class="form-control" id="ecommerce-year-model" name="yearModel" placeholder="Year Model"  aria-label="Year Model">
+            <input type="number" class="form-control" id="ecommerce-year-model" placeholder="Year Model" name="yearModel" aria-label="Year Model">
             <label for="ecommerce-plate-number">Year Model</label>
           </div>
+
+          <!-- Transmission -->
+          <div class="mb-3 col ecommerce-select2-dropdown">
+            <div class="form-floating form-floating-outline">
+              <select id="select-tansmission" class="select2 form-select" name="transmission" data-placeholder="Select Transmission">
+                <option value="">Select Transmission</option>
+                <option value="AT">Automatic</option>
+                <option value="MT">Manual</option>
+              </select>
+              <label for="Transmission">Transmission</label>
+            </div>
+          </div>
+
+
+        <!-- Fuel Type -->
+          <div class="mb-3 col ecommerce-select2-dropdown">
+            <div class="form-floating form-floating-outline">
+              <select id="select-fuel-type" class="select2 form-select" name="fuelType" data-placeholder="Select Fuel Type">
+                <option value="">Select Fuel Type</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Gas">Gas</option>
+              </select>
+              <label for="Fuel Type">Fuel Type </label>
+            </div>
+          </div>
+
+
           <!-- Plate Number -->
            <div class="form-floating form-floating-outline mb-4">
             <input type="text" class="form-control" id="ecommerce-plate-number" name="plateNumber" max="10" placeholder="Plate Number"  aria-label="Plate Number">
             <label for="ecommerce-plate-number">Plate Number</label>
           </div>
 
+           <!-- MIleage -->
+           <div class="form-floating form-floating-outline mb-4">
+            <input type="number" class="form-control" id="ecommerce-mileage" name="mileage" max="10" placeholder="Mileage"  aria-label="Mileage">
+            <label for="ecommerce-mileage">Mileage</label>
+          </div>
 
           <!-- Tags -->
           <!-- <div class="mb-3">
@@ -378,6 +409,13 @@
 
     <!-- Second column -->
     <div class="col-12 col-lg-4">
+      <div class="alert new-car-alert d-none alert-dismissible" role="alert">
+          <h4 class="alert-heading align-items-center"><i class="mdi mdi-check-circle-outline mdi-24px me-2"></i>Car has been added!</h4>
+          <hr>
+          <p class="mb-0">click here to view <u><a href="" id="link-new-car">click here</a></u></p>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+          </button>
+        </div>
       <!-- Pricing Card -->
       </div>
       <!-- /Pricing Card -->

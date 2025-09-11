@@ -13,11 +13,13 @@ use App\Models\JobOrdersPartServiceOption;
 use App\Models\JobOrdersPartService;
 use App\Models\SpecialNote;
 use App\Models\JobOrdersStatus;
+use App\Models\ModeOfPayment;
 
 
 use App\Models\Package;
 
 use DB;
+use DateTime;
 
 class InvoiceEdit extends Controller
 {
@@ -29,6 +31,10 @@ class InvoiceEdit extends Controller
     ->where('job_orders.id', '=', $job_order_id)
    ->select('cars.*', 'owners.*', 'job_orders.*', 'job_orders.status as job_order_status')
     ->get(); 
+
+    $originalDate =  $jobOrderInfo[0]->date;
+    $unixTimestamp = strtotime($originalDate);
+    $newInvoiceDate = date("m/d/Y", $unixTimestamp);
 
 
     if($jobOrderInfo[0]->job_order_status  == 1) {
@@ -51,11 +57,17 @@ class InvoiceEdit extends Controller
     if(isset($jobOrderPackageSelected[0]->job_order_id)) {
       foreach($jobOrderPackageSelected as $keypckg => $selected) {
       
-        $optionOneHtml[] = '<div class="border row w-100  p-2"  data-repeater-item><div class="col-md-9 col-12 mb-md-0 mb-3"><select class="form-select item-details mb-3" name="package"  id="package-'.$keypckg.'"  onchange="calculatePackage('.$keypckg.')">';
-        foreach($jobOrderPackageOption as $options) {
-            $optionOneHtml[] = '<option value="'.$options->id.'" '.(($options->id == $selected->package_id) ? "selected" : "").'>'.$options->value.'</option>';
-        }
+        $optionOneHtml[] = '<div class="border row w-100  p-2"  data-repeater-item><div class="col-md-6 col-12 mb-md-0 mb-3">
+        <input type="hidden" name="package-id" value="'.$selected->id.'" />
+        <select id="package-option-'.$keypckg.' select1Basic'.$keypckg.'" name="package-option" class="select2" data-allow-clear="true"  onchange=" calculatePackage('.$keypckg.')" style="width: 0px;">
+          <option value="">Select Package</option>';
+          foreach($jobOrderPackageOption as $options) {
+                  $optionOneHtml[] = '<option value="'.$options->id.'" '.(($options->id == $selected->package_id) ? "selected" : "").'>'.$options->value.'</option>';
+              }
         $optionOneHtml[] =  '</select></div>
+            <div class="col-md-3 col-12">
+             <input type="text" class="form-control invoice-item-note package mb-3" name="package-note" id="package-note-'.$keypckg.'" value="'.$selected->package_note.'" onchange="calculatePrice('.$keypckg.')" />
+            </div>
             <div class="col-md-3 col-12 mb-md-0 mb-3 color-black d-flex">
                       <span class="pt-2 pl-2">₱</span>
                     <input type="text" class="form-control invoice-item-price package mb-3" name="package-price" id="package-price-'.$keypckg.'" value="'.$selected->package_price.'" placeholder="0" min="12" onchange="calculatePrice('.$keypckg.')" />
@@ -69,6 +81,7 @@ class InvoiceEdit extends Controller
    
     $jobOrderLaborOption = DB::table('job_orders_labor_options')
     ->where('status', '=', 1)
+    ->orderBy('value','asc')
     ->get();
     $jobOrderLaborSelected = DB::table('job_orders_labors')
     ->where('status', '=', 1)
@@ -102,15 +115,21 @@ class InvoiceEdit extends Controller
                   </div>
                   <div class="col-md-5 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>Service</strong></h6>
+                        <input type="hidden" name="labor-id" value="'.$selectedLabor->id.'" />
                     <input type="text" class="form-control invoice-item-text " name="labor-text" id="labor-text-'.$keyl.'"  value="'.$selectedLabor->labor_value.'" onchange="calculateLabor('.$keyl.')" />
                   </div>
-                     <div class="col-md-2 col-12 mb-md-0 mb-3">
+                   <div class="col-md-2 col-12 mb-md-0 mb-3">
+                    <h6 class="mb-2 repeater-title fw-medium"></h6>
+                    <input type="text" class="form-control invoice-item-part-number labor" name="labor-part-number" id="labor-part-number-'.$keyl.'" value="'.$selectedLabor->part_number.'" placeholder="" min="1" max="" onchange="calculateLabor('.$keyl.')"/>
+                  </div>
+
+                     <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Qty</h6>
                     <input type="text" class="form-control invoice-item-qty labor" name="labor-qty" id="labor-qty-'.$keyl.'" value="'.$selectedLabor->labor_qty.'" placeholder="1" min="1" max=""  onchange="calculateLabor('.$keyl.')"/>
                   </div>
-                  <div class="col-md-2 col-12 mb-md-0 mb-3">
+                  <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Price</h6>
-                    <input type="text" class="form-control invoice-item-price labor mb-3" name="labor-price" id="labor-price-'.$keyl.'" value="'.$selectedLabor->labor_price.'" placeholder="" min=""  onchange="calculateLabor('.$keyl.')"/>
+                    <input type="text" class="form-control invoice-item-price labor mb-3" name="labor-price" id="labor-price-'.$keyl.'" value="'.$selectedLabor->labor_price.'" placeholder="" min=""  onchange="calculateLabor('.$keyl.')" pattern="^(?=.)(\d{1,3}(,\d{3})*)?(\.\d+)?$"/>
                     
                   </div>
                
@@ -124,7 +143,7 @@ class InvoiceEdit extends Controller
                 <div class="col-md-1 col-12 border-start text-right">
                   <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyl.', 1)" data-repeater-delete></i>
                   <div class="dropdown">
-                    <i class="mdi mdi-cog-outline cursor-pointer more-options-dropdown color-black" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                    
                     </i>
                     <div class="dropdown-menu dropdown-menu-end w-px-300 p-3" aria-labelledby="dropdownMenuButton">
 
@@ -168,6 +187,7 @@ class InvoiceEdit extends Controller
 
     $jobOrderPartServiceOption = DB::table('job_orders_part_service_options')
     ->where('status', '=', 1)
+    ->orderBy('value','asc')
     ->get();
 
     $jobOrderPartSelected = DB::table('job_orders_part_services')
@@ -178,7 +198,7 @@ class InvoiceEdit extends Controller
 
     $keyprt = 1;
     $optionThreeHtml = array();
-    if(isset($jobOrderPartSelected[0]->job_order_id)) {
+    // if(isset($jobOrderPartSelected[0]->job_order_id)) {
       foreach($jobOrderPartSelected as $keyprt => $selectedPart) {
                 $keyprt++;
                 $sub_amount = $selectedPart->part_price * $selectedPart->part_qty;
@@ -189,18 +209,26 @@ class InvoiceEdit extends Controller
                      <span id="part-counter-'.$keyprt.'">'.$keyprt.'</span>
                   </div>
                   <div class="col-md-5 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>Service</strong></h6>
-                      <div class="input-group">
-                        <i class="mdi mdi-ballot mdi-36px dropdown-con"></i>
-                        <select class="btn btn-outline-primary dropdown-toggle dropdown-menu form-select item-details mb-3" name="part" id="part-option-'.$keyprt.'" onchange="calculatePart('.$keyprt.'); populateOption(this)">';
-                             foreach($jobOrderPartServiceOption as $optionsPart) {
-                      $optionThreeHtml[] = '<option value="'.$optionsPart->id.'" '.(($optionsPart->id == $selectedPart->part_id) ? "selected" : "").'>'.$optionsPart->value.'</option>';
-                  }
-                     $optionThreeHtml[] = '< </select>
-                        <input type="text" class="form-control" aria-label="Text input with dropdown button" name="part-text"  id="part-text-'.$keyprt.'" value="'.$selectedPart->part_value.'" onchange="calculatePart('.$keyprt.')">
+                    <h6 class="mb-2 ml-2 repeater-title fw-medium"><strong>Service</strong></h6>
+                      <div class="row">
+                      <div class="col-1">
+                      <i class="mdi mdi-content-copy me-1 js-textareacopybtn" id="part-icon" onclick="copyParts('.$keyprt.')"></i><span class="alert-coppied" id="icon-part-'.$keyprt.'">Coppied!</span>
                       </div>
+                      <div class="col-11">
+                        <input type="hidden" name="part-id" value="'.$selectedPart->id.'" />
+                        <select id="part-option-'.$keyprt.' select2Basic'.$keyprt.'" name="part-option" class="select2" data-allow-clear="true"  onchange=" populateOption('.$keyprt.')">
+                         <option value="">Select Manufacturer</option>';
+                         foreach($jobOrderPartServiceOption as $optionsPart) {
+                                  $optionThreeHtml[] = '<option value="'.$optionsPart->id.'" '.(($optionsPart->id == $selectedPart->part_id) ? "selected" : "").'>'.$optionsPart->value.'</option>';
+                              }
+                                $optionThreeHtml[] = '
+                            </select>
+                        <input type="hidden" class="form-control" aria-label="Text input with dropdown button" name="part-text"  id="part-text-'.$keyprt.'" value="'.$selectedPart->part_value.'" onchange="calculatePart('.$keyprt.')">
+                        <input type="hidden" name="part-counter"  id="part-'.$keyprt.'" value="'.$keyprt.'" >
+                         </div>
+                        </div>
                      </div>
-                     <div class="col-md-2 col-12 mb-md-0 mb-3">
+                  <div class="col-md-2 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium"></h6>
                     <input type="text" class="form-control invoice-item-part-number part" name="part-part-number" id="part-part-number-'.$keyprt.'" value="'.$selectedPart->part_number.'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                   </div>
@@ -224,7 +252,6 @@ class InvoiceEdit extends Controller
                   <div class="col-md-1 col-12 border-start text-right">
                   <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyprt.', 2)" data-repeater-delete></i>
                   <div class="dropdown">
-                    <i class="mdi mdi-cog-outline cursor-pointer more-options-dropdown color-black" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                     </i>
                     <div class="dropdown-menu dropdown-menu-end w-px-300 p-3" aria-labelledby="dropdownMenuButton">
 
@@ -262,16 +289,25 @@ class InvoiceEdit extends Controller
                 </div>
                 ';
               }
-          } else {
-            $optionThreeHtml = false;
-          }
+          // } else {
+          //   // $optionThreeHtml = false;
+          // }
 
 
     $specialNotes = DB::table('special_notes')
     ->where('status', '=', 1)
     ->get();
 
-    return view('content.apps.app-invoice-edit', ['specialNotes' => $specialNotes, 'optionStatus' => $optionStatus, 'packageTotalItem' => $keypckg, 'partTotalItem' => $keyprt, 'laborTotalItem' => $keyl, 'optionThreeHtml' => $optionThreeHtml, 'optionTwoHtml' => $optionTwoHtml, 'optionOneHtml' => $optionOneHtml, 'job_order_id' => $job_order_id, 'jobOrderInfo' => $jobOrderInfo, 'jobOrderPartServiceOption' => $jobOrderPartServiceOption, 'jobOrderLaborOption' => $jobOrderLaborOption, 'jobOrderPackageOption' => $jobOrderPackageOption]);
+    
+     $modeOfPaymentData = DB::table('mode_of_payments')
+    ->where('status', '=', 1)
+    ->get();
+
+
+    foreach($modeOfPaymentData as $mop) {
+      $modeOfPayment[] = $mop->value;
+    }
+    return view('content.apps.app-invoice-edit', ['invoice_date' => $newInvoiceDate, 'expire_date' => $jobOrderInfo[0]->expire_date, 'modeOfPayment' => $modeOfPayment, 'specialNotes' => $specialNotes, 'optionStatus' => $optionStatus, 'packageTotalItem' => $keypckg, 'partTotalItem' => $keyprt, 'laborTotalItem' => $keyl, 'optionThreeHtml' => $optionThreeHtml, 'optionTwoHtml' => $optionTwoHtml, 'optionOneHtml' => $optionOneHtml, 'job_order_id' => $job_order_id, 'jobOrderInfo' => $jobOrderInfo, 'jobOrderPartServiceOption' => $jobOrderPartServiceOption, 'jobOrderLaborOption' => $jobOrderLaborOption, 'jobOrderPackageOption' => $jobOrderPackageOption]);
   }
 
 
@@ -287,12 +323,12 @@ class InvoiceEdit extends Controller
 
   public function saveJobOrderItem($job_order_id){
 
+    
     $jobOrderInfo = DB::table('job_orders')
     ->join('cars', 'cars.id', '=', 'job_orders.car_id')
     ->join('owners', 'owners.id', '=', 'cars.owner_id')
     ->where('job_orders.id', '=', $job_order_id)
     ->get();
-
    
     if($_GET['status'] == 1) {
       $status_display = "estimate";
@@ -305,80 +341,126 @@ class InvoiceEdit extends Controller
 
     }
 
+    $invoice_date = $_GET['invoice_date']; // Example date in m/d/Y format
+    // Create a DateTime object from the original format
+    $dateTimeObject = DateTime::createFromFormat('m/d/Y', $invoice_date);
+    // Format the DateTime object into the desired Y-m-d format
+    $new_invoice_date = $dateTimeObject->format('Y-m-d');
+
+    $payment = intval(preg_replace('/[^\d.]/', '', $_GET['payment']));
     JobOrder::where("id", $job_order_id)->update(
       [
         "status" => $_GET['status'],
         "status_display" => $status_display,
+        "date" => $new_invoice_date,
+        "expire_date" => (($_GET['expire_date']) ? $_GET['expire_date'] : 0),
         "package_total" => (($_GET['hidden-package-sub-totals']) ? $_GET['hidden-package-sub-totals'] : 0),
         "labor_total" => (($_GET['labor-total']) ? $_GET['labor-total'] : 0),
         "part_total" => (($_GET['part-total']) ? $_GET['part-total'] : 0),
         "sub_total" => (($_GET['sub_total']) ? intval(preg_replace('/[^\d.]/', '', $_GET['sub_total'])) : 0),
         "vat" => (($_GET['vat']) ? intval(preg_replace('/[^\d.]/', '', $_GET['vat'])) : 0),
         "total_amount" => (($_GET['total-amount']) ? intval(preg_replace('/[^\d.]/', '', $_GET['total-amount'])) : 0),
-        "payment" => (($_GET['payment']) ? intval(preg_replace('/[^\d.]/', '', $_GET['payment'])) : 0),
+        "payment" => (($_GET['payment']) ? $payment : 0),
         "balance" => (($_GET['balance']) ? intval(preg_replace('/[^\d.]/', '', $_GET['balance'])) : 0),
         "remarks" => (($_GET['remarks']) ?  $_GET['remarks'] : ''),
+        "mode_of_payment" => (($_GET['mop']) ?  $_GET['mop'] : ''),
+        "customer_name" => (($_GET['customer_name']) ?  $_GET['customer_name'] : ''),
+        
       ]
     );
   
 
-    $delPackage=JobOrdersPackage::where('job_order_id',$job_order_id)->delete();
-    $delLabor=JobOrdersLabor::where('job_order_id',$job_order_id)->delete();
-    $delPart=JobOrdersPartService::where('job_order_id',$job_order_id)->delete();
-
+    // $delPackage=JobOrdersPackage::where('job_order_id',$job_order_id)->delete();
+    // $delLabor=JobOrdersLabor::where('job_order_id',$job_order_id)->delete();
+    // $delPart=JobOrdersPartService::where('job_order_id',$job_order_id)->delete();
+     
+  
+   
     foreach($_GET as $key => $value) {
+    
       if($key== 'group-a') {
         foreach($value as $package){
-         if(isset($package['package']) && $package['package'] > "") {
-            $pck = new JobOrdersPackage();
-            $pck->job_order_id = $job_order_id;
-            $pck->package_id    = $package['package'];
-            $pck->package_value    =  JobOrdersPackageOption::find($package['package'])->value;
-            $pck->package_price    = JobOrdersPackageOption::find($package['package'])->package_price;
-            $pck->save();
-          } else {
-            $pck = new JobOrdersPackage();
-            $pck->save();
-          }
+
+
+        if(isset($package['package-option']) && $package['package-option'] > "") {
+
+         JobOrdersPackage::where("id", $package['package-id'])->update(
+          [
+            "job_order_id" => $job_order_id,
+            "package_id"    => $package['package-option'],
+              "package_value"    =>  JobOrdersPackageOption::find($package['package-option'])->value,
+              "package_price"    => JobOrdersPackageOption::find($package['package-option'])->package_price,
+              "package_note"    => ((isset($package['package-note'])) ? $package['package-note'] : ""),
+          ]
+        );
+        //         $pck = new JobOrdersPackage();
+        //         $pck->job_order_id = $job_order_id; 
+        //         $pck->package_id    = $package['package'];
+        //         $pck->package_value    =  JobOrdersPackageOption::find($package['package'])->value;
+        //         $pck->package_price    = JobOrdersPackageOption::find($package['package'])->package_price;
+        //         $pck->save();
+        }
+          // else {
+          //   $pck = new JobOrdersPackage();
+          //   $pck->save();
+          // }
         }
       }
       if($key== 'group-b') {
         foreach($value as $labor){
          if(isset($labor['labor-text']) && $labor['labor-text'] > "") {
-            $lbr = new JobOrdersLabor();
-            $lbr->job_order_id = $job_order_id;
-            $lbr->labor_qty     = ((isset($labor['labor-qty'])) ? $labor['labor-qty'] : 1);
-             $lbr->labor_value  =  ((isset($labor['labor-text'])) ? $labor['labor-text'] : "");
-            $lbr->labor_price   = ((isset($labor['labor-price'])) ? $labor['labor-price'] : 0);
-            $lbr->labor_amount   = ((isset($labor['labor-amount'])) ? $labor['labor-amount'] : 0);
-            $lbr->save();
-          } else {
-            $lbr = new JobOrdersLabor();
-            $lbr->job_order_id = $job_order_id;
-            $lbr->save();
-          }
+            // $lbr = new JobOrdersLabor();
+            // $lbr->job_order_id = $job_order_id;
+            // $lbr->labor_qty     = ((isset($labor['labor-qty'])) ? $labor['labor-qty'] : 1);
+            // $lbr->labor_value  =  ((isset($labor['labor-text'])) ? $labor['labor-text'] : "");
+            // $lbr->part_number   =  ((isset($labor['labor-part-number'])) ? $labor['labor-part-number'] : "");
+            // $lbr->labor_price   = ((isset($labor['labor-price'])) ? $labor['labor-price'] : 0);
+            // $lbr->labor_amount   = ((isset($labor['labor-amount'])) ? $labor['labor-amount'] : 0);
+            // $lbr->save();
+
+             JobOrdersLabor::where("id", $labor['labor-id'])->update(
+            [
+            "job_order_id" => $job_order_id,
+             "labor_qty"     => ((isset($labor['labor-qty'])) ? $labor['labor-qty'] : 1),
+            "labor_value"  =>  ((isset($labor['labor-text'])) ? $labor['labor-text'] : ""),
+            "part_number"   =>  ((isset($labor['labor-part-number'])) ? $labor['labor-part-number'] : ""),
+            "labor_price"   => ((isset($labor['labor-price'])) ? $labor['labor-price'] : 0),
+            "labor_amount"   => ((isset($labor['labor-amount'])) ? $labor['labor-amount'] : 0),
+            ]
+          );
+
+          } 
+          // else {
+          //   $lbr = new JobOrdersLabor();
+          //   $lbr->job_order_id = $job_order_id;
+          //   $lbr->save();
+          // }
             
         }
       }
       if($key== 'group-c') {
         foreach($value as $part){
-           if(isset($part['part']) && $part['part'] > "") {
-            $prt = new JobOrdersPartService();
-            $prt->job_order_id = $job_order_id;
-            $prt->part_id      = ((isset($part['part']))? $part['part'] : "");
-            $prt->part_qty     = ((isset($part['part-qty'])) ? $part['part-qty'] : 1);
-            $prt->part_value   =  ((isset($part['part-text'])) ? $part['part-text'] : "");
-            $prt->part_number   =  ((isset($part['part-part-number'])) ? $part['part-part-number'] : "");
-            $prt->part_price   = ((isset($part['part-price'])) ? $part['part-price'] : 0);
-            $prt->part_amount   = ((isset($part['part-amount'])) ? $part['part-amount'] : 0);
-            $prt->save();
+           if(isset($part['part-text']) && $part['part-text'] > "") {
+            $counter = $part['part-counter'];
+          JobOrdersPartService::where("id", $part['part-id'])->update(
+          [
+            "job_order_id" => $job_order_id,
+            "part_id"      => ((isset($part['part-option']))? $part['part-option'] : ""),
+            "part_qty"     => ((isset($part['part-qty'])) ? $part['part-qty'] : 1),
+            "part_value"   =>  JobOrdersPartServiceOption::find($part['part-option'])->value,
+            "part_number"   => ((isset($part['part-part-number'])) ? $part['part-part-number'] : ""),
+            "part_price"  => ((isset($part['part-price'])) ? $part['part-price'] : 0),
+            "part_amount"   => ((isset($part['part-amount'])) ? $part['part-amount'] : 0),
+          ] );
+
           } else {
-            $prt = new JobOrdersPartService();
-            $prt->job_order_id = $job_order_id;
-            $prt->save();
+            // $prt = new JobOrdersPartService();
+            // $prt->job_order_id = $job_order_id;
+            // $prt->save();
           }
         }
       }
+
     }
      return response()->json(['success'=> true, 'message' => 'Job Order Updated!']);
   }
@@ -554,6 +636,15 @@ class InvoiceEdit extends Controller
     }
 
   
+  public function duplicateParts($job_order_id) {
+    $jobOrderPartInfo = DB::table('job_orders_part_services')
+    ->where('job_order_id', '=', $job_order_id)
+    ->get();
+
+     return response()->json(['success'=> true, 'jobOrderPartDuplicate' => $jobOrderPartInfo ]);
+
+  }
+
   
   
 }

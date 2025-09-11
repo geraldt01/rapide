@@ -17,6 +17,7 @@ class EcommerceSettingsCarManufacturer extends Controller
 
         $ManufacturerData = DB::table('car_manufacturer_options')
         ->where('status', '=', 1)
+        ->orderBy('value','asc')
         ->get(); 
 
     return view('content.apps.app-settings-car-manufacturer-option', ['ManufacturerData' => $ManufacturerData]);

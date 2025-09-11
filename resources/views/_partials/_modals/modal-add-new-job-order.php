@@ -40,6 +40,24 @@
               <label for="modalVehicleModel">Vehicle Model</label>
             </div>
           </div>
+          <div class="col-12 col-md-6">
+            <div class="form-floating form-floating-outline">
+              <input type="text" id="modalTransmission" name="modalTransmission" class="form-control" placeholder="Transmission" />
+              <label for="Transmission">Transmission</label>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-floating form-floating-outline">
+              <input type="text" id="modalFuelType" name="modalFuelType" class="form-control" placeholder="Fuel Type" />
+              <label for="Fuel Type">Fuel Type</label>
+            </div>
+          </div>
+           <div class="col-12 col-md-6">
+            <div class="form-floating form-floating-outline">
+              <input type="text" id="modalMileage" name="modalMileage" class="form-control" placeholder="Mileage" />
+              <label for="modalMileage">Mileage</label>
+            </div>
+          </div>
            <div class="col-12 col-md-6">
             <div class="form-floating form-floating-outline">
               <!-- <select id="modalVehicleType" class="select2 form-select" name="modalVehicleType" data-placeholder="Select Manufacturer">
@@ -53,27 +71,22 @@
               </select> -->
 
 
-         <div class="form-floating form-floating-outline">
+         <!-- <div class="form-floating form-floating-outline">
               <input type="text" id="modalVehicleType" name="modalVehicleType" class="form-control"  />
               <label for="modalManufacturer">Vehicle Type </label>
-            </div>
+            </div> -->
 
 
 
             </div>
           </div>
-          <div class="col-12 col-md-6">
-            <div class="form-floating form-floating-outline">
-              <input type="text" id="modalMileage" name="modalMileage" class="form-control" placeholder="Mileage" />
-              <label for="modalMileage">Mileage</label>
-            </div>
-          </div>
-           <div class="col-12 col-md-6">
+         
+           <!-- <div class="col-12 col-md-6">
             <div class="form-floating form-floating-outline">
               <input type="text" id="modalYearModel" name="modalYearModel" class="form-control" placeholder="modalYearModel" />
               <label for="modalYearModel">Year Model</label>
             </div>
-          </div>
+          </div> -->
           <!-- <div class="col-12 col-md-6">
             <div class="form-floating form-floating-outline">
               <select id="modalStatus" name="modalStatus" class="form-select" aria-label="Default select example">

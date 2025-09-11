@@ -66,7 +66,7 @@ $(function () {
           render: function (data, type, full, meta) {
             var $id = full['order'];
 
-            return "<a href='" + order_details + "'><span>#" + $id + '</span></a>';
+            return "<a href='" + order_details + "'><span>" + $id + '</span></a>';
           }
         },
         {
@@ -175,20 +175,24 @@ $(function () {
 
     console.log(dt_order);
 
-    var plate_number = document.getElementById("hidden-selected-car-plate-number").value;
+  
+
+     var modalFuelType = document.getElementById("hidden-selected-fuel-type").value;
+    document.getElementById("modalFuelType").value = modalFuelType;
+ var modalTransmission = document.getElementById("hidden-selected-transmission").value;
+    document.getElementById("modalTransmission").value = modalTransmission;
+  var plate_number = document.getElementById("hidden-selected-car-plate-number").value;
     document.getElementById("modalPlateNumber").value = plate_number;
     var vehicle_model = document.getElementById("hidden-selected-vehicle-model").value;
     document.getElementById("modalVehicleModel").value = vehicle_model;
     var vehicle_model = document.getElementById("hidden-selected-vehicle-manufacturer").value;
     document.getElementById("modalManufacturer").value = vehicle_model;
- var vehicle_type = document.getElementById("hidden-selected-vehicle-type").value;
-    document.getElementById("modalVehicleType").value = vehicle_type;
+//  var vehicle_type = document.getElementById("hidden-selected-vehicle-type").value;
+//     document.getElementById("modalVehicleType").value = vehicle_type;
  var modalMileage = document.getElementById("hidden-selected-mileage").value;
     document.getElementById("modalMileage").value = modalMileage;
- var modalYearModel = document.getElementById("hidden-selected-year").value;
-    document.getElementById("modalYearModel").value = modalYearModel;
-
-    
+ var modalEst = document.getElementById("hidden-selected-invoice-number").value;
+    document.getElementById("modalEst").value = "INV#"+modalEst;
         console.log(dt_order);
     $('div.head-label').html('<h5 class="card-title mb-0 text-nowrap">Estimates/Job Orders for <span id="selected-car-job-order" class="text-primary mb-0"><strong>'+plate_number+'</strong></span></h5>');
   }
@@ -275,15 +279,28 @@ function saveJobOrder() {
     url: '/app/save-job-order/'+ car_id,
     data:  {car_id: car_id,date:date,est:est,modalPlateNumber:modalPlateNumber,modalManufacturer:modalManufacturer,modalVehicleModel:modalVehicleModel,modalMileage:modalMileage,modalStatus:modalStatus },
     success: function (result) {
-        $('#addNewJobOrder').modal('hide');
-        $(".alert-success p").html(result.message);
+      console.log(result.success);
+      if(result.success == true) {
+          $(".alert-success p").html(result.message);
         $(".alert-success").removeClass("d-none");
-      setTimeout(function(){ 
+      } else {
+
+    $(".alert-danger p").html(result.message);
+        $(".alert-danger").removeClass("d-none");
+       
+      }
+      
+
+       $('#addNewJobOrder').modal('hide');
+    
+        setTimeout(function(){ 
         $(".alert-success").addClass("d-none");
+        $(".alert-danger").addClass("d-none");
         const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
         form.reset();
         location.reload();
-    }, 3000);
+        }, 3000);
+
 
 
     },
@@ -300,14 +317,18 @@ function addNewCar() {
     var owner_id = document.getElementById("hidden-customer-id").value;
     var modalPlateNumber = document.getElementById("modaladdPlateNumber").value;
     var modalManufacturer = document.getElementById("modaladdManufacturer").value;
-    var modalVehicleType = document.getElementById("modaladdVehicleyType").value;
+    // var modalVehicleType = document.getElementById("modaladdVehicleyType").value;
     var modalVehicleModel = document.getElementById("modaladdVehicleModel").value;
     var modaladdYearModel = document.getElementById("modaladdYearModel").value;
+    var modaladdTransmission = document.getElementById("modaladdTransmission").value;
+    var modaladdFuelType = document.getElementById("modaladdFuelType").value;
     var modalMileage = document.getElementById("modaladdMileage").value;
+    var modalMileage = document.getElementById("modaladdMileage").value;
+    
   $.ajax({
     type: "get",
     url: '/app/add-new-car/',
-    data:  {modaladdYearModel: modaladdYearModel, modalVehicleType:modalVehicleType,owner_id:owner_id,modalPlateNumber:modalPlateNumber,modalManufacturer:modalManufacturer,modalVehicleModel:modalVehicleModel,modalMileage:modalMileage },
+    data:  {modaladdYearModel: modaladdYearModel, modaladdFuelType: modaladdFuelType, modaladdTransmission: modaladdTransmission,owner_id:owner_id,modalPlateNumber:modalPlateNumber,modalManufacturer:modalManufacturer,modalVehicleModel:modalVehicleModel,modalMileage:modalMileage },
     success: function (result) {
         $(".show-car-added").removeClass("d-none");
         $(".show-car-added").html(result.htmlAddCar);

@@ -6,6 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\JobOrder;
 use App\Models\Car;
+use App\Models\JobOrdersPartService;
+use App\Models\JobOrdersLabor;
+use App\Models\JobOrdersPackage;
+use App\Models\InvoiceNumber;
+
+
 use DB;
 
 
@@ -18,7 +24,7 @@ class EcommerceCustomerDetailsOverview extends Controller
     $carInfo = DB::table('cars')
     ->where('cars.id', '=', $car_id)
     ->join('owners', 'owners.id', '=', 'cars.owner_id')
-   ->select('cars.id as car_id', 'cars.year as year', 'cars.mileage as mileage', 'owners.id as owner_id', 'cars.manufacturer as manufacturer', 'cars.vehicle_type as vehicle_type', 'cars.vehicle_model as vehicle_model', 'cars.year as year', 'cars.plate_number as plate_number', 'cars.status as status', 'owners.owner_name as owner_name', 'owners.address as address', 'owners.mobile_number as mobile_number' )
+   ->select('cars.fuel_type as fuel_type', 'cars.transmission as transmission', 'cars.id as car_id', 'cars.year as year', 'cars.mileage as mileage', 'owners.id as owner_id', 'cars.manufacturer as manufacturer', 'cars.vehicle_type as vehicle_type', 'cars.vehicle_model as vehicle_model', 'cars.year as year', 'cars.plate_number as plate_number', 'cars.status as status', 'owners.owner_name as owner_name', 'owners.address as address', 'owners.mobile_number as mobile_number' )
     ->get();
 
     $otherCars = DB::table('owners')
@@ -50,19 +56,22 @@ class EcommerceCustomerDetailsOverview extends Controller
 
     
 
-
-
     
 
+    $getLatestInvoice = DB::table('invoice_numbers')->where('status', '=', 1)
+     ->orderBy('id','desc')
+    ->first();
    
-    return view('content.apps.app-ecommerce-customer-details-overview', [ 'selectedCar' => $carInfo, 'otherCars' => $otherCars, 'htmlAddCar' => $htmlAddCar]);
+    return view('content.apps.app-ecommerce-customer-details-overview', [ 'selectedCar' => $carInfo, 'otherCars' => $otherCars, 'htmlAddCar' => $htmlAddCar, 'invoice_number' => $getLatestInvoice->value+1]);
   }
 
   public function getDroptownOptions() {
-      $carManufacturerOptions = DB::table('car_manufacturer_options')->where('status', '=', 1)
+     $carManufacturerOptions = DB::table('car_manufacturer_options')->where('status', '=', 1)
+     ->orderBy('value','asc')
     ->get();
 
       $carVehicleTypeOptions = DB::table('car_vehicle_type_options')->where('status', '=', 1)
+      ->orderBy('value','asc')
     ->get();
 
 
@@ -85,17 +94,76 @@ class EcommerceCustomerDetailsOverview extends Controller
   
 
   public function saveJobOrder($car_id) {
-    $c = new JobOrder();
-    $c->car_id    = $_GET['car_id'] ? $_GET['car_id'] : "";
-    $c->job_order_number    = $_GET['est'] ? $_GET['est'] : "";
-    $c->date   = $_GET['date'] ? $_GET['date'] : "";
-    $c->plate_number            = $_GET['modalPlateNumber'] ? $_GET['modalPlateNumber'] : "";
-    $c->manufacturer    = $_GET['modalManufacturer'] ? $_GET['modalManufacturer'] : "";
-    $c->model    = $_GET['modalVehicleModel'] ? $_GET['modalVehicleModel'] : "";
-    $c->mileage    = $_GET['modalMileage'] ? $_GET['modalMileage'] : "";
-    $c->status_display    = $_GET['modalStatus'] ? $_GET['modalStatus'] : "";
-    $c->save();
-     return response()->json(['success'=> true, 'message' => 'Job Order added successfully!']);
+
+    $checkExistingJobOrder = DB::table('job_orders')
+    ->where('car_id', '=', $car_id)
+    ->where('date', '=', $_GET['date'])
+    ->get();
+
+    if(isset($checkExistingJobOrder[0])) {
+     return response()->json(['success'=> false, 'message' => 'Job Order already exist!']);
+
+    } else {
+      $numbers_only = preg_replace("/[^0-9]/", "", $_GET['est']);
+      $checkInvoiceNumber = DB::table('invoice_numbers')->where('value', '=', $numbers_only)
+      ->get();
+
+      $final_invoice_number = $numbers_only + 1;
+
+      if(isset($checkInvoiceNumber[0])) {
+        $i = new InvoiceNumber();
+        $i->value = $final_invoice_number;
+        $i->save();
+      } else {
+        $getLatestInvoice = DB::table('invoice_numbers')->where('status', '=', 1)
+          ->orderBy('id','desc')
+          ->get();
+
+          $final_invoice_number = $getLatestInvoice[0]->value + 1;
+          $i = new InvoiceNumber();
+          $i->value = $final_invoice_number;
+          $i->save();
+      }
+
+
+
+       $getOwner = DB::table('cars')
+      ->where('cars.id', '=', $_GET['car_id'])
+      ->join('owners', 'owners.id', '=', 'cars.owner_id')
+      ->get();
+
+
+
+
+      $c = new JobOrder();
+      $c->car_id    = $_GET['car_id'] ? $_GET['car_id'] : "";
+      $c->job_order_number    = "INV#".$final_invoice_number;
+      $c->date   = $_GET['date'] ? $_GET['date'] : "";
+      $c->plate_number            = $_GET['modalPlateNumber'] ? $_GET['modalPlateNumber'] : "";
+      $c->manufacturer    = $_GET['modalManufacturer'] ? $_GET['modalManufacturer'] : "";
+      $c->model    = $_GET['modalVehicleModel'] ? $_GET['modalVehicleModel'] : "";
+      $c->mileage    = $_GET['modalMileage'] ? $_GET['modalMileage'] : "";
+      $c->status_display    = $_GET['modalStatus'] ? $_GET['modalStatus'] : "";
+      $c->customer_name    = $getOwner[0]->owner_name;
+      $c->save();
+
+      for($x=0;$x<=10;$x++) {
+        if($x == 0) {
+          $pck = new JobOrdersPackage();
+          $pck->job_order_id = $c->id;
+          $pck->save(); 
+        }
+        $prt = new JobOrdersPartService();
+        $prt->job_order_id = $c->id;
+        $prt->save();
+
+        $lbr = new JobOrdersLabor();
+        $lbr->job_order_id = $c->id;
+        $lbr->save();
+
+      } 
+      return response()->json(['success'=> true, 'message' => 'Job Order added successfully!']);
+      }
   }
 
   public function jsonJobOrder($car_id) {
@@ -157,8 +225,10 @@ class EcommerceCustomerDetailsOverview extends Controller
     $c->plate_number            = $_GET['modalPlateNumber'] ? $_GET['modalPlateNumber'] : "";
     $c->manufacturer    = $_GET['modalManufacturer'] ? $_GET['modalManufacturer'] : "";
     $c->vehicle_model    = $_GET['modalVehicleModel'] ? $_GET['modalVehicleModel'] : "";
-    $c->vehicle_type    = $_GET['modalVehicleType'] ? $_GET['modalVehicleType'] : "";
+    // $c->vehicle_type    = $_GET['modalVehicleType'] ? $_GET['modalVehicleType'] : "";
     $c->mileage    = $_GET['modalMileage'] ? $_GET['modalMileage'] : "";
+    $c->fuel_type    = $_GET['modaladdFuelType'] ? $_GET['modaladdFuelType'] : "";
+    $c->transmission    = $_GET['modaladdTransmission'] ? $_GET['modaladdTransmission'] : "";
     $c->year    = $_GET['modaladdYearModel'] ? $_GET['modaladdYearModel'] : "";
 
     

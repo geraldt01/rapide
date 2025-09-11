@@ -45,6 +45,18 @@
             <span class="align-middle">Car Vehicle Type</span>
           </a>
         </li>
+        <li class="nav-item mb-1">
+          <a class="nav-link " href="{{url('/app/ecommerce/settings/parts-and-services')}}">
+            <i class="mdi mdi-credit-car-outline me-2"></i>
+            <span class="align-middle">Parts and Services</span>
+          </a>
+        </li>
+          <li class="nav-item mb-1">
+          <a class="nav-link" href="{{url('/app/ecommerce/settings/package')}}">
+            <i class="mdi mdi-credit-car-outline me-2"></i>
+            <span class="align-middle">Package</span>
+          </a>
+        </li>
         <!-- <li class="nav-item mb-1">
           <a class="nav-link" href="{{url('/app/ecommerce/settings/shipping')}}">
             <i class="mdi mdi-package-variant-closed me-2"></i>

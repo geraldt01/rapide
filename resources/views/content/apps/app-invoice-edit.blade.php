@@ -4,11 +4,17 @@
 
 @section('vendor-style')
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/flatpickr/flatpickr.css')}}" />
+
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/select2/select2.css')}}" />
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/tagify/tagify.css')}}" />
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css')}}" />
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/typeahead-js/typeahead.css')}}" />
 @endsection
 
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/vendor/css/pages/app-invoice.css')}}" />
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/spinkit/spinkit.css')}}" />
+
 
 @endsection
 <style type="text/css">
@@ -21,18 +27,32 @@
 <script src="{{asset('assets/vendor/libs/cleavejs/cleave.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/cleavejs/cleave-phone.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/jquery-repeater/jquery-repeater.js')}}"></script>
+
+
+<script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
+<script src="{{asset('assets/vendor/libs/tagify/tagify.js')}}"></script>
+<script src="{{asset('assets/vendor/libs/bootstrap-select/bootstrap-select.js')}}"></script>
+<script src="{{asset('assets/vendor/libs/typeahead-js/typeahead.js')}}"></script>
+<script src="{{asset('assets/vendor/libs/bloodhound/bloodhound.js')}}"></script>
+
 @endsection
 
 @section('page-script')
 <script src="{{asset('assets/js/offcanvas-add-payment.js')}}"></script>
 <script src="{{asset('assets/js/offcanvas-send-invoice.js')}}"></script>
 <script src="{{asset('assets/js/app-invoice-edit.js')}}"></script>
+
+<script src="{{asset('assets/js/forms-selects.js')}}"></script>
+<script src="{{asset('assets/js/forms-tagify.js')}}"></script>
+<script src="{{asset('assets/js/forms-typeahead.js')}}"></script>
+
 @endsection
 
 @section('content')
 @foreach($jobOrderInfo as $k => $data)
 <form id="form-job-order">
   <input type="hidden" name="hidden-job-order-id" id="hidden-job-order-id" value="{{$job_order_id}}" />
+  <input type="hidden" name="hidden-invoice-date" id="hidden-invoice-date" value="{{$invoice_date}}" />
   <input type="hidden" name="hidden-job-order-current-status" id="hidden-job-order-current-status" value="{{$data->job_order_status}}" />
   <input type="hidden" name="hidden-job-order-new-status" id="hidden-job-order-new-status" value="" />
   <input type="hidden" name="hidden-package-sub-totals" id="hidden-package-sub-totals" value="" />
@@ -45,6 +65,14 @@
 
 <div class="row invoice-edit">
   <!-- Invoice Edit-->
+   <div class="row">
+    <div class="col-lg-9 col-12 mb-lg-0 mb-4 mb-4 d-flex">
+          
+
+
+    </div>
+  </div>
+  <br>
   <div class="col-lg-9 col-12 mb-lg-0 mb-4">
     <div class="card invoice-preview-card">
       <div class="card-body">
@@ -78,21 +106,20 @@
               </dt>
               <dd class="col-sm-6">
                 <div class="input-group input-group-merge disabled">
-                  <span class="input-group-text">#</span>
-                  <input type="text" class="form-control" disabled placeholder="74909" value="74909" id="invoiceId" />
+                  <input type="text" class="form-control" disabled placeholder="74909" value="{{$data->job_order_number}}" id="invoiceId" />
                 </div>
               </dd>
               <dt class="col-sm-6 mb-2 d-md-flex align-items-center justify-content-end">
                 <span class="fw-normal">Date:</span>
               </dt>
               <dd class="col-sm-6">
-                <input type="text" class="form-control invoice-date" placeholder="DD-MM-YYY" />
+                <input type="text" class="form-control invoice-date" name="invoice_date" placeholder="DD-MM-YYY" value="{{$invoice_date}}"/>
               </dd>
               <dt class="col-sm-6 mb-2 d-md-flex align-items-center justify-content-end">
                 <span class="fw-normal">Expires:</span>
               </dt>
               <dd class="col-sm-6">
-                <input type="text" class="form-control due-date" placeholder="YYYY-MM-DD" />
+                <input type="text" class="form-control due-date" name="expire_date" placeholder="YYYY-MM-DD" />
               </dd>
             </dl>
           </div>
@@ -123,8 +150,7 @@
                 </tr>
                 <tr>
                   <td class="pe-3 fw-medium">{{$data->mobile_number}}</td>
-                  <td>{{$data->manufacturer}} {{$data->vehicle_model}} {{$data->year}}</td>
-                  <td></td>
+                  <td colspan="2" class="capital-letter">{{$data->manufacturer}} {{$data->vehicle_model}} {{$data->transmission}} {{$data->fuel_type}}</td>
                   <td></td>
                 </tr>
                 
@@ -153,7 +179,7 @@
                           <option value="{{$op->id}}">{{$op->value}}</option>
                         @endforeach
                         </select>
-                    </div>
+                    </div> 
                     <div class="col-md-3 col-12 mb-md-0 mb-3 color-black d-flex">
                       <span class="pt-2 pl-2">₱</span>
                     <input type="text" class="form-control invoice-item-price mb-3" name="package-price" id="package-price-{{$p}}" value="0" placeholder="0" min="12" onchange="calculatePrice({{$p}})" />
@@ -184,6 +210,9 @@
       <div class="card-body pb-0 tbl-header">
         <div class="mb-0 pb-0">
           <h6><strong>LABOR</strong></h6>
+
+          <i class="mdi mdi-content-duplicate me-1 js-textareacopybtn" id="part-duplicate" onclick="duplicateParts({{$job_order_id}})"></i>
+
         </div>
       </div>
       <div class="card-body">
@@ -308,92 +337,10 @@
           <div class="mb-3" data-repeater-list="group-c">
             <div class="d-flex repeater-wrapper pt-0 pt-md-4">
               <div class="rounded position-relative pe-0 color-white">
-                @if($optionThreeHtml == false)
-                  @for ($i = 1; $i < 11; $i++)
-                <div class="border row w-100 p-3 pr-0" style="padding-right: 0px !important;"  id="item-list-part-{{$i}}"  data-repeater-item>
-                 <div class="col-md-1 col-12 mb-md-0 mb-3 color-black">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
-                    <span id="part-counter-1">{{$i}}</span>
-                  </div>
-                  <div class="col-md-5 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>Service</strong></h6>
-                     <div class="input-group">
-                        <i class="mdi mdi-ballot mdi-36px dropdown-con"></i>
-                        <select class="btn btn-outline-primary dropdown-toggle dropdown-menu form-select item-details mb-3" name="part" id="part-option-{{$i}}" onchange="calculatePart({{$i}}); populateOption(this)">';
-                            <option value="" selected></option>
-                          @foreach($jobOrderPartServiceOption as $keyprt => $prt)
-                            <option value="{{$prt->id}}">{{$prt->value}}</option>
-                          @endforeach
-                        </select>
-                        <input type="text" class="form-control" aria-label="Text input with dropdown button" name="part-text"  id="part-text-{{$i}}" onchange="calculatePart({{$i}})">
-                      </div>
-                  </div>
-                   <div class="col-md-2 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium"></h6>
-                    <input type="text" class="form-control invoice-item-part-number part" name="part-part-number" id="part-part-number-{{$i}}" value="" placeholder="" min="" max="" onchange="calculatePart({{$i}})" />
-                  </div>
-
-                  <div class="col-md-1 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium">Qty</h6>
-                    <input type="text" class="form-control invoice-item-qty part" name="part-qty" id="part-qty-{{$i}}" value="1" placeholder="1" min="1" max="" onchange="calculatePart({{$i}})" />
-                  </div>
-                  <div class="col-md-1 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium">Price</h6>
-                    <input type="text" class="form-control invoice-item-price part mb-3" name="part-price" id="part-price-{{$i}}" value="0" placeholder="0" min="" onchange="calculatePart({{$i}})" />
-                  </div>
-                  <div class="col-md-1 col-12 pe-0">
-                    <h6 class="mb-2 repeater-title fw-medium">Amount</h6>
-                    <p class="mb-0 pt-2 color-black amount-part-sub d-flex" id="amount-part-sub-{{$i}}">₱
-                    <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="part-amount" id="part-amount-{{$i}}" value="0" placeholder="" min="12"/>
-                    </p>
-                  </div>
-                <div class="col-md-1 col-12 border-start text-right">
-                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem(2 , {{$i}})" data-repeater-delete></i>
-                  <div class="dropdown">
-                    <i class="mdi mdi-cog-outline cursor-pointer more-options-dropdown color-black" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                    </i>
-                    <div class="dropdown-menu dropdown-menu-end w-px-300 p-3" aria-labelledby="dropdownMenuButton">
-
-                      <div class="row g-3">
-                        <div class="col-12">
-                          <label for="discountInput" class="form-label">Discount(%)</label>
-                          <input type="number" class="form-control" id="discountInput" min="0" max="100" />
-                        </div>
-                        <div class="col-md-6">
-                          <label for="taxInput1" class="form-label">Tax 1</label>
-                          <select name="tax-1-input" id="taxInput1" class="form-select tax-select">
-                            <option value="0%" selected>0%</option>
-                            <option value="1%">1%</option>
-                            <option value="10%">10%</option>
-                            <option value="18%">18%</option>
-                            <option value="40%">40%</option>
-                          </select>
-                        </div>
-                        <div class="col-md-6">
-                          <label for="taxInput2" class="form-label">Tax 2</label>
-                          <select name="tax-2-input" id="taxInput2" class="form-select tax-select">
-                            <option value="0%" selected>0%</option>
-                            <option value="1%">1%</option>
-                            <option value="10%">10%</option>
-                            <option value="18%">18%</option>
-                            <option value="40%">40%</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="dropdown-divider my-3"></div>
-                      <button type="button" class="btn btn-outline-primary btn-apply-changes">Apply</button>
-                    </div>
-                  </div>
-                </div>
-                </div>
-
-                  @endfor
-
-                @else 
+           
                  @foreach($optionThreeHtml as $k => $l)
                     {!!$l!!}
                   @endforeach
-                @endif
               </div>
             </div>
           </div>
@@ -686,10 +633,25 @@
 
                 </h6>
               </div>
-               <div class="d-flex justify-content-between mb-2">
+              <div class="d-flex justify-content-between mb-2">
                 <span class="w-px-150 pt-3"><b>PAYMENT</b></span>
+                <i class="mdi mdi-arrow-down-right me-1 js-textareacopybtn" id="note-icon" onclick="copyPayment()"></i><span class="alert-coppied" id="icon-{{$k}}">Coppied!</span>
+
                 <h6 class="mb-0 pt-1 width-95px">
-                  <input type="text" class="form-control invoice-payment mb-3 text-right" name="payment" id="payment" value="0" placeholder="" onchange="calculateAll()" min="12">
+                  <input type="text" class="form-control invoice-payment mb-3 text-right" name="payment" id="payment" value="{{$data->payment}}" placeholder="" onchange="calculateAll()" min="12">
+                </h6>
+
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="w-px-150 pt-3"><b>MODE OF PAYMENT</b></span>
+                <h6 class="mb-0 pt-1 width-95px">
+                   <select class="form-select item-details mb-3" name="mop" id="mop">
+                          <option value="" selected></option>
+                        @foreach($modeOfPayment as $k => $mop)
+                          <option value="{{$mop}}" id="option1" class="bg-label-warning" {{$data->mode_of_payment == $mop ? 'selected' : ''}}>{{$mop}}</option>
+                        @endforeach
+                    </select>
+
                 </h6>
               </div>
               <div class="d-flex justify-content-between">
@@ -721,8 +683,9 @@
           </div>
           <div class="col-md-6 d-flex justify-content-md-end mt-2">
             <div class="form-floating form-floating-outline mb-4">
-              <input type="text" class="form-control" id="invoiceMsg" placeholder="Gerald Tejero" value="Gerald Tejero" />
-              <label for="invoiceMsg">Customer Signature</label>
+                  
+              <input type="text" class="form-control" id="customername" name="customer_name" placeholder="" value="{{$data->customer_name}}" />
+              <label for="invoiceMsg">Customer Name</label>
             </div>
           </div>
         </div>
@@ -746,9 +709,15 @@
   <div class="col-lg-3 col-12 invoice-actions fixed-section">
     <div class="card mb-4">
       <div class="card-body">
-        <button class="btn btn-primary d-grid w-100 mb-3" data-bs-toggle="offcanvas" data-bs-target="#sendInvoiceOffcanvas">
+        <!-- <button class="btn btn-primary d-grid w-100 mb-3" data-bs-toggle="offcanvas" data-bs-target="#sendInvoiceOffcanvas">
           <span class="d-flex align-items-center justify-content-center text-nowrap"><i class="mdi mdi-send-outline scaleX-n1-rtl me-2"></i>Send Invoice</span>
-        </button>
+        </button> -->
+
+
+
+        <a href="/app/car/view/{{$data->car_id}}" class="btn btn-primary d-grid w-100 mb-3">
+            <span class="d-flex align-items-center justify-content-center text-nowrap"><i class="mdi mdi-step-backward scaleX-n1-rtl me-2"></i>Back to &nbsp;<i class="mdi mdi-train-car-flatbed-car scaleX-n1-rtl me-2 pl-2"></i></span>
+        </a>
         <a href="#" id="btn-preview" class="btn btn-outline-secondary w-100 me-2 mb-3">Preview</a>
         <button type="button" class="btn btn-success w-100 mb-3 bt-save-changes disabled" onclick="saveInvoice({{$job_order_id}})">Save</button>
         <!-- <button class="btn btn-success d-grid w-100 mb-3" data-bs-toggle="offcanvas" data-bs-target="#addPaymentOffcanvas">
@@ -804,6 +773,9 @@
 </div>
 </div>
 
+<div class="autosave">
+    <p>Autosave</p>
+</div>
 @endforeach
 <!-- Offcanvas -->
 @include('_partials/_offcanvas/offcanvas-send-invoice')

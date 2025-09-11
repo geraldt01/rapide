@@ -19,7 +19,6 @@
               <div class="col-12 col-md-6">
             <div class="form-floating form-floating-outline">
                <select id="modaladdManufacturer" class="select2 form-select" name="modaladdManufacturer" data-placeholder="Select Manufacturer">
-               
               </select>
               <label for="modaladdManufacturer">Vehicle Manufacturer </label>
             </div>
@@ -30,13 +29,30 @@
               <label for="modaladdVehicleModel">Vehicle Model</label>
             </div>
           </div>
-             <div class="col-12 col-md-6">
+          <div class="col-12 col-md-6">
+           <div class="form-floating form-floating-outline">
+            <input type="number" class="form-control" id="modaladdYearModel" placeholder="Year Model" name="modaladdYearModel" aria-label="Year Model">
+            <label for="modaladdYearModel">Year Model</label>
+          </div>
+          </div>
+           <div class="col-12 col-md-6">
             <div class="form-floating form-floating-outline">
-
-             <select id="modaladdVehicleyType" class="select2 form-select" name="modaladdVehicleyType" data-placeholder="Vehicle Type">
-                
+              <select id="modaladdTransmission" class="select2 form-select" name="modaladdTransmission" data-placeholder="Select Transmission">
+                  <option value="">Select Transmission</option>
+                  <option value="AT">Automatic</option>
+                  <option value="MT">Manual</option>
               </select>
-              <label for="modaladdVehicleModel">Vehicle Type</label>
+              <label for="Transmission">Transmission</label>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+              <div class="form-floating form-floating-outline">
+                <select id="modaladdFuelType" class="select2 form-select" name="modaladdFuelType" data-placeholder="Select Fuel Type">
+                <option value="">Select Fuel Type</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Gas">Gas</option>
+              </select>
+              <label for="Fuel Type">Fuel Type</label>
             </div>
           </div>
           <div class="col-12 col-md-6">
@@ -45,12 +61,12 @@
               <label for="modaladdMileage">Mileage</label>
             </div>
           </div>
-          <div class="col-12 col-md-6">
+          <!-- <div class="col-12 col-md-6">
             <div class="form-floating form-floating-outline">
               <input type="text" id="modaladdYearModel" name="modaladdYearModel" class="form-control" placeholder="Year Model" />
               <label for="modaladdYearModel">Year Model</label>
             </div>
-          </div>
+          </div> -->
          
           <div class="col-12 text-center">
             <button type="submit" class="btn btn-primary me-sm-3 me-1" onclick="addNewCar()">Submit</button>

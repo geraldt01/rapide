@@ -49,12 +49,12 @@
   <div class="card-widget-separator-wrapper">
     <div class="card-body card-widget-separator">
       <div class="row gy-4 gy-sm-1">
-        <div class="col-sm-6 col-lg-4">
+        <div class="col-sm-6 col-lg-3">
           <div class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-3 pb-sm-0">
             <div>
               <p class="mb-2">Total Sales Today</p>
               <h4 class="mb-2"><p id="total-sales"></p></h4>
-              <p class="mb-0"><span class="me-2">5k higher thank yesterday</span><span class="badge rounded-pill bg-label-success">+5.7%</span></p>
+              <!-- <p class="mb-0"><span class="me-2">5k higher thank yesterday</span><span class="badge rounded-pill bg-label-success">+5.7%</span></p> -->
             </div>
             <div class="avatar me-sm-4">
               <span class="avatar-initial rounded bg-label-secondary">
@@ -64,12 +64,11 @@
           </div>
           <hr class="d-none d-sm-block d-lg-none me-4">
         </div>
-        <div class="col-sm-6 col-lg-4">
+        <div class="col-sm-6 col-lg-3">
           <div class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
             <div>
-              <p class="mb-2">Total Cars</p>
+              <p class="mb-2">Total Cars Today</p>
               <h4 class="mb-2" id="total-cars"></h4>
-              <p class="mb-0">&nbsp;</p>
 
               <!-- <p class="mb-0"><span class="me-2">21k orders</span><span class="badge rounded-pill bg-label-success">+12.4%</span></p> -->
             </div>
@@ -81,16 +80,28 @@
           </div>
           <hr class="d-none d-sm-block d-lg-none me-4">
         </div>
-        <div class="col-sm-6 col-lg-4">
-          <div class="d-flex justify-content-between align-items-start pb-3 pb-sm-0 card-widget-3">
+        <div class="col-sm-6 col-lg-3">
+          <div class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
             <div>
               <p class="mb-2">Month Sales</p>
               <h4 class="mb-2" id="month-sales">₱ 0.00</h4>
-              <p class="mb-0">6k orders</p>
             </div>
             <div class="avatar me-sm-4">
               <span class="avatar-initial rounded bg-label-secondary">
-                <i class="mdi mdi-wallet-giftcard mdi-24px"></i>
+                <i class="mdi mdi-cash-fast mdi-24px"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+          <div class="col-sm-6 col-lg-3">
+          <div class="d-flex justify-content-between align-items-start pb-3 pb-sm-0 card-widget-3">
+            <div>
+              <p class="mb-2">Month Cars</p>
+              <h4 class="mb-2" id="total-month-cars">₱ 0.00</h4>
+            </div>
+            <div class="avatar me-sm-4">
+              <span class="avatar-initial rounded bg-label-secondary">
+                <i class="mdi mdi-train-car-flatbed-car mdi-24px"></i>
               </span>
             </div>
           </div>
@@ -116,7 +127,65 @@
 
 <!-- Product List Table -->
  
+<!-- <div class="card mb-4">
+  <div class="card-header bg-yellow tbl-daily-sales">
+    <h5 class="card-title"></h5>
+  </div>
+  <div class="card-datatable table-responsive">
+    <table class="datatables-products table">
+      <thead class="table-light">
+        <tr>
+          <th></th>
+          <th></th>
+          <th>plate number</th>
+          <th></th>
+          <th></th>
+          <th>Amount</th>
+          <th>actions</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+</div> -->
+
+  <div class="row">
+
+<div class="col-md-3" style="padding: 0px;">
+
+<!-- Bootstrap Table with Caption -->
 <div class="card">
+  <div class="row">
+    <div class="col-md-8">
+      <h5 class="card-header">DAILY CASH BALANCE</h5>
+    </div>
+    <div class="col-md-4">
+      <a href="javascript:;" class="btn btn-primary me-3 mt-2 btn-date" style="float: right" data-bs-target="#createCashBalance" data-bs-toggle="modal" onclick="createCashBalance()">Create</a>
+      <a href="javascript:;" class="btn btn-primary me-3 mt-2 btn-date-edit d-none" style="float: right" data-bs-target="#createCashBalance" data-bs-toggle="modal" onclick="updateCashBalance()">Edit</a>
+    </div>
+  </div>
+  
+  <div class="table-responsive text-nowrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Cash</th>
+          <th></th>
+          <th>Amount</th>
+        
+        </tr>
+      
+      </thead>
+      <tbody  id="tblcashbalancehtml">
+        
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+<!-- Bootstrap Table with Caption -->
+
+<div class="col-md-9">
+  <div class="card">
   <div class="card-header bg-yellow tbl-daily-sales">
     <h5 class="card-title"></h5>
     <!-- <div class="d-flex justify-content-between align-items-center row py-3 gap-3 gap-md-0">
@@ -126,29 +195,42 @@
     </div> -->
   </div>
   <div class="card-datatable table-responsive">
-    <table class="datatables-products table">
+    <table class="datatables-products table tbl-ds">
       <thead class="table-light">
         <tr>
-          <th></th>
-          <th></th>
-          <th>plate number</th>
-          <!-- <th>Vehicle Type</th> -->
-          <th></th>
-          <th></th>
-          <!-- <th>price</th>
-          <th>qty</th> -->
-          <th>Amount</th>
-          <th>actions</th>
+          <th><b>Invoice Number</b></th>
+          <th><b>plate number</b></th>
+          <th><b>Cash</b></th>
+          <th><b>Gcash</b></th>
+          <th><b>Mobile/Check</b></th>
+          <th><b>Others</b></th>
+          <th><b>Total</b></th>
+          <th><b>actions</b></th>
         </tr>
       </thead>
+
+      <tfoot class="table-border-bottom-0">
+        <tr style="background: #f4f4f6;">
+          <th><b>Sales</b></th>
+          <th></th>
+          <th><span id="total-cash"></span></th>
+          <th><span id="total-gcash"></span></th>
+          <th><span id="total-mobile-check"></span></th>
+          <th><span id="total-others"></span></th>
+          <th><span id="grand-total"></span></th>
+          <th></th>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </div>
+
+</div>
+
 </div>
 
 
-
-
-
-
+<!-- Modal -->
+@include('_partials/_modals/modal-daily-sales-report')
+<!-- /Modal -->
 @endsection

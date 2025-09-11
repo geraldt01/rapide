@@ -17,6 +17,7 @@ class EcommerceSettingsCarVehicleType extends Controller
 
         $VehicleTypeData = DB::table('car_vehicle_type_options')
         ->where('status', '=', 1)
+        ->orderBy('value','asc')
         ->get(); 
 
     return view('content.apps.app-settings-car-vehicle-type-option', ['VehicleTypeData' => $VehicleTypeData]);

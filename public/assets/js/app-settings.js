@@ -226,7 +226,6 @@ function saveManufacturer(manufacturer_id) {
     
   function createManufacturer() {
         document.getElementById('btn-save-manufacturer').setAttribute('onclick', 'saveManufacturer()');
-    
        document.getElementById('modalManufacturer').value = "";
        $("#label-action").html("Adding New");
   }
@@ -346,6 +345,7 @@ function saveVehicleType(vehicle_type_id) {
 
     
   function createVehicleType() {
+        document.getElementById('btn-save-vehicle-type').setAttribute('onclick', 'saveVehicleType()');
        document.getElementById('modalVehicleType').value = "";
        $("#label-action").html("Adding New");
   }
@@ -364,6 +364,247 @@ function saveVehicleType(vehicle_type_id) {
       success: function (result) {
           showVehicleTypes();
           $('#deleteVehicleTypeOption').modal('hide');
+            $(".alert-danger h4").html('<i class="mdi mdi-check-circle-outline mdi-24px me-2"><?i>Deleted!');
+            $(".alert-danger p").html(result.message);
+          $(".alert-danger").removeClass("d-none");
+          setTimeout(function(){ 
+            $(".alert-danger").addClass("d-none");
+          }, 3000);
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+  }
+
+
+
+
+
+
+
+  // Parts and Services
+
+function editPartsAndServices(parts_and_services_id) {
+  if(parts_and_services_id) {
+  $.ajax({
+    type: "get",
+    url: '/app/parts-and-services/get/'+ parts_and_services_id,
+      data:  $("#formPartsAndServicesOption").serialize(),
+        success: function (result) {
+          document.getElementById('modalPartsAndServices').value = result.PartsAndServicesData.value;
+
+        document.getElementById('btn-save-parts-and-services').setAttribute('onclick', 'savePartsAndServices('+result.PartsAndServicesData.id+')');
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+  } else {
+  }
+
+}
+function showPartsAndServices() {
+ $.ajax({
+    type: "get",
+    url: '/app/parts-and-services/show/',
+      data:  $("").serialize(),
+      success: function (result) {
+          $('#addNewPartsAndServicesOption').modal('hide');
+          $("#tbl-parts-and-services-body").html(result.partsAndServicesHtml);
+          console.log(result.partsAndServicesHtml);
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+}
+
+function savePartsAndServices(parts_and_services_id) {
+  if(parts_and_services_id) {
+  $.ajax({
+    type: "get",
+    url: '/app/parts-and-services/update/'+ parts_and_services_id,
+      data:  $("#formPartsAndServicesOption").serialize(),
+      success: function (result) {
+        $('#addNewPartsAndServicesOption').modal('hide');
+          showPartsAndServices();
+          $(".alert-success p").html(result.message);
+            $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+            }, 3000);
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+  } else {
+     $.ajax({
+      type: "get",
+     url: '/app/parts-and-services/save/',
+       data:  $("#formPartsAndServicesOption").serialize(),
+      success: function (result) {
+          $('#addNewPartsAndServicesOption').modal('hide');
+          showPartsAndServices();
+             $(".alert-success p").html(result.message);
+            $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+            }, 3000);
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+  }
+}
+
+
+    
+  function createPartsAndServices() {
+        document.getElementById('btn-save-parts-and-services').setAttribute('onclick', 'savePartsAndServices()');
+       document.getElementById('modalPartsAndServices').value = "";
+       $("#label-action").html("Adding New");
+  }
+
+  function promptDeletePartsAndServices(parts_and_services_id) {
+          $('#deletePartsAndServicesOption').modal('show');
+           document.getElementById('hidden-parts-and-services-id').value = parts_and_services_id;
+  }
+
+  function deletePartsAndServices(parts_and_services_id) {
+     var parts_and_services_id =  document.getElementById('hidden-parts-and-services-id').value;
+    $.ajax({
+      type: "get",
+     url: '/app/parts-and-services/delete/'+parts_and_services_id,
+       data:  $("#formPartsAndServicesOption").serialize(),
+      success: function (result) {
+          showPartsAndServices();
+          $('#deletePartsAndServicesOption').modal('hide');
+            $(".alert-danger h4").html('<i class="mdi mdi-check-circle-outline mdi-24px me-2"><?i>Deleted!');
+            $(".alert-danger p").html(result.message);
+          $(".alert-danger").removeClass("d-none");
+          setTimeout(function(){ 
+            $(".alert-danger").addClass("d-none");
+          }, 3000);
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+   // Package
+
+function editPackage(package_id) {
+  if(package_id) {
+  $.ajax({
+    type: "get",
+    url: '/app/package/get/'+ package_id,
+      data:  $("#formPackageOption").serialize(),
+        success: function (result) {
+          document.getElementById('modalPackage').value = result.PackageData.value;
+          document.getElementById('modalPrice').value = result.PackageData.package_price;
+
+        document.getElementById('btn-save-package').setAttribute('onclick', 'savePackage('+result.PackageData.id+')');
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+  } else {
+  }
+
+}
+function showPackage() {
+ $.ajax({
+    type: "get",
+    url: '/app/package/show/',
+      data:  $("").serialize(),
+      success: function (result) {
+          $('#addNewPackageOption').modal('hide');
+          $("#tbl-package-body").html(result.packageHtml);
+          console.log(result.packageHtml);
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+}
+
+function savePackage(package_id) {
+  if(package_id) {
+  $.ajax({
+    type: "get",
+    url: '/app/package/update/'+ package_id,
+      data:  $("#formPackageOption").serialize(),
+      success: function (result) {
+        $('#addNewPackageOption').modal('hide');
+          showPackage();
+          $(".alert-success p").html(result.message);
+            $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+            }, 3000);
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+  } else {
+     $.ajax({
+      type: "get",
+     url: '/app/package/save/',
+       data:  $("#formPackageOption").serialize(),
+      success: function (result) {
+          $('#addNewPackageOption').modal('hide');
+          showPackage();
+             $(".alert-success p").html(result.message);
+            $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+            }, 3000);
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+  }
+}
+
+
+    
+  function createPackage() {
+        document.getElementById('btn-save-package').setAttribute('onclick', 'savePackage()');
+       document.getElementById('modalPackage').value = "";
+       document.getElementById('modalPrice').value = "";
+       $("#label-action").html("Adding New");
+  }
+
+  function promptDeletePackage(package_id) {
+          $('#deletePackageOption').modal('show');
+           document.getElementById('hidden-package-id').value = package_id;
+  }
+
+  function deletePackage(package_id) {
+     var package_id =  document.getElementById('hidden-package-id').value;
+    $.ajax({
+      type: "get",
+     url: '/app/package/delete/'+package_id,
+       data:  $("#formPackageOption").serialize(),
+      success: function (result) {
+          showPackage();
+          $('#deletePackageOption').modal('hide');
             $(".alert-danger h4").html('<i class="mdi mdi-check-circle-outline mdi-24px me-2"><?i>Deleted!');
             $(".alert-danger p").html(result.message);
           $(".alert-danger").removeClass("d-none");

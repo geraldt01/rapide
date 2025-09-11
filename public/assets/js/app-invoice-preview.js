@@ -35,18 +35,18 @@
   }
 
   // Datepicker
-  if (invoiceDate) {
-    invoiceDate.flatpickr({
-      monthSelectorType: 'static',
-      defaultDate: date
-    });
-  }
-  if (dueDate) {
-    dueDate.flatpickr({
-      monthSelectorType: 'static',
-      defaultDate: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 5)
-    });
-  }
+  // if (invoiceDate) {
+  //   invoiceDate.flatpickr({
+  //     monthSelectorType: 'static',
+  //     defaultDate: date
+  //   });
+  // }
+  // if (dueDate) {
+  //   dueDate.flatpickr({
+  //     monthSelectorType: 'static',
+  //     defaultDate: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 5)
+  //   });
+  // }
 })();
 
 // repeater (jquery)

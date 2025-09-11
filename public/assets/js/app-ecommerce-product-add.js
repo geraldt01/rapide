@@ -17,17 +17,21 @@
 
             if(result.success == true) {
               $(".alert-success p").html(result.message);
+                const myAnchor = document.getElementById('link-new-car');
+                myAnchor.setAttribute('href', '/app/car/view/'+result.new_car_id);
+              
                   $(".alert-success").removeClass("d-none");
                 setTimeout(function(){ 
                   $(".alert-success").addClass("d-none");
                   const form = document.getElementById('form-add-car'); // Replace 'myForm' with your form's ID
                   form.reset();
+                  $(".new-car-alert").removeClass("d-none");
 
-                  location.reload();
                   var selectElement = document.getElementById('select-manufacturer');
                   selectElement.innerHTML = '';
                   var selectElement2 = document.getElementById('select-vehicle-type');
                   selectElement2.innerHTML = '';
+
 
               }, 2000);
               

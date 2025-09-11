@@ -51,12 +51,12 @@ table.border-black {
         <span>{{$data->job_order_number}}</span>
       </div>
       <div class="text-right">
-        <span>Date:</span>
-        <span>{{$data->date}}</span>
+        <span>DATE:</span>
+        <span>{{$invoice_date}}</span>
       </div>
       <div class="text-right">
         <span>EXPIRES:</span>
-        <span>{{$data->date}}</span>
+        <span>{{$expire_date}}</span>
       </div>
     </div>
   </div>
@@ -71,7 +71,7 @@ table.border-black {
           
           </tr>
           <tr>
-            <td  rowspan="2" class="pe-3 fw-medium">{{$data->address}}</td>
+            <td  rowspan="2" class="pe-3 fw-medium capital-letter">{{$data->address}}</td>
            
             <td></td>
           </tr>
@@ -98,16 +98,14 @@ table.border-black {
           </tr>
           <tr>
         <td><strong>PLATE NUMBER</strong></td>
-            <td>{{$data->plate_number}}</td>
+            <td class="capital-letter">{{$data->plate_number}}</td>
           </tr>
           <tr>
                <td><strong>VEHICLE MODEL</strong></td>
             <td></td>
           </tr>
           <tr>
-            <td>{{$data->manufacturer}} {{$data->vehicle_model}} {{$data->year}}</td>
-
-            <td></td>
+            <td colspan="2" class="capital-letter">{{$data->manufacturer}} {{$data->vehicle_model}} {{$data->transmission}} {{$data->fuel_type}}</td>
           </tr>
         
         </tbody>
@@ -235,10 +233,10 @@ table.border-black {
           <td colspan="2" style="border-color: #ffffff !important;">
               <table class="text-center m-0-auto" style="display: table">
                 <tr>
-                  <td>FERDINAND ENCARNACION</td>
+                  <td>{{$data->customer_name}}</td>
                 </tr>
                   <tr>
-                  <td style="border-top: 1px solid black;"> <p for="salesperson" class="fw-medium text-center">STORE MANAGER</p></td>
+                  <td style="border-top: 1px solid black;"> <p for="salesperson" class="fw-medium text-center">CUSTOMER NAME</p></td>
                 </tr>
               </table>
           </td>

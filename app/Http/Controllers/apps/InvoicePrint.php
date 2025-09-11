@@ -38,10 +38,14 @@ class InvoicePrint extends Controller
     ->get();
 
     
+ 
+    $originalDate =  $jobOrderInfo[0]->date;
+    $unixTimestamp = strtotime($originalDate);
+    $newInvoiceDate = date("m/d/Y", $unixTimestamp);
 
 
     
-    return view('content.apps.app-invoice-print', ['pageConfigs' => $pageConfigs, 'job_order_id' => $job_order_id, 'jobOrderInfo' => $jobOrderInfo, 'jobOrderPackageSelected' => $jobOrderPackageSelected, 'jobOrderLaborSelected' => $jobOrderLaborSelected, 'jobOrderPartSelected' => $jobOrderPartSelected]);
+    return view('content.apps.app-invoice-print', ['invoice_date' => $newInvoiceDate, 'expire_date' => $jobOrderInfo[0]->expire_date, 'pageConfigs' => $pageConfigs, 'job_order_id' => $job_order_id, 'jobOrderInfo' => $jobOrderInfo, 'jobOrderPackageSelected' => $jobOrderPackageSelected, 'jobOrderLaborSelected' => $jobOrderLaborSelected, 'jobOrderPartSelected' => $jobOrderPartSelected]);
 
   }
 }
