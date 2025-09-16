@@ -118,10 +118,10 @@ class SalesReport extends Controller
         <td class="text-right"> 20.00</td><td>'.$data->cash_20.'</td><td class="text-right">PHP ' .(($data->cash_20>0) ? number_format(20*$data->cash_20, 2, '.', ',')  : 0).'</td>
         </tr>
          <tr>
-        <td class="text-right"> 10.00</td><td>'.$data->cash_10.'</td><td class="text-right">PHP ' .(($data->cash_10>0) ? number_format(20*$data->cash_10, 2, '.', ',')  : 0).'</td>
+        <td class="text-right"> 10.00</td><td>'.$data->cash_10.'</td><td class="text-right">PHP ' .(($data->cash_10>0) ? number_format(10*$data->cash_10, 2, '.', ',')  : 0).'</td>
         </tr>
         <tr>
-        <td class="text-right"> 5.00</td><td>'.$data->cash_5.'</td><td class="text-right">PHP ' .(($data->cash_5>0) ? number_format(20*$data->cash_5, 2, '.', ',')  : 0).'</td>
+        <td class="text-right"> 5.00</td><td>'.$data->cash_5.'</td><td class="text-right">PHP ' .(($data->cash_5>0) ? number_format(5*$data->cash_5, 2, '.', ',')  : 0).'</td>
         </tr>
          <tr>
         <td class="text-left"> LOOSE COINS</td><td></td><td class="text-right">PHP ' .(($data->loose_coins>0) ?  number_format($data->loose_coins, 2, '.', ',')  : 0).'</td>
