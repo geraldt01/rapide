@@ -135,7 +135,7 @@ class SalesReport extends Controller
         </tr>
            <tr>
         <td class="text-left"> <b><i>CASH SALES</i></b></td><td></td><td class="text-right"><b>PHP ' .number_format((1000*$data->cash_1000 + 500*$data->cash_500 + 100*$data->cash_100 + 50*$data->cash_50 + 20*$data->cash_20 
-        + 20*$data->cash_10 + 20*$data->cash_5 + $data->loose_coins - $data->change), 2, '.', ',').'</b></td>
+        + 10*$data->cash_10 + 5*$data->cash_5 + $data->loose_coins - $data->change), 2, '.', ',').'</b></td>
         </tr>
         ';
         
