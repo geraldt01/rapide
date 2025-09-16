@@ -128,7 +128,7 @@ class SalesReport extends Controller
         </tr>
          <tr>
         <td class="text-left" colspan="2"> TOTAL</td><td class="text-right">PHP '.  number_format((1000*$data->cash_1000 + 500*$data->cash_500 + 100*$data->cash_100 + 50*$data->cash_50 + 20*$data->cash_20 
-        + 20*$data->cash_10 + 20*$data->cash_5 + $data->loose_coins), 2, '.', ',').'</td>
+        + 10*$data->cash_10 + 5*$data->cash_5 + $data->loose_coins), 2, '.', ',').'</td>
         </tr>
          <tr style="border-bottom: 2px solid black;">
         <td class="text-left" colspan="2"> <small><i>CHANGE, ADMIN DRAWER</i></small></td><td class="text-right"> -' . number_format($data->change, 2, '.', ',').'</td>
