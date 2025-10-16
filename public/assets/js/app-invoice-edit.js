@@ -6,11 +6,49 @@
 
 (function () {
 
+
+  let hasReached75 = false;
+let hasReached100 = false;
+
+function handleScroll() {
+  const scrollTop = window.scrollY;
+  const viewportHeight = window.innerHeight;
+  const totalHeight = document.documentElement.scrollHeight;
+
+  const scrollPercent = ((scrollTop + viewportHeight) / totalHeight) * 100;
+
+
+  if (scrollPercent >= 50 && !hasReached75) {
+    console.log('User reached 75% scroll depth');
+    $(".invoice-actions").removeClass("fixed-section");
+  } else {
+    console.log('User less 75% scroll depth');
+    $(".invoice-actions").addClass("fixed-section");
+  }
+
+
+}
+
+// Attach the scroll event listener
+window.addEventListener('scroll', handleScroll);
+
+
+
+
+
+
   
+  document.body.classList.add('invoice-page');
+$(".layout-navbar-fixed").addClass("layout-menu-collapsed");
 
    var invoice_date = document.getElementById("hidden-invoice-date").value;
+   var payment2 = document.getElementById("hidden-payment2").value;
 
-  
+  if(payment2 > 0) {
+    addPayment();
+  }
+
+
 
   const invoiceItemPriceList = document.querySelectorAll('.invoice-item-price'),
     invoiceItemQtyList = document.querySelectorAll('.invoice-item-qty'),
@@ -160,7 +198,7 @@ calculateAll();
     setTimeout(function(){ 
       let total_item = document.getElementById('hidden-'+type+'-total-item').value;
       let plus = 1;
-      let total = parseInt(total_item)+plus;
+      let total = parseFloat(total_item)+plus;
       if(type == 'package') {
           document.getElementsByName('group-a['+total_item+']['+type+']')[0].id =  type+'-'+total;
           document.getElementsByName('group-a['+total_item+']['+type+'-price]')[0].id =  type+'-price-'+total;
@@ -275,43 +313,32 @@ calculateAll();
 
 
   function calculatePart(option_id) {
+    if(option_id > '') {
+      const part_qty = document.getElementById('part-qty-'+option_id).value ;
+      const part_price = document.getElementById('part-price-'+option_id).value ;
+
+      const amount =part_price * part_qty;
+      document.getElementById('part-amount-'+option_id).value = amount.toFixed(2);
+      calculateAll();
+    }
     // var job_order_id = document.getElementById('part-option-'+option_id).value ;
-    var part_qty = document.getElementById('part-qty-'+option_id).value ;
-    var part_price = document.getElementById('part-price-'+option_id).value ;
 
-    const amount =part_price * part_qty;
-    document.getElementById('part-amount-'+option_id).value = amount;
-    calculateAll();
-
-
-    // $.ajax({
-    //   type: "get",
-    //   url: '/app/get-job-order-item-price/'+ job_order_id,
-    //     data:  $("").serialize(),
-    //     success: function (result) {
-
-    //              const amount = result.price * part_qty;
-    //             document.getElementById('part-price-'+option_id).value = result.price;
-    //             document.getElementById('part-amount-'+option_id).value = amount;
-    //             calculateAll();
-
-    //     },
-    //   error: function (result, textStatus, errorThrown) {
-    //       console.log(result.success);
-    //   },
-    // });
+   
 
   }
   function calculateLabor(option_id) {
-    console.log(option_id);
+    if(option_id > '') {
     // var job_order_id = document.getElementById('labor-option-'+option_id).value ;
-    var labor_qty = document.getElementById('labor-qty-'+option_id).value ;
-    var labor_price = document.getElementById('labor-price-'+option_id).value ;
+      const labor_qty = document.getElementById('labor-qty-'+option_id).value ;
+      const labor_price = document.getElementById('labor-price-'+option_id).value ;
 
-    var labor_amount = parseInt(labor_price) * parseInt(labor_qty);
-    document.getElementById('labor-amount-'+option_id).value = labor_amount;
-  
-    calculateAll();
+      const labor_amount = labor_price * parseFloat(labor_qty);
+      console.log(labor_amount);
+      document.getElementById('labor-amount-'+option_id).value = labor_amount.toFixed(2);
+    
+      calculateAll();
+    }
+
 
     // $.ajax({
     //   type: "get",
@@ -331,6 +358,7 @@ calculateAll();
     // });
   }
   function copyPayment() {
+     document.getElementById('balance').value = 0;
     $(".bt-save-changes").removeClass("disabled");
     sessionStorage.setItem("updateTriggered", "true");
    document.getElementById("payment").value = document.getElementById("total-amount").value;
@@ -355,7 +383,7 @@ calculateAll();
           console.log(count);
 
           if(value.part_value > '') {
-            document.getElementById('labor-text-'+count).value = value.part_value;
+            document.getElementById('labor-text-'+count).value = "Replace " + value.part_value;
             document.getElementById('labor-part-number-'+count).value = value.part_number;
           }
         });
@@ -648,7 +676,13 @@ const first = element -1;
 
 
   }
+
+  function addPayment() {
+    $(".second-payment").removeClass("d-none");
+  }
   function calculateAll() {
+    
+    $(".invoice-actions").addClass("fixed-section");
 
   const options = {
     minimumFractionDigits: 2, // Ensures at least two decimal places
@@ -682,7 +716,7 @@ const first = element -1;
     } else {
         var p_amount4  = 0;
     }
-    const package_sub_total = parseInt(p_amount1)+parseInt(p_amount2)+parseInt(p_amount3)+parseInt(p_amount4);
+    const package_sub_total = parseFloat(p_amount1)+parseFloat(p_amount2)+parseFloat(p_amount3)+parseFloat(p_amount4);
     document.getElementById('hidden-package-sub-totals').value = package_sub_total;
 
       //Labor
@@ -776,9 +810,9 @@ const first = element -1;
     } else {
         var labor_amount15  = 0;
     }
-    const labor_sub_total = parseInt(labor_amount1)+parseInt(labor_amount2)+parseInt(labor_amount3)+parseInt(labor_amount4)+parseInt(labor_amount5)+parseInt(labor_amount6)+parseInt(labor_amount7)+parseInt(labor_amount8)+parseInt(labor_amount9)+parseInt(labor_amount10)+parseInt(labor_amount11)+parseInt(labor_amount12)+parseInt(labor_amount13)+parseInt(labor_amount14)+parseInt(labor_amount15);
+    const labor_sub_total = parseFloat(labor_amount1)+parseFloat(labor_amount2)+parseFloat(labor_amount3)+parseFloat(labor_amount4)+parseFloat(labor_amount5)+parseFloat(labor_amount6)+parseFloat(labor_amount7)+parseFloat(labor_amount8)+parseFloat(labor_amount9)+parseFloat(labor_amount10)+parseFloat(labor_amount11)+parseFloat(labor_amount12)+parseFloat(labor_amount13)+parseFloat(labor_amount14)+parseFloat(labor_amount15);
     document.getElementById('hidden-labor-sub-totals').value = labor_sub_total;
-    document.getElementById('labor-total').value = labor_sub_total;
+    document.getElementById('labor-total').value = labor_sub_total.toLocaleString(undefined, options);
 
 
 
@@ -873,33 +907,58 @@ const first = element -1;
     } else {
         var prt_amount15  = 0;
     }
-    const part_sub_total = parseInt(prt_amount1)+parseInt(prt_amount2)+parseInt(prt_amount3)+parseInt(prt_amount4)+parseInt(prt_amount5)+parseInt(prt_amount6)+parseInt(prt_amount7)+parseInt(prt_amount8)+parseInt(prt_amount9)+parseInt(prt_amount10)+parseInt(prt_amount11)+parseInt(prt_amount12)+parseInt(prt_amount13)+parseInt(prt_amount14)+parseInt(prt_amount15);
+    const part_sub_total = parseFloat(prt_amount1)+parseFloat(prt_amount2)+parseFloat(prt_amount3)+parseFloat(prt_amount4)+parseFloat(prt_amount5)+parseFloat(prt_amount6)+parseFloat(prt_amount7)+parseFloat(prt_amount8)+parseFloat(prt_amount9)+parseFloat(prt_amount10)+parseFloat(prt_amount11)+parseFloat(prt_amount12)+parseFloat(prt_amount13)+parseFloat(prt_amount14)+parseFloat(prt_amount15);
 
     document.getElementById('hidden-part-sub-totals').value = part_sub_total;
-    document.getElementById('part-total').value = part_sub_total;
+    document.getElementById('part-total').value = part_sub_total.toLocaleString(undefined, options);
 
 
 
-    const total_sub = parseInt(package_sub_total) + parseInt(labor_sub_total) + parseInt(part_sub_total); 
-    const vat = parseInt(total_sub) * 0.12;
+    const total_sub = parseFloat(package_sub_total) + parseFloat(labor_sub_total) + parseFloat(part_sub_total); 
+    const vat = parseFloat(total_sub) * 0.12;
 
-     const total_sub_with_vat = parseInt(total_sub) + parseInt(vat);
+     const total_sub_with_vat = parseFloat(total_sub) + parseFloat(vat);
       
     document.getElementById('sub-total').value =  total_sub.toLocaleString(undefined, options); 
 
     document.getElementById('vat').value =  vat.toLocaleString(undefined, options); 
     document.getElementById('total-amount').value =  total_sub_with_vat.toLocaleString(undefined, options); 
 
-     const payment = document.getElementById('payment').value;
-     const balance = parseInt(total_sub_with_vat) - parseInt(payment);
+     var payment =  document.getElementById('payment').value;
 
+     var payment2 = document.getElementById('payment2').value;
+    console.log(payment);
+
+      payment = payment.replace(/,/g, "");
+      payment2 = payment2.replace(/,/g, "");
+
+
+     if(payment2 > 0) {
+        var balance = parseFloat(total_sub_with_vat) - parseFloat(payment) -  parseFloat(payment2);
+     } else {
+        var balance = parseFloat(total_sub_with_vat) - parseFloat(payment);
+    }
+
+  //  alert(total_sub_with_vat);
+    console.log(payment);
+    console.log(balance);
+    // alert(balance);
     document.getElementById('balance').value =  balance.toLocaleString(undefined, options); 
 
 
 
 
+  }
 
 
- 
+  function filterOption() {
+    document.getElementById("mop2").value = "";
 
+    $("#option-cash").removeClass("d-none");
+    $("#option-gcash").removeClass("d-none");
+    $("#option-mobile").removeClass("d-none");
+    $("#option-check_others").removeClass("d-none");
+
+    var mop = document.getElementById("mop").value;
+    $("#option-"+mop).addClass("d-none");
   }

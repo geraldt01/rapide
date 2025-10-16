@@ -28,6 +28,7 @@ $(function () {
         // columns according to JSON
         { data: '' },
         { data: 'id' },
+        { data: 'counter' },
         { data: 'order' },
         { data: 'date' },
         { data: 'spent' },
@@ -64,6 +65,16 @@ $(function () {
           targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
+            var $counter = full['counter'];
+
+            return "<span>" + $counter + '</span>';
+          }
+        },
+               {
+          // order order number
+          targets: 3,
+          responsivePriority: 4,
+          render: function (data, type, full, meta) {
             var $id = full['order'];
 
             return "<a href='" + order_details + "'><span>" + $id + '</span></a>';
@@ -71,7 +82,7 @@ $(function () {
         },
         {
           // date
-          targets: 3,
+          targets: 4,
           render: function (data, type, full, meta) {
             var date = new Date(full.date); // convert the date string to a Date object
             var formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -95,7 +106,7 @@ $(function () {
         // },
         {
           // spent
-          targets: 4,
+          targets: 5,
           render: function (data, type, full, meta) {
             var $js_list = full['js_list'];
 
@@ -234,6 +245,21 @@ function getDropdown() {
   });
 }
 function addJobOrder() {
+
+    $.ajax({
+    type: "get",
+    url: '/app/get-available-estimate-number',
+    data:  $("").serialize(),
+    success: function (data) {
+     document.getElementById("modalEst").value = data.estimate_number;
+    },
+    error: function (data, textStatus, errorThrown) {
+        console.log(data.success);
+
+    },
+  });
+
+   
     var plate_number = document.getElementById("hidden-selected-car-plate-number").value;
     var car_id = document.getElementById("hidden-selected-car-id").value;
     $("#car-plate-number").html(plate_number);

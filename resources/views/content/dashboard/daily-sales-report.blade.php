@@ -21,11 +21,12 @@
 <script src="{{asset('assets/vendor/libs/flatpickr/flatpickr.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/pickr/pickr.js')}}"></script>
+
+
 @endsection
 
 @section('page-script')
 <script src="{{asset('assets/js/app-daily-sales-report.js')}}"></script>
-
 <script src="{{asset('assets/js/forms-pickers.js')}}"></script>
 
 @endsection
@@ -179,6 +180,35 @@
         
       </tbody>
     </table>
+
+  
+    
+    <hr class="my-0" />
+      <div class="card-body pt-0">
+        <div class="row">
+          <div class="col-md-8 d-flex justify-content-md-start mt-2">
+            <div class="invoice-calculations">
+              <div class=" justify-content-between mb-2 mt-3">
+                <div class="d-flex">
+                  <h6 class="mb-0 pt-1">Prepared By:</h6>
+                  <i class="mdi mdi-arrow-down-right me-1 ml-4 js-textareacopybtn" id="note-icon" onclick="copyPreparedBy()"></i>
+                </div>
+                <br>
+                <div class="form-floating form-floating-outline">
+                  <input type="text" class="form-control flatpickr-input active"  name="input-prepared-by" id="input-prepared-by" value="" readonly="readonly">
+                  <label for="flatpickr-date"></label>
+                     <a class="btn btn-primary me-3 mt-2 btn-prepared-by disabled"  onclick="saveRemarks()">Save</a>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="col-md-4 d-flex justify-content-md-end mt-2">
+             <div class="invoice-calculations">
+            </div>
+          </div>
+        </div>
+      </div>
+
   </div>
 </div>
 </div>
@@ -202,8 +232,8 @@
           <th><b>plate number</b></th>
           <th><b>Cash</b></th>
           <th><b>Gcash</b></th>
-          <th><b>Mobile/Check</b></th>
-          <th><b>Others</b></th>
+          <th><b>Mobile</b></th>
+          <th><b>Check/Others</b></th>
           <th><b>Total</b></th>
           <th><b>actions</b></th>
         </tr>
@@ -223,6 +253,55 @@
       </tfoot>
     </table>
   </div>
+
+   <hr class="my-0" />
+      <div class="card-body pt-0">
+        <div class="row">
+          <div class="col-md-8 d-flex justify-content-md-start mt-2">
+            <div class="invoice-calculations">
+              <div class=" justify-content-between mb-2 mt-3">
+               <div class="d-flex">
+                  <h6 class="mb-0 pt-1">Checked By:</h6>
+                  <i class="mdi mdi-arrow-down-right me-1 ml-4 js-textareacopybtn" id="note-icon" onclick="copyCheckedBy()"></i>
+                </div>
+                <br>
+                <div class="form-floating form-floating-outline">
+                  <input type="text" class="form-control flatpickr-input active"  name="input-checked-by" id="input-checked-by" value="" readonly="readonly">
+                  <label for="flatpickr-date"></label>
+                     <a class="btn btn-primary me-3 mt-2 btn-checked-by disabled"  onclick="saveRemarks()">Save</a>
+                </div>
+                </>
+              </div>
+            </div>
+          </div>
+            <div class="col-md-4 d-flex justify-content-md-end mt-2">
+             <div class="invoice-calculations">
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+     <hr class="my-0" />
+      <div class="card-body pt-0">
+        <div class="row">
+          <div class="col-md-8 d-flex justify-content-md-start mt-2">
+            <div class="invoice-calculations">
+              <div class=" justify-content-between mb-2 mt-3">
+                <h6 class="mb-0 pt-1">REMARKS</h6><br>
+                  <textarea class="form-control" name="remarks" id="remarks" style="height: 120px;"  name="history"cols="80"label="notes"rows="4">
+                    
+                  </textarea>
+                  <a class="btn btn-primary me-3 mt-2"  onclick="saveRemarks()">Save</a>
+              </div>
+            </div>
+          </div>
+            <div class="col-md-4 d-flex justify-content-md-end mt-2">
+             <div class="invoice-calculations">
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
 
 </div>

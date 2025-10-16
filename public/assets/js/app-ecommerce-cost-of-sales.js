@@ -6,24 +6,8 @@
 
 // Datatable (jquery)
 $(function () {
-
-      
-
-    
   let borderColor, bodyBg, headingColor;
-  $("#total-sales").html("₱ 0.00");
-  $("#month-sales").html("₱ 0.00");
-  $("#total-cars").html("0");
-  $(".add-new").css("display", "none");
-  setTimeout(() => {
-    $('.daily-sales-section').removeClass("d-none");
-  }, 700);
-
-   var remarks = document.getElementById("remarks").value;
- if(remarks.length == 18) {
-  document.getElementById("remarks").value = "";
-  }
-
+ 
   const today = new Date();
   const year = today.getFullYear();
   const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed, so add 1
@@ -40,39 +24,38 @@ console.log(dateToday);
       document.getElementById("flatpickr-date").value = formattedDate;
       var getDate = dateYmd;
     } else {
-      window.location.pathname = '/app/sales-report/'+dateToday;
+      window.location.pathname = '/app/cost-of-sales/'+dateToday;
       document.getElementById("flatpickr-date").value = dateToday;
       var getDate = dateToday;
 
     }
     $(".btn-date-edit").attr("onclick", "getFormCashBalance('"+getDate+"')");
 
-    getCashBlance(getDate);
-    // function getCashBlance(getDate) {
-    //     $.ajax({
-    // type: "get",
-    // url: '/app/get/cash-balance/'+getDate,
-    //   data:  $("#editCashBalanceForm").serialize(),
-    //   success: function (result) {
-    //     console.log(result);
-    //       if(result.success == true) {
-    //           $("#tblcashbalancehtml").html(result.htmlCashBalance);
-    //         $(".btn-date").removeClass("disabled");
-    //         $(".btn-date-edit").removeClass("d-none");
-    //         $(".btn-date").addClass("d-none");
-    //       } else {
-    //         $(".btn-date").removeClass("d-none");
-    //         $(".btn-date").removeClass("disabled");
-    //         $(".btn-date-edit").addClass("d-none");
+    // getCashBlance(getDate);
+$.ajax({
+    type: "get",
+    url: '/json/cost-of-sales/'+getDate,
+      data:  $("").serialize(),
+      success: function (result) {
+        console.log("test");
+       
+          if(result.success == true) {
+              $("#tblcosHtml").html(result.cosHtml);
+            $(".btn-date").removeClass("disabled");
+            $(".btn-date-edit").removeClass("d-none");
+            $(".btn-date").addClass("d-none");
+            
+          } else {
+            $(".btn-date").removeClass("d-none");
+            $(".btn-date").removeClass("disabled");
+            $(".btn-date-edit").addClass("d-none");
 
-    //       }
-    //     },
-    //   error: function (result, textStatus, errorThrown) {
-    //       console.log(result.success);
-    //   },
-    // });
-
-    // }
+          }
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
 
 // let nf = new Intl.NumberFormat('en-US');
 
@@ -91,6 +74,8 @@ var nf = new Intl.NumberFormat('en-US', {
 nf.format(123456.789); // ‘$123,456.79’
 
 
+
+
   $.ajax({
     type: "get",
     url: '/app/get/total/'+getDate,
@@ -107,10 +92,14 @@ nf.format(123456.789); // ‘$123,456.79’
           $("#total-mobile-check").html(result.total_mobile_check);
           $("#total-others").html(result.total_others);
           $("#grand-total").html(result.grand_total);
+
+          
+          
           } else {
             $(".btn-date").removeClass("d-none");
             $(".btn-date").removeClass("disabled");
             $(".btn-date-edit").addClass("d-none");
+
           }
         },
       error: function (result, textStatus, errorThrown) {
@@ -162,7 +151,7 @@ nf.format(123456.789); // ‘$123,456.79’
     var date = pathArray[3];
     var dt_products = dt_product_table.DataTable({
       // ajax: assetsPath + 'json/ecommerce-product-list.json', // JSON file to add data
-      ajax: '/json/sales-report/?date='+ date, // JSON file to add data
+      ajax: '/json/cost-of-sales/?date='+ date, // JSON file to add data
       columns: [
         // columns according to JSON
         { data: 'job_order_number' },
@@ -248,7 +237,7 @@ nf.format(123456.789); // ‘$123,456.79’
           render: function (data, type, full, meta) {
             var $cash = full['cash'];
             if($cash > 0) {
-              $cash = "₱"+$cash.toLocaleString();
+              $cash = "₱"+$cash.toLocaleString()+".00";
             } else {
               $cash = "";
             }
@@ -262,7 +251,7 @@ nf.format(123456.789); // ‘$123,456.79’
           render: function (data, type, full, meta) {
             var $gcash = full['gcash'];
             if($gcash > 0) {
-              $gcash = "₱"+$gcash.toLocaleString();
+              $gcash = "₱"+$gcash.toLocaleString()+".00";
             } else {
               $gcash = "";
             }
@@ -275,7 +264,7 @@ nf.format(123456.789); // ‘$123,456.79’
           render: function (data, type, full, meta) {
             var $mobile_check = full['mobile_check'];
              if($mobile_check > 0) {
-              $mobile_check = "₱"+$mobile_check.toLocaleString();
+              $mobile_check = "₱"+$mobile_check.toLocaleString()+".00";
             } else {
               $mobile_check = "";
             }
@@ -383,14 +372,14 @@ nf.format(123456.789); // ‘$123,456.79’
       // Buttons with Dropdown
       buttons: [
         {
-          // extend: 'collection',
-          className: 'btn-export-csv btn btn-label-secondary dropdown-toggle me-3 waves-effect waves-light ',
+          extend: 'collection',
+          className: 'btn btn-label-secondary dropdown-toggle me-3 waves-effect waves-light',
           text: '<i class="mdi mdi-export-variant me-1"></i><span class="d-none d-sm-inline-block">Export </span>',
           buttons: [
             {
               extend: 'print',
               text: '<i class="mdi mdi-printer-outline me-1" ></i>Print',
-              className: 'dropdown-item ',
+              className: 'dropdown-item',
               exportOptions: {
                 columns: [1, 2, 3, 4, 5],
                 // prevent avatar to be print
@@ -653,58 +642,8 @@ function changeDate() {
 
 const convertedDate = convertDateFjYtoYmd(newDate);
 
-    window.location.replace("/app/sales-report/"+convertedDate);
+    window.location.replace("/app/cost-of-sales/"+convertedDate);
 }
-
-
-function changeInvoiceNo(jo_id) {
-    $('#changeInvoiceNumber').modal('show');
-    document.getElementById("jo-id").value = jo_id;
-     $.ajax({
-    type: "get",
-    url: '/app/get-latest-invoice-number/'+jo_id,
-      data:  $("").serialize(),
-        success: function (result) {
-         document.getElementById("modalInvoiceNumber").value = result.invoice_number;
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
-}
-
-function editInvoiceNumber() {
-  $('#changeInvoiceNumber').modal('hide');
-  $.ajax({
-    type: "get",
-    url: '/app/save-invoice-number/',
-      data:  $("#form-change-invoice-number").serialize(),
-        success: function (result) {
-        var jo_id = document.getElementById("jo-id").value;
-        if(result.success == true) {
-          $("#inv-"+jo_id).html(result.invoice_number);
-           $(".alert-success p").html(result.message);
-              $(".alert-success").removeClass("d-none");
-            setTimeout(function(){ 
-              $(".alert-success").addClass("d-none");
-          }, 3000);
-        } else {
-            $(".alert-danger p").html(result.message);
-            $(".alert-danger").removeClass("d-none");
-            setTimeout(function(){ 
-              $(".alert-danger").addClass("d-none");
-          }, 3000);
-        }
-        
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
-}
-
-
-
 
 
 function convertDateFjYtoYmd(dateString) {
@@ -736,248 +675,16 @@ function convertDateFormat(dateString) {
 }
 
 
-function addNewCashBalance() {
-   var pathArray = window.location.pathname.split('/');
-  const dateYmd = pathArray[3];
-
-
-  $.ajax({
-    type: "get",
-    url: '/app/create/cash-balance/'+dateYmd,
-      data:  $("#editCashBalanceForm").serialize(),
-      success: function (result) {
-          if(result.success == true) {
-           getCashBlance(dateYmd);
-              $('#createCashBalance').modal('hide');
-            $(".alert-success p").html(result.message);
-              $(".alert-success").removeClass("d-none");
-            setTimeout(function(){ 
-              $(".alert-success").addClass("d-none");
-          }, 3000);
-          }
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
-}
-
-
-
-function saveRemarks() {
-
-   var pathArray = window.location.pathname.split('/');
-   const date = pathArray[3];
-
-   var remarks = document.getElementById("remarks").value;
-   var checkedBy = document.getElementById("input-checked-by").value;
-   var preparedBy = document.getElementById("input-prepared-by").value;
-
-$.ajax({
-    type: "get",
-    url: '/app/save-daily-sales-remarks/'+date,
-      data:  {remarks: remarks, checkedBy: checkedBy, preparedBy: preparedBy},
-      success: function (result) {
-          if(result.success == true) {
-            console.log(result);
-           $(".alert-success p").html(result.message);
-              $(".alert-success").removeClass("d-none");
-            setTimeout(function(){ 
-              $(".alert-success").addClass("d-none");
-            }, 3000);
-
-          }
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
-}
-
-
-
-function getFormCashBalance(date) {
-$.ajax({
-    type: "get",
-    url: '/app/get-form/cash-balance/'+date,
-      data:  $("#editCashBalanceForm").serialize(),
-      success: function (result) {
-          if(result.success == true) {
-            console.log(result);
-             document.getElementById("modaladdCash1000").value = result.cashData.cash_1000;
-             document.getElementById("modaladdCash500").value = result.cashData.cash_500;
-             document.getElementById("modaladdCash200").value = result.cashData.cash_200;
-             document.getElementById("modaladdCash100").value = result.cashData.cash_100;
-             document.getElementById("modaladdCash50").value = result.cashData.cash_50;
-             document.getElementById("modaladdCash20").value = result.cashData.cash_20;
-             document.getElementById("modaladdCash10").value = result.cashData.cash_10;
-             document.getElementById("modaladdCash5").value = result.cashData.cash_5;
-             document.getElementById("modaladdLooseCoins").value = result.cashData.loose_coins;
-             document.getElementById("modaladdLooseChange").value = result.cashData.change;
-            $(".btn-submit").attr("onclick", "updateCashBalance('"+date+"')");
-          }
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
-}
-
-function updateCashBalance(date) {
-  $.ajax({
-    type: "get",
-    url: '/app/update/cash-balance/'+date,
-      data:  $("#editCashBalanceForm").serialize(),
-      success: function (result) {
-          if(result.success == true) {
-            reloadCashBalance(date);
-               $('#createCashBalance').modal('hide');
-            $(".alert-success p").html(result.message);
-              $(".alert-success").removeClass("d-none");
-            setTimeout(function(){ 
-              $(".alert-success").addClass("d-none");
-          }, 3000);
-          }
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
-}
-
-
-function reloadCashBalance(getDate) {
-$.ajax({
-    type: "get",
-    url: '/app/get/cash-balance/'+getDate,
-      data:  $("#editCashBalanceForm").serialize(),
-      success: function (result) {
-        console.log("test");
-       
-          if(result.success == true) {
-              $("#tblcashbalancehtml").html(result.htmlCashBalance);
-            $(".btn-date").removeClass("disabled");
-            $(".btn-date-edit").removeClass("d-none");
-            $(".btn-date").addClass("d-none");
-            
-          } else {
-            $(".btn-date").removeClass("d-none");
-            $(".btn-date").removeClass("disabled");
-            $(".btn-date-edit").addClass("d-none");
-
-          }
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
-}
-
-
-  setTimeout(() => {
-       $(".dropdown-toggle.me-3").attr("onclick", "exportCsv()");
-  }, 1000);
-
-
- 
-   var pathArray = window.location.pathname.split('/');
-    const dateYmd = pathArray[3];
-    if(dateYmd) {
-      const formattedDate = convertDateFormat(dateYmd);
-      document.getElementById("flatpickr-date").value = formattedDate;
-      var getDate = dateYmd;
-    } else {
-      window.location.pathname = '/app/sales-report/'+dateToday;
-      document.getElementById("flatpickr-date").value = dateToday;
-      var getDate = dateToday;
-
-    }
-    $(".btn-date-edit").attr("onclick", "getFormCashBalance('"+getDate+"')");
-
-
-    function copyPreparedBy() {
-      $(".btn-prepared-by").removeClass("disabled");
-        $.ajax({
-        type: "get",
-        url: '/app/get-user-name',
-          data:  $("").serialize(),
-          success: function (result) {
-          document.getElementById("input-prepared-by").value = result.userName;
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
-    }
-
-
-    function copyCheckedBy() {
-      $(".btn-checked-by").removeClass("disabled");
-        $.ajax({
-        type: "get",
-        url: '/app/get-user-name',
-          data:  $("").serialize(),
-          success: function (result) {
-          document.getElementById("input-checked-by").value = result.userName;
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
-    }
-
-    
-
-
-    function getCashBlance(getDate) {
-        $.ajax({
-        type: "get",
-        url: '/app/get/cash-balance/'+getDate,
-          data:  $("#editCashBalanceForm").serialize(),
-          success: function (result) {
-            console.log("est");
-            console.log(result);
-       
-
-        if(result.remarks>'') {
-           const myTextarea = document.getElementById('remarks');
-          myTextarea.value = result.remarks[0].remarks; 
-          document.getElementById('input-checked-by').value = result.remarks[0].checked_by; 
-          document.getElementById('input-prepared-by').value = result.remarks[0].prepared_by; 
-        }
-      
-
-        console.log(result);
-          if(result.success == true) {
-              $("#tblcashbalancehtml").html(result.htmlCashBalance);
-            $(".btn-date").removeClass("disabled");
-            $(".btn-date-edit").removeClass("d-none");
-            $(".btn-date").addClass("d-none");
-          } else {
-            $(".btn-date").removeClass("d-none");
-            $(".btn-date").removeClass("disabled");
-            $(".btn-date-edit").addClass("d-none");
-
-          }
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
-
-    }
-
-
     function exportCsv() {
 
       var pathArray = window.location.pathname.split('/');
       const dateYmd = pathArray[3];
        $.ajax({
         type: "get",
-        url: '/app/export/sales-report/'+dateYmd,
+        url: '/app/export/cost-of-sales/'+dateYmd,
           data:  $("#editCashBalanceForm").serialize(),
           success: function (result) {
-           window.open('/cost-of-sales/download/'+result.fileName, '_blank').focus();
+           window.open('/download/'+result.fileName, '_blank').focus();
 
         },
       error: function (result, textStatus, errorThrown) {
@@ -988,6 +695,228 @@ $.ajax({
     
     }
 
+// function addNewCashBalance() {
+//    var pathArray = window.location.pathname.split('/');
+//   const dateYmd = pathArray[3];
 
+
+//   $.ajax({
+//     type: "get",
+//     url: '/app/create/cash-balance/'+dateYmd,
+//       data:  $("#editCashBalanceForm").serialize(),
+//       success: function (result) {
+//           if(result.success == true) {
+//            getCashBlance(dateYmd);
+//               $('#createCashBalance').modal('hide');
+//             $(".alert-success p").html(result.message);
+//               $(".alert-success").removeClass("d-none");
+//             setTimeout(function(){ 
+//               $(".alert-success").addClass("d-none");
+//           }, 3000);
+//           }
+//         },
+//       error: function (result, textStatus, errorThrown) {
+//           console.log(result.success);
+//       },
+//     });
+// }
+
+
+
+// function saveRemarks() {
+
+//    var pathArray = window.location.pathname.split('/');
+//    const date = pathArray[3];
+
+//    var remarks = document.getElementById("remarks").value;
+//    var checkedBy = document.getElementById("input-checked-by").value;
+//    var preparedBy = document.getElementById("input-prepared-by").value;
+
+// $.ajax({
+//     type: "get",
+//     url: '/app/save-daily-sales-remarks/'+date,
+//       data:  {remarks: remarks, checkedBy: checkedBy, preparedBy: preparedBy},
+//       success: function (result) {
+//           if(result.success == true) {
+//             console.log(result);
+//            $(".alert-success p").html(result.message);
+//               $(".alert-success").removeClass("d-none");
+//             setTimeout(function(){ 
+//               $(".alert-success").addClass("d-none");
+//             }, 3000);
+
+//           }
+//         },
+//       error: function (result, textStatus, errorThrown) {
+//           console.log(result.success);
+//       },
+//     });
+// }
+
+
+
+// function getFormCashBalance(date) {
+// $.ajax({
+//     type: "get",
+//     url: '/app/get-form/cash-balance/'+date,
+//       data:  $("#editCashBalanceForm").serialize(),
+//       success: function (result) {
+//           if(result.success == true) {
+//             console.log(result);
+//              document.getElementById("modaladdCash1000").value = result.cashData.cash_1000;
+//              document.getElementById("modaladdCash500").value = result.cashData.cash_500;
+//              document.getElementById("modaladdCash200").value = result.cashData.cash_200;
+//              document.getElementById("modaladdCash100").value = result.cashData.cash_100;
+//              document.getElementById("modaladdCash50").value = result.cashData.cash_50;
+//              document.getElementById("modaladdCash20").value = result.cashData.cash_20;
+//              document.getElementById("modaladdCash10").value = result.cashData.cash_10;
+//              document.getElementById("modaladdCash5").value = result.cashData.cash_5;
+//              document.getElementById("modaladdLooseCoins").value = result.cashData.loose_coins;
+//              document.getElementById("modaladdLooseChange").value = result.cashData.change;
+//             $(".btn-submit").attr("onclick", "updateCashBalance('"+date+"')");
+//           }
+//         },
+//       error: function (result, textStatus, errorThrown) {
+//           console.log(result.success);
+//       },
+//     });
+// }
+
+// function updateCashBalance(date) {
+//   $.ajax({
+//     type: "get",
+//     url: '/app/update/cash-balance/'+date,
+//       data:  $("#editCashBalanceForm").serialize(),
+//       success: function (result) {
+//           if(result.success == true) {
+//             reloadCashBalance(date);
+//                $('#createCashBalance').modal('hide');
+//             $(".alert-success p").html(result.message);
+//               $(".alert-success").removeClass("d-none");
+//             setTimeout(function(){ 
+//               $(".alert-success").addClass("d-none");
+//           }, 3000);
+//           }
+//         },
+//       error: function (result, textStatus, errorThrown) {
+//           console.log(result.success);
+//       },
+//     });
+// }
+
+
+// function reloadCashBalance(getDate) {
+// $.ajax({
+//     type: "get",
+//     url: '/app/get/cash-balance/'+getDate,
+//       data:  $("#editCashBalanceForm").serialize(),
+//       success: function (result) {
+//         console.log("test");
+       
+//           if(result.success == true) {
+//               $("#tblcashbalancehtml").html(result.htmlCashBalance);
+//             $(".btn-date").removeClass("disabled");
+//             $(".btn-date-edit").removeClass("d-none");
+//             $(".btn-date").addClass("d-none");
+            
+//           } else {
+//             $(".btn-date").removeClass("d-none");
+//             $(".btn-date").removeClass("disabled");
+//             $(".btn-date-edit").addClass("d-none");
+
+//           }
+//         },
+//       error: function (result, textStatus, errorThrown) {
+//           console.log(result.success);
+//       },
+//     });
+// }
+
+
+ 
+//    var pathArray = window.location.pathname.split('/');
+//     const dateYmd = pathArray[3];
+//     if(dateYmd) {
+//       const formattedDate = convertDateFormat(dateYmd);
+//       document.getElementById("flatpickr-date").value = formattedDate;
+//       var getDate = dateYmd;
+//     } else {
+//       window.location.pathname = '/app/sales-report/'+dateToday;
+//       document.getElementById("flatpickr-date").value = dateToday;
+//       var getDate = dateToday;
+
+//     }
+//     $(".btn-date-edit").attr("onclick", "getFormCashBalance('"+getDate+"')");
+
+
+//     function copyPreparedBy() {
+//       $(".btn-prepared-by").removeClass("disabled");
+//         $.ajax({
+//         type: "get",
+//         url: '/app/get-user-name',
+//           data:  $("").serialize(),
+//           success: function (result) {
+//           document.getElementById("input-prepared-by").value = result.userName;
+//         },
+//       error: function (result, textStatus, errorThrown) {
+//           console.log(result.success);
+//       },
+//     });
+//     }
+
+
+    // function copyCheckedBy() {
+    //   $(".btn-checked-by").removeClass("disabled");
+    //     $.ajax({
+    //     type: "get",
+    //     url: '/app/get-user-name',
+    //       data:  $("").serialize(),
+    //       success: function (result) {
+    //       document.getElementById("input-checked-by").value = result.userName;
+    //     },
+    //   error: function (result, textStatus, errorThrown) {
+    //       console.log(result.success);
+    //   },
+    // });
+    // }
 
     
+
+
+    // function getCashBlance(getDate) {
+    //     $.ajax({
+    //     type: "get",
+    //     url: '/app/get/cash-balance/'+getDate,
+    //       data:  $("#editCashBalanceForm").serialize(),
+    //       success: function (result) {
+    //         console.log("est");
+    //         console.log(result);
+       
+
+    //     if(result.remarks>'') {
+    //        const myTextarea = document.getElementById('remarks');
+    //       myTextarea.value = result.remarks[0].remarks; 
+    //       document.getElementById('input-checked-by').value = result.remarks[0].checked_by; 
+    //       document.getElementById('input-prepared-by').value = result.remarks[0].prepared_by; 
+    //     }
+      
+
+    //     console.log(result);
+    //       if(result.success == true) {
+    //           $("#tblcashbalancehtml").html(result.htmlCashBalance);
+    //         $(".btn-date").removeClass("disabled");
+    //         $(".btn-date-edit").removeClass("d-none");
+    //         $(".btn-date").addClass("d-none");
+    //       } else {
+    //         $(".btn-date").removeClass("d-none");
+    //         $(".btn-date").removeClass("disabled");
+    //         $(".btn-date-edit").addClass("d-none");
+
+    //       }
+    //     },
+    //   error: function (result, textStatus, errorThrown) {
+    //       console.log(result.success);
+    //   },
+    // });
+
+    // }

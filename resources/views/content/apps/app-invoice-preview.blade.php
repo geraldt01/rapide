@@ -1,6 +1,11 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Preview - Invoice')
+
+@foreach($jobOrderInfo as $k => $data)
+  @section('title', 'Preview - '. (($data->status == 1) ? 'RE ' : 'JO '). $data->plate_number)
+@endforeach
+
+
 
 @section('vendor-style')
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/flatpickr/flatpickr.css')}}" />
@@ -55,11 +60,18 @@
             </div>
             <div class="row mb-2 g-2">
               <div class="col-sm-6 mb-2 d-md-flex align-items-right justify-content-end pt-2">
-                                <span class="fw-normal">EST</span>
+
+                  @if($data->status == 1)
+                    <span class="fw-normal">EST#:</span>
+                  @else
+                    <span class="fw-normal">JO#:</span>
+                  @endif
+
+
               </div>
               <div class="col-sm-6">
                 <div class="input-group input-group-merge disabled align-items-right">
-                  <input type="text" class="form-control disabled-preview text-right mr-3"  placeholder="74909" value="#74909" id="invoiceId" />
+                  <input type="text" class="form-control disabled-preview text-right mr-3"  placeholder="74909" value="{{$data->job_order_number}}"" id="invoiceId" />
                 </div>
               </div>
               <div class="col-sm-6 mb-2 d-md-flex align-items-right justify-content-end pt-2">
@@ -198,7 +210,7 @@
           @endforeach
             <tr>
               <td colspan="3"></td>
-              <td colspan="3" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{number_format($data->part_total, 2)}}</b></td>
+              <td colspan="3" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->part_total}}</b></td>
             </tr>
           </tbody>
         </table>
@@ -252,7 +264,7 @@
              <div class="invoice-calculations">
               <div class="d-flex justify-content-between mb-2">
                 <span class="w-px-150"><b>SUBTOTAL</b></span>
-                <h6 class="mb-0 pt-1">₱ {{number_format($data->sub_total, 2)}}</h6>
+                <h6 class="mb-0 pt-1">₱ {{$data->sub_total}}</h6>
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <span class="w-px-150">VAT (12%)</span>
@@ -260,12 +272,27 @@
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <span class="w-px-150"><b>TOTAL AMOUNT</b></span>
-                <h6 class="mb-0 pt-1">₱ {{number_format($data->total_amount, 2)}}</h6>
+                <h6 class="mb-0 pt-1">₱ {{$data->total_amount}}</h6>
               </div>
                <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150"><b>PAYMENT</b></span>
+                <span class="w-px-150"><b>PAYMENT</b>
+                @if($data->payment2 > 0)
+                  <span>({{$data->mode_of_payment}})</span>
+                @endif
+              </span>
                 <h6 class="mb-0 pt-1">₱ {{number_format($data->payment, 2)}}</h6>
               </div>
+
+              @if($data->payment2 > 0)
+              <div class="d-flex justify-content-between mb-2">
+                <span class="w-px-150"><b>PAYMENT</b> 
+                @if($data->payment2 > 0)
+                  <span>({{$data->mode_of_payment2}})</span>
+                @endif
+                </span>
+                <h6 class="mb-0 pt-1">₱ {{number_format($data->payment2, 2)}}</h6>
+              </div>
+              @endif
               <hr />
               <div class="d-flex justify-content-between">
                 <span class="w-px-150"><b>BALANCE</b></span>
@@ -295,7 +322,7 @@
           <div class="col-md-6  justify-content-md-start ">
             <div class="form-floating form-floating-outline mb-4">
               <input type="text" class="form-control" id="invoiceMsg" placeholder="Gerald Tejero" value="{{$data->customer_name}}" />
-              <label for="invoiceMsg">Customer Name</label>
+              <label for="invoiceMsg">CUSTOMER NAME AND SIGNATURE</label>
             </div>
           </div>
         </div>

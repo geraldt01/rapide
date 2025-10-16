@@ -86,7 +86,7 @@ class EcommerceProductAdd extends Controller
     ->get();
     $key = 0;
     foreach($totalSalesData as  $d) {
-       $data[$d->job_order_number][] = $d;
+       $data[$d->plate_number][] = $d;
     }
     $estimateTotal = 0;
     $jobOrderTotal = 0;

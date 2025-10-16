@@ -169,6 +169,7 @@ return [
     App\Providers\EventServiceProvider::class,
     App\Providers\RouteServiceProvider::class,
     App\Providers\MenuServiceProvider::class,
+     Maatwebsite\Excel\ExcelServiceProvider::class,
     
   ])->toArray(),
 
@@ -188,6 +189,7 @@ return [
     'Helper' => App\Helpers\Helpers::class,
     //  'Input' => Symfony\Component\Console\Input\Input::class,
         'Input' => Illuminate\Support\Facades\Request::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
   ])->toArray(),
 

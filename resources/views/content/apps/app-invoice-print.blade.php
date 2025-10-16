@@ -1,6 +1,9 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Invoice (Print version) - Pages')
+@foreach($jobOrderInfo as $k => $data)
+  @section('title', 'Print - '. (($data->status == 1) ? 'RE ' : 'JO '). $data->plate_number)
+@endforeach
+
 
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/vendor/css/pages/app-invoice-print.css')}}" />
@@ -47,7 +50,12 @@ table.border-black {
         @endif
       </h4>
       <div class="text-right">
-        <span>EST:</span>
+        @if($data->status == 1)
+         <span>EST#:</span>
+        @else
+         <span>JO#:</span>
+        @endif
+
         <span>{{$data->job_order_number}}</span>
       </div>
       <div class="text-right">
@@ -176,7 +184,7 @@ table.border-black {
           @endforeach
         <tr>
           <td colspan="3"></td>
-          <td colspan="3" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{number_format($data->part_total, 2)}}</b></td>
+          <td colspan="3" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->part_total}}</b></td>
         </tr>
          <tr>
           <td colspan="6"></td>
@@ -204,14 +212,29 @@ table.border-black {
             <p class="mb-2"><b>SUBTOTAL</b></p>
             <p class="mb-2"><b>VAT</b>(12%)</p>
             <p class="mb-2"><b>TOTAL AMOUNT</b></p>
-            <p class="mb-2"><b>PAYMENT</b></p>
+            <p class="mb-2"><b>PAYMENT</b>
+              @if($data->payment2 > 0)
+                 <span>({{$data->mode_of_payment}})</span>
+              @endif
+          </p>
+             @if($data->payment2 > 0)
+            <p class="mb-2"><b>PAYMENT</b>
+            @if($data->payment2 > 0)
+              <span>({{$data->mode_of_payment2}})</span>
+             @endif
+          </p>
+            @endif
             <p class="mb-2"><b>BALANCE</b></p>
           </td>
           <td class="text-end px-4 py-3" style="width: 15%;vertical-align: top;">
-            <p class="mb-2"><b>₱ {{number_format($data->sub_total, 2)}}</b></p>
-            <p class=" mb-2">{{number_format($data->vat, 2)}}</p>
-            <p class=" mb-2"><b>₱ {{number_format($data->total_amount, 2)}}</b></p>
+            <p class="mb-2"><b>₱ {{$data->sub_total}}</b></p>
+            <p class=" mb-2">{{$data->vat}}</p>
+            <p class=" mb-2"><b>₱ {{$data->total_amount}}</b></p>
             <p class="mb-2"><b>₱ {{number_format($data->payment, 2)}}</b></p>
+
+             @if($data->payment2 > 0)
+            <p class="mb-2"><b>₱ {{number_format($data->payment2, 2)}}</b></p>
+            @endif
             <p class="mb-2"><b>₱ {{number_format($data->balance, 2)}}</b></p>
           </td>
         </tr>
@@ -236,7 +259,7 @@ table.border-black {
                   <td>{{$data->customer_name}}</td>
                 </tr>
                   <tr>
-                  <td style="border-top: 1px solid black;"> <p for="salesperson" class="fw-medium text-center">CUSTOMER NAME</p></td>
+                  <td style="border-top: 1px solid black;"> <p for="salesperson" class="fw-medium text-center">CUSTOMER NAME AND SIGNATURE</p></td>
                 </tr>
               </table>
           </td>

@@ -4,6 +4,8 @@ use App\Http\Controllers\laravel_example\UserManagement;
 use App\Http\Controllers\dashboard\Analytics;
 use App\Http\Controllers\dashboard\SalesReport;
 use App\Http\Controllers\dashboard\Crm;
+use App\Http\Controllers\dashboard\CostOfSales;
+
 use App\Http\Controllers\language\LanguageController;
 use App\Http\Controllers\layouts\CollapsedMenu;
 use App\Http\Controllers\layouts\ContentNavbar;
@@ -221,6 +223,16 @@ Route::get('/app/save-job-order/{car_id}', [EcommerceCustomerDetailsOverview::cl
 Route::get('/json/ecommerce-job-order/{car_id}', [EcommerceCustomerDetailsOverview::class, 'jsonJobOrder']);
 Route::get('/app/add-new-car/', [EcommerceCustomerDetailsOverview::class, 'addNewCar']);
 Route::get('/app/get-dropdown-options', [EcommerceCustomerDetailsOverview::class, 'getDroptownOptions']);
+Route::get('/app/get-available-estimate-number', [EcommerceCustomerDetailsOverview::class, 'getEstimateNumber']);
+
+Route::get('app/cost-of-sales/', [CostOfSales::class, 'index'])->name('cost-of-sales')->middleware('auth');
+Route::get('app/cost-of-sales/{date}', [CostOfSales::class, 'index'])->name('cost-of-sales')->middleware('auth');
+Route::get('/json/cost-of-sales/{date}', [CostOfSales::class, 'jsonCostOfSalesList'])->name('cost-of-sales')->middleware('auth');
+Route::get('/json/cost-of-sales/{date}', [CostOfSales::class, 'jsonCostOfSalesList'])->name('cost-of-sales')->middleware('auth');
+Route::get('/app/export/cost-of-sales/{date}', [CostOfSales::class, 'exportCostOfSales'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/cost-of-sales/download/{filename}', [CostOfSales::class, 'download'])->name('laravel-example-user-management')->middleware('auth');
+
+
 
 
 // custom
@@ -283,7 +295,13 @@ Route::get('/app/get/cash-balance/{date}', [SalesReport::class, 'getCashBalance'
 Route::get('/app/get-form/cash-balance/{date}', [SalesReport::class, 'getFormCashBalance'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/app/update/cash-balance/{date}', [SalesReport::class, 'updateCashBalance'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/app/get/total/{date}', [SalesReport::class, 'getTotal'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/save-daily-sales-remarks/{date}', [SalesReport::class, 'saveRemarks'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/get-user-name', [SalesReport::class, 'getUserName'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/get-latest-invoice-number/{jo_id}', [SalesReport::class, 'getLatestInvoiceNumber'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/save-invoice-number', [SalesReport::class, 'saveInvoiceNumber'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/export/sales-report/{date}', [SalesReport::class, 'exportSalesReport'])->name('laravel-example-user-management')->middleware('auth');
 
+Route::get('/download/{filename}', [SalesReport::class, 'download'])->name('laravel-example-user-management')->middleware('auth');
 
 
 Route::get('/app/ecommerce/settings/details', [EcommerceSettingsDetails::class, 'index'])->name('app-ecommerce-settings-details');

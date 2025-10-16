@@ -19,7 +19,7 @@
           <div class="col-12 col-md-6">
             <div class="form-floating form-floating-outline">
               <input type="text" id="modalEst" name="modalEst" class="form-control" placeholder="EST#" value="0000"/>
-              <label for="modalEst">EST#</label>
+              <label for="modalEst">Repair Estimate #</label>
             </div>
           </div>
           <div class="col-12 col-md-6">

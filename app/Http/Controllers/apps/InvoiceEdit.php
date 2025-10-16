@@ -14,6 +14,8 @@ use App\Models\JobOrdersPartService;
 use App\Models\SpecialNote;
 use App\Models\JobOrdersStatus;
 use App\Models\ModeOfPayment;
+use App\Models\RepairEstimateNumber;
+use App\Models\JobOrderNumber;
 
 
 use App\Models\Package;
@@ -66,7 +68,7 @@ class InvoiceEdit extends Controller
               }
         $optionOneHtml[] =  '</select></div>
             <div class="col-md-3 col-12">
-             <input type="text" class="form-control invoice-item-note package mb-3" name="package-note" id="package-note-'.$keypckg.'" value="'.$selected->package_note.'" onchange="calculatePrice('.$keypckg.')" />
+             <input type="text" class="form-control customer-hidden package mb-3" name="package-note" id="package-note-'.$keypckg.'" value="'.$selected->package_note.'" onchange="calculatePrice('.$keypckg.')" />
             </div>
             <div class="col-md-3 col-12 mb-md-0 mb-3 color-black d-flex">
                       <span class="pt-2 pl-2">₱</span>
@@ -109,17 +111,21 @@ class InvoiceEdit extends Controller
                 $keyl++;
                 $sub_amount = $selectedLabor->labor_price * $selectedLabor->labor_qty;
                 $optionTwoHtml[] = '<div class="border row w-100 p-3 pr-0" style="padding-right: 0px !important;" id="item-list-labor-'.$keyl.'"  data-repeater-item>
-                 <div class="col-md-1 col-12 mb-md-0 mb-3 color-black">
+                 <div class="col-md-1 col-12 mb-md-0 mb-3 color-black"  style="width: 4.333333%;">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
                     <span id="labor-counter-'.$keyl.'">'.$keyl.'</span>
                   </div>
-                  <div class="col-md-5 col-12 mb-md-0 mb-3">
+                  <div class="col-md-4 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>Service</strong></h6>
                         <input type="hidden" name="labor-id" value="'.$selectedLabor->id.'" />
                     <input type="text" class="form-control invoice-item-text " name="labor-text" id="labor-text-'.$keyl.'"  value="'.$selectedLabor->labor_value.'" onchange="calculateLabor('.$keyl.')" />
                   </div>
-                   <div class="col-md-2 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium"></h6>
+                   <div class="col-md-1 col-12 mb-md-0 mb-3">
+                    <h6 class="mb-2 repeater-title fw-medium">Cost</h6>
+                    <input type="text" class="form-control invoice-item-cost labor customer-hidden" name="labor-cost" id="labor-cost-'.$keyl.'" value="'.$selectedLabor->cost.'" placeholder="" min="1" max="" onchange="calculateLabor('.$keyl.')"/>
+                  </div>
+                  <div class="col-md-2 col-12 mb-md-0 mb-3">
+                    <h6 class="mb-2 repeater-title fw-medium">Part Number</h6>
                     <input type="text" class="form-control invoice-item-part-number labor" name="labor-part-number" id="labor-part-number-'.$keyl.'" value="'.$selectedLabor->part_number.'" placeholder="" min="1" max="" onchange="calculateLabor('.$keyl.')"/>
                   </div>
 
@@ -140,7 +146,7 @@ class InvoiceEdit extends Controller
                     </p>
                   </div>
 
-                <div class="col-md-1 col-12 border-start text-right">
+                <div class="col-md-1 col-12 border-start text-right" style="width: 2.333333%;">
                   <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyl.', 1)" data-repeater-delete></i>
                   <div class="dropdown">
                     
@@ -204,11 +210,11 @@ class InvoiceEdit extends Controller
                 $sub_amount = $selectedPart->part_price * $selectedPart->part_qty;
 
                 $optionThreeHtml[] = '<div class="border row w-100 p-3 pr-0" style="padding-right: 0px !important;"  id="item-list-part-'.$keyprt.'"  data-repeater-item>
-                 <div class="col-md-1 col-12 mb-md-0 mb-3 color-black">
+                 <div class="col-md-1 col-12 mb-md-0 mb-3 color-black" style="width: 4.333333%;">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
                      <span id="part-counter-'.$keyprt.'">'.$keyprt.'</span>
                   </div>
-                  <div class="col-md-5 col-12 mb-md-0 mb-3">
+                  <div class="col-md-3 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 ml-2 repeater-title fw-medium"><strong>Service</strong></h6>
                       <div class="row">
                       <div class="col-1">
@@ -228,28 +234,46 @@ class InvoiceEdit extends Controller
                          </div>
                         </div>
                      </div>
-                  <div class="col-md-2 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium"></h6>
+
+                  <div class="col-md-1 col-12 mb-md-0 mb-3">
+                    <h6 class="mb-2 repeater-title fw-medium">Part Number</h6>
                     <input type="text" class="form-control invoice-item-part-number part" name="part-part-number" id="part-part-number-'.$keyprt.'" value="'.$selectedPart->part_number.'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
+                  </div>            
+                  <div class="col-md-1 col-12 mb-md-0 mb-3">
+                      <h6 class="mb-2 repeater-title fw-medium">Supplier</h6>
+                    <input type="text" class="form-control invoice-item-supplier part customer-hidden" name="part-supplier" id="supplier-'.$keyprt.'" value="'.$selectedPart->supplier.'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
+                  </div>
+                  <div class="col-md-1 col-12 mb-md-0 mb-3">
+                      <h6 class="mb-2 repeater-title fw-medium">Supplier Inv</h6>
+                    <input type="text" class="form-control invoice-item-supplier-inv part customer-hidden" name="part-supplier-inv" id="supplier-'.$keyprt.'" value="'.$selectedPart->supplier_inv.'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                   </div>
                    <div class="col-md-1 col-12 mb-md-0 mb-3">
+                    <h6 class="mb-2 repeater-title fw-medium">Unit Cost</h6>
+                    <input type="text" class="form-control invoice-unit-cost part customer-hidden" name="part-unit-cost" id="part-unit-cost-'.$keyprt.'" value="'.$selectedPart->unit_cost.'" placeholder="1" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
+                  </div>
+                      <div class="col-md-1 col-12 pe-0">
+                      <h6 class="mb-2 repeater-title fw-medium">Total Cost</h6>
+                    <input type="text" class="form-control invoice-unit-cost part customer-hidden" name="part-total-cost" id="part-total-cost-'.$keyprt.'" value="'.$selectedPart->total_cost.'" placeholder="1" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
+                 
+                  </div>
+
+                  <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Qty</h6>
                     <input type="text" class="form-control invoice-item-qty part" name="part-qty" id="part-qty-'.$keyprt.'" value="'.$selectedPart->part_qty.'" placeholder="1" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                   </div>
+
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Price</h6>
                     <input type="text" class="form-control invoice-item-price part mb-3" name="part-price" id="part-price-'.$keyprt.'" value="'.$selectedPart->part_price.'" placeholder="" min="" />
-                    
                   </div>
                
-                 <div class="col-md-1 col-12 pe-0">
-                    <h6 class="mb-2 repeater-title fw-medium">Amount</h6>
+             
+                  <div class="col-md-1 col-12 border-start text-right" style="">
+                   <h6 class="mb-2 repeater-title fw-medium">Amount</h6>
                     <p class="mb-0 pt-2 color-black amount-part-sub d-flex" id="amount-part-sub-'.$keyprt.'">₱
                     <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="part-amount" id="part-amount-'.$keyprt.'" value="'.$sub_amount.'" placeholder="" min="12"/>
                     </p>
-                  </div>
 
-                  <div class="col-md-1 col-12 border-start text-right">
                   <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyprt.', 2)" data-repeater-delete></i>
                   <div class="dropdown">
                     </i>
@@ -307,6 +331,7 @@ class InvoiceEdit extends Controller
     foreach($modeOfPaymentData as $mop) {
       $modeOfPayment[] = $mop->value;
     }
+
     return view('content.apps.app-invoice-edit', ['invoice_date' => $newInvoiceDate, 'expire_date' => $jobOrderInfo[0]->expire_date, 'modeOfPayment' => $modeOfPayment, 'specialNotes' => $specialNotes, 'optionStatus' => $optionStatus, 'packageTotalItem' => $keypckg, 'partTotalItem' => $keyprt, 'laborTotalItem' => $keyl, 'optionThreeHtml' => $optionThreeHtml, 'optionTwoHtml' => $optionTwoHtml, 'optionOneHtml' => $optionOneHtml, 'job_order_id' => $job_order_id, 'jobOrderInfo' => $jobOrderInfo, 'jobOrderPartServiceOption' => $jobOrderPartServiceOption, 'jobOrderLaborOption' => $jobOrderLaborOption, 'jobOrderPackageOption' => $jobOrderPackageOption]);
   }
 
@@ -347,7 +372,11 @@ class InvoiceEdit extends Controller
     // Format the DateTime object into the desired Y-m-d format
     $new_invoice_date = $dateTimeObject->format('Y-m-d');
 
-    $payment = intval(preg_replace('/[^\d.]/', '', $_GET['payment']));
+    // $payment = intval(preg_replace('/[^\d.]/', '', $_GET['payment']));
+    $payment =  $_GET['payment'];
+    // $payment2 = intval(preg_replace('/[^\d.]/', '', $_GET['payment2']));
+    $payment2 = $_GET['payment2'];
+
     JobOrder::where("id", $job_order_id)->update(
       [
         "status" => $_GET['status'],
@@ -357,13 +386,15 @@ class InvoiceEdit extends Controller
         "package_total" => (($_GET['hidden-package-sub-totals']) ? $_GET['hidden-package-sub-totals'] : 0),
         "labor_total" => (($_GET['labor-total']) ? $_GET['labor-total'] : 0),
         "part_total" => (($_GET['part-total']) ? $_GET['part-total'] : 0),
-        "sub_total" => (($_GET['sub_total']) ? intval(preg_replace('/[^\d.]/', '', $_GET['sub_total'])) : 0),
-        "vat" => (($_GET['vat']) ? intval(preg_replace('/[^\d.]/', '', $_GET['vat'])) : 0),
-        "total_amount" => (($_GET['total-amount']) ? intval(preg_replace('/[^\d.]/', '', $_GET['total-amount'])) : 0),
+        "sub_total" => (($_GET['sub_total']) ? $_GET['sub_total'] : 0),
+        "vat" => (($_GET['vat']) ?  $_GET['vat'] : 0),
+        "total_amount" => (($_GET['total-amount']) ?  $_GET['total-amount'] : 0),
         "payment" => (($_GET['payment']) ? $payment : 0),
-        "balance" => (($_GET['balance']) ? intval(preg_replace('/[^\d.]/', '', $_GET['balance'])) : 0),
+        "payment2" => (($_GET['payment2']) ? $payment2 : 0),
+        "balance" => (($_GET['balance']) ? $_GET['balance'] : 0),
         "remarks" => (($_GET['remarks']) ?  $_GET['remarks'] : ''),
         "mode_of_payment" => (($_GET['mop']) ?  $_GET['mop'] : ''),
+        "mode_of_payment2" => (($_GET['mop2']) ?  $_GET['mop2'] : ''),
         "customer_name" => (($_GET['customer_name']) ?  $_GET['customer_name'] : ''),
         
       ]
@@ -423,6 +454,7 @@ class InvoiceEdit extends Controller
             "job_order_id" => $job_order_id,
              "labor_qty"     => ((isset($labor['labor-qty'])) ? $labor['labor-qty'] : 1),
             "labor_value"  =>  ((isset($labor['labor-text'])) ? $labor['labor-text'] : ""),
+            "cost"  =>  ((isset($labor['labor-cost'])) ? $labor['labor-cost'] : ""),
             "part_number"   =>  ((isset($labor['labor-part-number'])) ? $labor['labor-part-number'] : ""),
             "labor_price"   => ((isset($labor['labor-price'])) ? $labor['labor-price'] : 0),
             "labor_amount"   => ((isset($labor['labor-amount'])) ? $labor['labor-amount'] : 0),
@@ -449,6 +481,10 @@ class InvoiceEdit extends Controller
             "part_qty"     => ((isset($part['part-qty'])) ? $part['part-qty'] : 1),
             "part_value"   =>  JobOrdersPartServiceOption::find($part['part-option'])->value,
             "part_number"   => ((isset($part['part-part-number'])) ? $part['part-part-number'] : ""),
+            "supplier"   => ((isset($part['part-supplier'])) ? $part['part-supplier'] : ""),
+            "supplier_inv"   => ((isset($part['part-supplier-inv'])) ? $part['part-supplier-inv'] : ""),
+            "unit_cost"   => ((isset($part['part-unit-cost'])) ? $part['part-unit-cost'] : ""),
+            "total_cost"   => ((isset($part['part-total-cost'])) ? $part['part-total-cost'] : ""),
             "part_price"  => ((isset($part['part-price'])) ? $part['part-price'] : 0),
             "part_amount"   => ((isset($part['part-amount'])) ? $part['part-amount'] : 0),
           ] );
@@ -560,13 +596,26 @@ class InvoiceEdit extends Controller
     if(!isset($check[0])) {
 
     foreach($jobOrderInfo as $data) {
+
+      $getLatestInvoice = DB::table('job_order_numbers')->where('status', '=', 1)
+      ->orderBy('id','desc')
+      ->get();
+
+      $final_invoice_number = $getLatestInvoice[0]->value + 1;
+
+      $i = new JobOrderNumber();
+      $i->value = $final_invoice_number;
+      $i->save();
+
+
       $jo = new JobOrder();
       $jo->ex_job_order_id = $data->id;
-      $jo->job_order_number = $data->job_order_number;
+      $jo->job_order_number = $final_invoice_number;
       $jo->car_id = $data->car_id;
       $jo->date = $data->date;
       $jo->plate_number = $data->plate_number;
-      $jo->manufacturer = $data->manufacturer;
+      $jo->manufacturer = $data->manufacturer; 
+      $jo->mileage = $data->mileage; 
       $jo->model = $data->model;
       $jo->status = $newStatus[0]->status_id;
       $jo->status_display = $newStatus[0]->status_value;
@@ -577,8 +626,12 @@ class InvoiceEdit extends Controller
       $jo->vat = $data->vat;
       $jo->total_amount = $data->total_amount;
       $jo->payment = $data->payment;
+      $jo->payment2 = $data->payment2;
+      $jo->mode_of_payment = $data->mode_of_payment;
+      $jo->mode_of_payment2 = $data->mode_of_payment2;
       $jo->balance = $data->balance;
       $jo->remarks = $data->remarks;
+
       $jo->save();
 
 

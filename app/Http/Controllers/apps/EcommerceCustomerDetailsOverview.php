@@ -10,7 +10,8 @@ use App\Models\JobOrdersPartService;
 use App\Models\JobOrdersLabor;
 use App\Models\JobOrdersPackage;
 use App\Models\InvoiceNumber;
-
+use App\Models\RepairEstimateNumber;
+use App\Models\JobOrderNumber;
 
 use DB;
 
@@ -105,22 +106,22 @@ class EcommerceCustomerDetailsOverview extends Controller
 
     } else {
       $numbers_only = preg_replace("/[^0-9]/", "", $_GET['est']);
-      $checkInvoiceNumber = DB::table('invoice_numbers')->where('value', '=', $numbers_only)
+      $checkInvoiceNumber = DB::table('repair_estimate_numbers')->where('value', '=', $numbers_only)
       ->get();
 
       $final_invoice_number = $numbers_only + 1;
 
       if(isset($checkInvoiceNumber[0])) {
-        $i = new InvoiceNumber();
+        $i = new RepairEstimateNumber();
         $i->value = $final_invoice_number;
         $i->save();
       } else {
-        $getLatestInvoice = DB::table('invoice_numbers')->where('status', '=', 1)
+        $getLatestInvoice = DB::table('repair_estimate_numbers')->where('status', '=', 1)
           ->orderBy('id','desc')
           ->get();
 
           $final_invoice_number = $getLatestInvoice[0]->value + 1;
-          $i = new InvoiceNumber();
+          $i = new RepairEstimateNumber();
           $i->value = $final_invoice_number;
           $i->save();
       }
@@ -137,7 +138,7 @@ class EcommerceCustomerDetailsOverview extends Controller
 
       $c = new JobOrder();
       $c->car_id    = $_GET['car_id'] ? $_GET['car_id'] : "";
-      $c->job_order_number    = "INV#".$final_invoice_number;
+      $c->job_order_number    = $final_invoice_number;
       $c->date   = $_GET['date'] ? $_GET['date'] : "";
       $c->plate_number            = $_GET['modalPlateNumber'] ? $_GET['modalPlateNumber'] : "";
       $c->manufacturer    = $_GET['modalManufacturer'] ? $_GET['modalManufacturer'] : "";
@@ -147,6 +148,14 @@ class EcommerceCustomerDetailsOverview extends Controller
       $c->customer_name    = $getOwner[0]->owner_name;
       $c->save();
 
+     Car::where("id", $_GET['car_id'])->update(
+      [
+        "mileage" => $_GET['modalMileage'],
+      ]
+      );
+
+
+
       for($x=0;$x<=10;$x++) {
         if($x == 0) {
           $pck = new JobOrdersPackage();
@@ -155,10 +164,14 @@ class EcommerceCustomerDetailsOverview extends Controller
         }
         $prt = new JobOrdersPartService();
         $prt->job_order_id = $c->id;
+        $prt->part_value = "";
+        $prt->part_number = "";
         $prt->save();
 
         $lbr = new JobOrdersLabor();
         $lbr->job_order_id = $c->id;
+        $lbr->labor_value = "";
+        $lbr->part_number = "";
         $lbr->save();
 
       } 
@@ -169,50 +182,65 @@ class EcommerceCustomerDetailsOverview extends Controller
   public function jsonJobOrder($car_id) {
     $jobOrderInfo = DB::table('job_orders')
     ->where('car_id', '=', $car_id)
-    ->where('ex_job_order_id', '=', NULL)
-    ->OrderBy('date', 'Desc')
+  //  ->where('ex_job_order_id', '=', NULL)
+    ->OrderBy('date', 'asc')
     ->get();
 
-
+      $k = 0;
+      $key = 1;
         $array = array();
-    foreach ($jobOrderInfo as $key => $value) {
 
-    $htmlJS = array();
-     $htmlJS[] = '<a href="/app/job-order/'.$jobOrderInfo[0]->id.'"><span class="badge rounded-pill bg-label-warning" text-capitalized="">'.$jobOrderInfo[0]->status_display.'</span></a>';
-
-     
-    $OtherjobOrder = DB::table('job_orders')
-    ->where('ex_job_order_id', '=', $value->id)
-    ->get();
-    if(isset($OtherjobOrder[0])) {
-      foreach($OtherjobOrder as $od) {
-          if($od->status == '2') {
-            $htmlJS[] = '<a href="/app/job-order/'.$od->id.'"><span class="badge rounded-pill bg-label-info" text-capitalized="">'.$od->status_display.'</span></a>';
-
-          } else if($od->status == '3') {
-            $htmlJS[] = '<a href="/app/job-order/'.$od->id.'"><span class="badge rounded-pill alert-solid-success" text-capitalized="">'.$od->status_display.'</span></a>';
-
-          } else {
-            $htmlJS[] = '<a href="/app/job-order/'.$od->id.'"><span class="badge rounded-pill alert-solid-success" text-capitalized="">'.$od->status_display.'</span></a>';
-          }
-      }
+ 
+    foreach ($jobOrderInfo as $k => $v) {
+      $opt[$v->date][] = $v;
     }
+      
+    if(isset($opt)) {
+     foreach ($opt as $key => $value) {
+      $htmlJS = array();
+      $number = array();
+      if(isset($value[0])) {
+        if($value[0]->status == '1') {
+         $jo_id = $value[0]->id;
 
+             $htmlJS[] = '<a href="/app/job-order/'.$value[0]->id.'"><span class="badge rounded-pill bg-label-warning" text-capitalized="">'.$value[0]->status_display.'</span></a>';
+             $number[] = "EST#".$value[0]->job_order_number;
+            $status = $value[0]->status;
+            $date = $value[0]->date;
 
-    $array[] = array('id' => $value->id,
-        'order' => $value->job_order_number,
+          }
+        }
+
+       if(isset($value[1])) {
+        if($value[1]->status == '2') {
+         $jo_id = $value[1]->id;
+          $htmlJS[] = '<a href="/app/job-order/'.$value[1]->id.'"><span class="badge rounded-pill bg-label-info" text-capitalized="">'.$value[1]->status_display.'</span></a>';
+          $number[] = " JO#".$value[1]->job_order_number;
+          $status = $value[1]->status;
+          $date = $value[1]->date;
+        }
+      
+
+      }
+         $array[] = array('id' => $jo_id,
+        'counter' => $key,
+        'order' => $number,
         'customer' => "Gabrielle Feyer",
         'email' => "gfeyer0@nyu.edu",
         'avatar' => "8.png",
         'payment' => 1,
-        'status' => $value->status,
+        'status' => $status,
         'js_list' => $htmlJS,
         'spent' => "-",
         'method' => "paypal_logo",
-        'date' => $value->date,
+        'date' => $date,
         'time' => "2:11 AM",
         'method_number' => 6522);
+      $key++;
     }
+  } 
+  
+
     $jo['data'] = $array;
     return response()->json($jo);
   }
@@ -273,4 +301,14 @@ class EcommerceCustomerDetailsOverview extends Controller
   }
 
 
+
+  function getEstimateNumber() {
+    
+    
+    $getLatestEstimateNumber = DB::table('repair_estimate_numbers')->where('status', '=', 1)
+     ->orderBy('id','desc')
+    ->first();
+
+     return response()->json(['success'=> true, 'estimate_number' => $getLatestEstimateNumber->value+1]);
+  }
 }

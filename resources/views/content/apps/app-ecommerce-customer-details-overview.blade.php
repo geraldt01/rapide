@@ -59,7 +59,7 @@
 <input type="hidden" name="hidden-selected-vehicle-type" id="hidden-selected-vehicle-type" value="{{$customerInfo->vehicle_type}}" />
 <input type="hidden" name="hidden-selected-mileage" id="hidden-selected-mileage" value="{{$customerInfo->mileage}}" />
 <input type="hidden" name="hidden-selected-year" id="hidden-selected-year" value="{{$customerInfo->year}}" />
-<input type="hidden" name="hidden-selected-invoice-number" id="hidden-selected-invoice-number" value="{{$invoice_number}}" />
+<!-- <input type="hidden" name="hidden-selected-invoice-number" id="hidden-selected-invoice-number" value="{{$invoice_number}}" /> -->
 
 
 <h4 class="py-3 mb-4">
@@ -252,6 +252,7 @@
             <tr>
               <th></th>
               <th></th>
+              <th style="text-align: center">#</th>
               <th style="text-align: center">Order</th>
               <th style="text-align: center">Date</th>
               <th style="text-align: center">Status</th>

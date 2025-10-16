@@ -41,13 +41,12 @@ class Analytics extends Controller
   )
    ->where('job_orders.date', $date_today)
     ->OrderBy('job_orders.status_display', 'Desc')
-     ->distinct()
     ->get();
 
 
     $key = 0;
     foreach($jobOrderInfo as  $d) {
-       $data[$d->job_order_number][] = $d;
+       $data[$d->plate_number][] = $d;
     }
 
     if(!isset($data)) {
@@ -56,9 +55,12 @@ class Analytics extends Controller
 }
 
 
+
+
 foreach($data as $key => $final) {
   $var[$key][] = $final[0];
 }
+
 
 
   //   $date_today =  date('Y-m-d');
@@ -86,46 +88,54 @@ foreach($data as $key => $final) {
 
  
     $array = array();
+$counter = 0;
+
+  foreach($var as $a){
+    $select['plate_number'][] = $a;
+  }
+
 
 
   foreach($var as $i){
-      foreach($i as $v){
+      foreach($i as $key => $v){
 
-
-      if($v) {
-    switch ($v->status_display) {
-          case "estimate":
-            $status_display = 1;
-            break;
-          case "job order":
-            $status_display = 2;
-            break;
-              case "receipt":
-            $status_display = 3;
-      
-          }
-        $array[] = array(
-          'id' => $v->plate_number,
-            'product_name' => $v->plate_number,
-            'category' => $v->vehicle_type,
-            'stock' => $v->mileage,
-            'sku' => $v->owner_name,
-            'price' => "$656.85",
-            'qty' => 679,
-            'status' => $v->status_display,
-            'image' =>"car-placeholder.jpg",
-            'product_brand' => $v->manufacturer." ".$v->vehicle_model." ".$v->transmission ." ".$v->year,
-            'car_overview_link' => "/app/car/view/".$v->car_id,
-            'job_order_link' => "/app/job-order/".$v->id,
+         if($v) {
+         switch ($v->status_display) {
+              case "estimate":
+                $status_display = 1;
+                break;
+              case "job order":
+                $status_display = 2;
+                break;
+                  case "receipt":
+                $status_display = 3;
+          
+              }
+            $array[] = array(
+              'id' => $v->plate_number,
+                'product_name' => $v->plate_number,
+                'category' => $v->vehicle_type,
+                'stock' => $v->mileage,
+                'sku' => $v->owner_name,
+                'price' => "$656.85",
+                'qty' => 679,
+                'status' => $v->status_display,
+                'image' =>"car-placeholder.jpg",
+                'product_brand' => $v->manufacturer." ".$v->vehicle_model." ".$v->transmission ." ".$v->year,
+                'car_overview_link' => "/app/car/view/".$v->car_id,
+                'job_order_link' => "/app/job-order/".$v->id,
+                
+              );
             
-          );
-        
-      } else {
+          } 
+      
 
+      
       }
-        
-      }
+
     }
+
+ 
  $jo['data'] = $array;
 
     return response()->json($jo);

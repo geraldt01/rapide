@@ -148,7 +148,7 @@ $(function () {
     setTimeout(function(){ 
       let total_item = document.getElementById('hidden-'+type+'-total-item').value;
       let plus = 1;
-      let total = parseInt(total_item)+plus;
+      let total = parseFloat(total_item)+plus;
       if(type == 'package') {
           document.getElementsByName('group-a['+total_item+']['+type+']')[0].id =  type+'-option-'+total;
           document.getElementsByName('group-a['+total_item+']['+type+'-qty]')[0].id =  type+'-qty-'+total;

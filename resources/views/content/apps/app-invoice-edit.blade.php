@@ -1,7 +1,8 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Edit - Invoice')
-
+@foreach($jobOrderInfo as $k => $data)
+  @section('title', (($data->status == 1) ? 'RE ' : 'JO '). $data->plate_number)
+@endforeach
 @section('vendor-style')
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/flatpickr/flatpickr.css')}}" />
 
@@ -62,6 +63,9 @@
   <input type="hidden" name="hidden-package-total-item" id="hidden-package-total-item" value="{{$packageTotalItem}}" />
   <input type="hidden" name="hidden-labor-total-item" id="hidden-labor-total-item" value="{{$laborTotalItem}}" />
   <input type="hidden" name="hidden-part-total-item" id="hidden-part-total-item" value="{{$partTotalItem}}" />
+  
+  <input type="hidden" name="hidden-payment2" id="hidden-payment2" value="{{$data->payment2}}" />
+
 
 <div class="row invoice-edit">
   <!-- Invoice Edit-->
@@ -102,7 +106,11 @@
             </div>
             <dl class="row mb-2 g-2">
               <dt class="col-sm-6 mb-2 d-md-flex align-items-center justify-content-end">
-                                <span class="fw-normal">EST</span>
+                @if($data->job_order_status == '1')
+                <span class="fw-normal">Repair Estimate #</span>
+                @else
+                <span class="fw-normal">Job Order #</span>
+                @endif
               </dt>
               <dd class="col-sm-6">
                 <div class="input-group input-group-merge disabled">
@@ -304,7 +312,7 @@
         <div class="row">
           <div class="col-md-10">
           </div>
-          <div class="col-md-2 d-flex justify-content-md-end mt-2">
+          <div class="col-md-2 d-flex justify-content-md-end mt-2 bg-white">
             <div class="invoice-calculations">
               <div class="d-flex justify-content-between mb-2">
                 <span class="w-px-150">Total:</span>
@@ -324,18 +332,17 @@
 
 
 
-
-
-         <hr class="my-0" />
-      <div class="card-body pb-0 tbl-header">
+    <hr class="my-0" />
+    <div class="invoice-min-width">
+      <div class="card-body pb-0 tbl-header h-55 invoice-min-width" >
         <div class="mb-0 pb-0">
           <h6><strong>PARTS & MATERIALS</strong></h6>
         </div>
       </div>
-      <div class="card-body">
+      <div class="card-body invoice-min-width bg-white">
         <div class="source-item pt-1">
           <div class="mb-3" data-repeater-list="group-c">
-            <div class="d-flex repeater-wrapper pt-0 pt-md-4">
+            <div class="d-block repeater-wrapper pt-0 pt-md-4">
               <div class="rounded position-relative pe-0 color-white">
            
                  @foreach($optionThreeHtml as $k => $l)
@@ -351,7 +358,7 @@
           </div>
         </div>
       </div>
-      <div class="card-body pt-0">
+      <div class="card-body pt-0 invoice-min-width bg-white">
         <div class="row">
           <div class="col-md-10">
           </div>
@@ -369,6 +376,7 @@
             </div>
           </div>
         </div>
+      </div>
       </div>
 
 
@@ -562,6 +570,7 @@
         </div>
       </div> -->
 
+      
       <hr class="my-0" />
       <div class="card-body pt-0">
         <div class="row">
@@ -635,7 +644,9 @@
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <span class="w-px-150 pt-3"><b>PAYMENT</b></span>
-                <i class="mdi mdi-arrow-down-right me-1 js-textareacopybtn" id="note-icon" onclick="copyPayment()"></i><span class="alert-coppied" id="icon-{{$k}}">Coppied!</span>
+                <span class="alert-coppied" id="icon-{{$k}}">Coppied!</span>
+                  <i class="mdi mdi-arrow-down-right me-1 js-textareacopybtn" id="note-icon" onclick="copyPayment()"></i><span class="alert-coppied" id="icon-{{$k}}">Coppied!</span>
+
 
                 <h6 class="mb-0 pt-1 width-95px">
                   <input type="text" class="form-control invoice-payment mb-3 text-right" name="payment" id="payment" value="{{$data->payment}}" placeholder="" onchange="calculateAll()" min="12">
@@ -643,17 +654,48 @@
 
               </div>
               <div class="d-flex justify-content-between mb-2">
+          <i class="mdi mdi-plus me-1 mt-3 add-payment" onclick="addPayment()"></i>
+ 
                 <span class="w-px-150 pt-3"><b>MODE OF PAYMENT</b></span>
                 <h6 class="mb-0 pt-1 width-95px">
-                   <select class="form-select item-details mb-3" name="mop" id="mop">
+                   <select class="form-select mb-3" name="mop" id="mop" onchange="filterOption()">
                           <option value="" selected></option>
                         @foreach($modeOfPayment as $k => $mop)
-                          <option value="{{$mop}}" id="option1" class="bg-label-warning" {{$data->mode_of_payment == $mop ? 'selected' : ''}}>{{$mop}}</option>
+                          <option value="{{$mop}}" class="bg-label-warning" {{$data->mode_of_payment == $mop ? 'selected' : ''}}>{{$mop}}</option>
                         @endforeach
                     </select>
 
                 </h6>
+                
               </div>
+
+
+              <div class="second-payment d-none">
+                <hr class="my-0 mb-2" />
+                <div class="d-flex justify-content-between mb-2">
+                  <span class="w-px-150 pt-3"><b>PAYMENT</b></span>
+                  <!-- <i class="mdi mdi-arrow-down-right me-1 js-textareacopybtn" id="note-icon" onclick="copyPayment()"></i><span class="alert-coppied" id="icon-{{$k}}">Coppied!</span> -->
+
+                  <h6 class="mb-0 pt-1 width-95px">
+                    <input type="text" class="form-control invoice-payment2 mb-3 text-right" name="payment2" id="payment2" value="{{$data->payment2}}" placeholder="" onchange="calculateAll()" min="12">
+                  </h6>
+
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                  <span class="w-px-150 pt-3"><b>MODE OF PAYMENT</b></span>
+                  <h6 class="mb-0 pt-1 width-95px">
+                    <select class="form-select item-details mb-3" name="mop2" id="mop2">
+                        <option value="" selected></option>
+                          @foreach($modeOfPayment as $k => $mop)
+                            <option value="{{$mop}}" id="option-{{$mop}}" class="bg-label-warning" {{$data->mode_of_payment2 == $mop ? 'selected' : ''}}>{{$mop}}</option>
+                          @endforeach
+                      </select>
+
+                  </h6>
+                </div>
+              </div>
+
+
               <div class="d-flex justify-content-between">
                 <span class="w-px-150"><b>BALANCE</b></span>
                 <h6 class="mb-0 pt-1">
@@ -685,7 +727,7 @@
             <div class="form-floating form-floating-outline mb-4">
                   
               <input type="text" class="form-control" id="customername" name="customer_name" placeholder="" value="{{$data->customer_name}}" />
-              <label for="invoiceMsg">Customer Name</label>
+              <label for="invoiceMsg">Customer Name and Signature</label>
             </div>
           </div>
         </div>
@@ -706,7 +748,7 @@
   <!-- /Invoice Edit-->
 
   <!-- Invoice Actions -->
-  <div class="col-lg-3 col-12 invoice-actions fixed-section">
+  <div class="col-lg-3 col-12 invoice-actions fixed-section" id="myFixedDiv" >
     <div class="card mb-4">
       <div class="card-body">
         <!-- <button class="btn btn-primary d-grid w-100 mb-3" data-bs-toggle="offcanvas" data-bs-target="#sendInvoiceOffcanvas">

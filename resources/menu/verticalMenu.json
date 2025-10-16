@@ -17,6 +17,12 @@
       "slug": "app-sales-report"
     },
     {
+      "url": "app/cost-of-sales",
+      "name": "Cost Of Sales",
+      "icon": "menu-icon tf-icons mdi mdi-brightness-percent",
+      "slug": "app-cost-of-sales"
+    },
+    {
       "url": "app/inventory/dashboard",
       "name": "Inventory",
       "icon": "menu-icon tf-icons mdi mdi-archive-outline",

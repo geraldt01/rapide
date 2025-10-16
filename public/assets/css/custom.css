@@ -12,6 +12,9 @@
 .sk-primary.sk-plane, .sk-primary .sk-chase-dot:before, .sk-primary .sk-bounce-dot, .sk-primary .sk-wave-rect, .sk-primary.sk-pulse, .sk-primary .sk-swing-dot, .sk-primary .sk-circle-dot:before, .sk-primary .sk-circle-fade-dot:before, .sk-primary .sk-grid-cube, .sk-primary .sk-fold-cube:before {
       background-color: #fce800 !important;
 }
+.float-right {
+  float: right;
+}
 .dark-style .menu .app-brand.demo {
   height: 64px;
 }
@@ -28,6 +31,9 @@
 .new-car-alert a:hover {
     color: #2e7200 !important;
 
+}
+.h-55 {
+  height: 55px;
 }
 .d-none {
   display: none !important;
@@ -400,7 +406,25 @@ input, select {
 #DataTables_Table_0 td, .datatables-customer-order th {
   text-align: center;
 }
-.invoice-item-note {
-  border: 1px solid #fce800 !important;
-    background-color: #fce8002e !important;
+.customer-hidden {
+  border: 1px solid #cccccc !important;
+    background-color: #ebebeb !important;
+    color: #8080808f !important;
+}
+body.invoice-page .container-xxl {
+   max-width: 1840px;
+}
+.invoice-min-width {
+  min-width: 1735px;
+}
+.bg-white {
+  background-color: #ffffff;
+}
+.add-payment {
+    position: absolute;
+    right: -2px !important;
+    display: block;
+}
+.tbl-gray-bg {
+  background: #80808014;
 }
