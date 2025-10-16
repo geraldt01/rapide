@@ -539,33 +539,37 @@ class SalesReport extends Controller
        $totalCheckOthers = 0;
        $grandTotal = 0;
     foreach ($jobOrderSales as $k => $v) {
+       $check_others = 0;
+         $totalCash = 0;
+       $totalGcash = 0;
+       $totalMobile = 0;
      
       if($v->mode_of_payment == 'cash') {
         $cash +=  str_replace(",", "", $v->payment);
-        $totalCash += $cash;
+        $totalCash += str_replace(",", "", $v->payment);
       } else if($v->mode_of_payment == 'gcash') {
         $gcash +=  str_replace(",", "", $v->payment);
-        $totalGcash += $gcash;
+        $totalGcash += str_replace(",", "", $v->payment);
       } else if($v->mode_of_payment == 'mobile') {
         $mobile +=  str_replace(",", "", $v->payment);
-        $totalMobile += $mobile;
+        $totalMobile += str_replace(",", "", $v->payment);
       } else if($v->mode_of_payment == 'check_others') {
         $check_others +=  str_replace(",", "", $v->payment);
-        $totalCheckOthers += $check_others;
+        $totalCheckOthers += str_replace(",", "", $v->payment);
       }
 
       if($v->mode_of_payment2 == 'cash') {
         $cash +=  str_replace(",", "", $v->payment2);
-        $totalCash += $cash;
+        $totalCash += str_replace(",", "", $v->payment2);
       } else if($v->mode_of_payment2 == 'gcash') {
         $gcash +=  str_replace(",", "", $v->payment2);
-        $totalGcash += $gcash;
+        $totalGcash += str_replace(",", "", $v->payment2);
       } else if($v->mode_of_payment2 == 'mobile') {
         $mobile +=  str_replace(",", "", $v->payment2);
-        $totalMobile += $mobile;
+        $totalMobile += str_replace(",", "", $v->payment2);
       } else if($v->mode_of_payment2 == 'check_others') {
         $check_others +=  str_replace(",", "", $v->payment2);
-        $totalCheckOthers += $check_others;
+        $totalCheckOthers += str_replace(",", "", $v->payment2);
       }
 
       $grandTotal +=  str_replace(",", "", $v->total_amount);
