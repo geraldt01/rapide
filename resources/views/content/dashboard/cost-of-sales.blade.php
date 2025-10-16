@@ -39,40 +39,12 @@
 
 <div class="card mb-4">
   <div class="card-widget-separator-wrapper">
-    <div class="card-body card-widget-separator dashboard">
       <div class="row gy-4 gy-sm-1">
         <div class="col-sm-6 col-lg-6">
-          <div class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-3 pb-sm-0">
-            <div>
-              <p class="mb-2">Status</p>
-              <div class="d-flex">
-                <div><span class="badge rounded-pill bg-label-warning" text-capitalized="">Estimate: <b><span id="total-estimate" class="c-black">0</span></b></span>  </div>
-                <div class="mb-0 ml-4"><span class="badge rounded-pill bg-label-info" text-capitalized="">Job Order: <b><span id="total-job-order" class="c-black">0</span></b></span> </div>
-              </div>
-            </div>
-            <div class="avatar me-sm-4">
-              <span class="avatar-initial rounded bg-label-secondary">
-                <i class="mdi mdi-align-horizontal-left mdi-24px"></i>
-              </span>
-            </div>
-          </div>
+         
           <hr class="d-none d-sm-block d-lg-none me-4">
         </div>
-        <div class="col-sm-6 col-lg-6">
-          <div class="d-flex justify-content-between align-items-start card-widget-2 pb-3 pb-sm-0">
-            <div>
-              <p class="mb-2">Total Cars</p>
-              <h4 class="mb-2"><span id="total-cars">0</span></h4>
-              <!-- <p class="mb-0"><span class="me-2">21k orders</span><span class="badge rounded-pill bg-label-success">+12.4%</span></p> -->
-            </div>
-            <div class="avatar me-lg-4">
-              <span class="avatar-initial rounded bg-label-secondary">
-                <i class="mdi mdi-train-car-flatbed-car mdi-24px"></i>
-              </span>
-            </div>
-          </div>
-          <hr class="d-none d-sm-block d-lg-none">
-        </div>
+ 
         <!-- <div class="col-sm-6 col-lg-3">
           <div class="d-flex justify-content-between align-items-start border-end pb-3 pb-sm-0 card-widget-3">
             <div>
@@ -101,7 +73,6 @@
             </div>
           </div>
         </div> -->
-      </div>
     </div>
   </div>
 </div>
