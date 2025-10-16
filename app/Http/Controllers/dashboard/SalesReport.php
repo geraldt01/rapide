@@ -539,10 +539,10 @@ class SalesReport extends Controller
        $totalCheckOthers = 0;
        $grandTotal = 0;
     foreach ($jobOrderSales as $k => $v) {
+        $cash = 0;
+       $gcash = 0;
+       $mobile = 0;
        $check_others = 0;
-         $totalCash = 0;
-       $totalGcash = 0;
-       $totalMobile = 0;
      
       if($v->mode_of_payment == 'cash') {
         $cash +=  str_replace(",", "", $v->payment);
