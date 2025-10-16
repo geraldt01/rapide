@@ -574,10 +574,10 @@ class SalesReport extends Controller
 
       $grandTotal +=  str_replace(",", "", $v->total_amount);
 
-      $items[] = array($v->invoice_number, $v->plate_number, $cash, $gcash, $mobile, $check_others, $v->total_amount );
+      $items[] = array($v->invoice_number, $v->plate_number, (($cash > 0) ? number_format($cash, 2) : ''), (($gcash > 0) ? number_format($gcash, 2) : ''), (($mobile > 0) ? number_format($mobile, 2) : '') , (($check_others > 0) ? number_format($check_others, 2) : '') , $v->total_amount );
     }
 
-      $items[] = array('Sales', '', $totalCash, $totalGcash, $totalMobile, $totalCheckOthers, $grandTotal);
+      $items[] = array('Sales', '', (($totalCash > 0) ? number_format($totalCash, 2) : '') , (($totalGcash > 0) ? number_format($totalGcash, 2) : '') , (($totalMobile > 0) ? number_format($totalMobile, 2) : '') , (($totalCheckOthers > 0) ? number_format($totalCheckOthers, 2) : '') , (($grandTotal > 0) ? number_format($grandTotal, 2) : '') );
 
       $export = new SalesReportExport([
         $items
