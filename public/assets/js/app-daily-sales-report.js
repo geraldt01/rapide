@@ -977,7 +977,7 @@ $.ajax({
         url: '/app/export/sales-report/'+dateYmd,
           data:  $("#editCashBalanceForm").serialize(),
           success: function (result) {
-           window.open('/cost-of-sales/download/'+result.fileName, '_blank').focus();
+           window.open('/download/'+result.fileName, '_blank').focus();
 
         },
       error: function (result, textStatus, errorThrown) {
