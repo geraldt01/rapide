@@ -535,7 +535,9 @@ class InvoiceEdit extends Controller
       // $jo = new JobOrder();
       // $jo->save();
 
-  $new_status = $_POST['hidden-job-order-new-status'];
+     $job_order_new_status = $_GET['job_order_new_status'];
+
+  $new_status = $job_order_new_status;
   $jobOrderInfo = DB::table('job_orders')
     ->where('id', '=', $job_order_id)
     ->get();
