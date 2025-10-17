@@ -496,7 +496,7 @@ calculateAll();
  function doChangeStatus() {
   var job_order_id = document.getElementById('hidden-job-order-id').value;
   var job_order_new_status = document.getElementById('hidden-job-order-new-status').value;
-  
+   
   $.ajax({
     type: "get",
     url: '/app/job-order/status-upgrade/'+job_order_id,
