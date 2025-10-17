@@ -355,47 +355,47 @@ class InvoiceEdit extends Controller
     ->where('job_orders.id', '=', $job_order_id)
     ->get();
    
-    if($_GET['status'] == 1) {
+    if($_POST['status'] == 1) {
       $status_display = "estimate";
-    } else if ($_GET['status'] == 2) {
+    } else if ($_POST['status'] == 2) {
       $status_display = "job order";
-    } else if ($_GET['status'] == 3) {
+    } else if ($_POST['status'] == 3) {
       $status_display = "receipt";
     } else {
-      $status_display = $_GET['status-text'];
+      $status_display = $_POST['status-text'];
 
     }
 
-    $invoice_date = $_GET['invoice_date']; // Example date in m/d/Y format
+    $invoice_date = $_POST['invoice_date']; // Example date in m/d/Y format
     // Create a DateTime object from the original format
     $dateTimeObject = DateTime::createFromFormat('m/d/Y', $invoice_date);
     // Format the DateTime object into the desired Y-m-d format
     $new_invoice_date = $dateTimeObject->format('Y-m-d');
 
-    // $payment = intval(preg_replace('/[^\d.]/', '', $_GET['payment']));
-    $payment =  $_GET['payment'];
-    // $payment2 = intval(preg_replace('/[^\d.]/', '', $_GET['payment2']));
-    $payment2 = $_GET['payment2'];
+    // $payment = intval(preg_replace('/[^\d.]/', '', $_POST['payment']));
+    $payment =  $_POST['payment'];
+    // $payment2 = intval(preg_replace('/[^\d.]/', '', $_POST['payment2']));
+    $payment2 = $_POST['payment2'];
 
     JobOrder::where("id", $job_order_id)->update(
       [
-        "status" => $_GET['status'],
+        "status" => $_POST['status'],
         "status_display" => $status_display,
         "date" => $new_invoice_date,
-        "expire_date" => (($_GET['expire_date']) ? $_GET['expire_date'] : 0),
-        "package_total" => (($_GET['hidden-package-sub-totals']) ? $_GET['hidden-package-sub-totals'] : 0),
-        "labor_total" => (($_GET['labor-total']) ? $_GET['labor-total'] : 0),
-        "part_total" => (($_GET['part-total']) ? $_GET['part-total'] : 0),
-        "sub_total" => (($_GET['sub_total']) ? $_GET['sub_total'] : 0),
-        "vat" => (($_GET['vat']) ?  $_GET['vat'] : 0),
-        "total_amount" => (($_GET['total-amount']) ?  $_GET['total-amount'] : 0),
-        "payment" => (($_GET['payment']) ? $payment : 0),
-        "payment2" => (($_GET['payment2']) ? $payment2 : 0),
-        "balance" => (($_GET['balance']) ? $_GET['balance'] : 0),
-        "remarks" => (($_GET['remarks']) ?  $_GET['remarks'] : ''),
-        "mode_of_payment" => (($_GET['mop']) ?  $_GET['mop'] : ''),
-        "mode_of_payment2" => (($_GET['mop2']) ?  $_GET['mop2'] : ''),
-        "customer_name" => (($_GET['customer_name']) ?  $_GET['customer_name'] : ''),
+        "expire_date" => (($_POST['expire_date']) ? $_POST['expire_date'] : 0),
+        "package_total" => (($_POST['hidden-package-sub-totals']) ? $_POST['hidden-package-sub-totals'] : 0),
+        "labor_total" => (($_POST['labor-total']) ? $_POST['labor-total'] : 0),
+        "part_total" => (($_POST['part-total']) ? $_POST['part-total'] : 0),
+        "sub_total" => (($_POST['sub_total']) ? $_POST['sub_total'] : 0),
+        "vat" => (($_POST['vat']) ?  $_POST['vat'] : 0),
+        "total_amount" => (($_POST['total-amount']) ?  $_POST['total-amount'] : 0),
+        "payment" => (($_POST['payment']) ? $payment : 0),
+        "payment2" => (($_POST['payment2']) ? $payment2 : 0),
+        "balance" => (($_POST['balance']) ? $_POST['balance'] : 0),
+        "remarks" => (($_POST['remarks']) ?  $_POST['remarks'] : ''),
+        "mode_of_payment" => (($_POST['mop']) ?  $_POST['mop'] : ''),
+        "mode_of_payment2" => (($_POST['mop2']) ?  $_POST['mop2'] : ''),
+        "customer_name" => (($_POST['customer_name']) ?  $_POST['customer_name'] : ''),
         
       ]
     );
@@ -407,7 +407,7 @@ class InvoiceEdit extends Controller
      
   
    
-    foreach($_GET as $key => $value) {
+    foreach($_POST as $key => $value) {
     
       if($key== 'group-a') {
         foreach($value as $package){

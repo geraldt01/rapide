@@ -257,7 +257,7 @@ calculateAll();
 
   function saveInvoice(job_order_id) {
     $.ajax({
-      type: "get",
+      type: "post",
       url: '/app/save-job-order-item/'+ job_order_id,
         data:  $("#form-job-order").serialize(),
         success: function (result) {
