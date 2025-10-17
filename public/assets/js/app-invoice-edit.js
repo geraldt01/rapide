@@ -496,24 +496,24 @@ calculateAll();
  function doChangeStatus() {
   var job_order_id = document.getElementById('hidden-job-order-id').value;
   var job_order_new_status = document.getElementById('hidden-job-order-new-status').value;
-   
-  $.ajax({
-    type: "get",
-    url: '/app/job-order/status-upgrade-now/'+job_order_id,
-      data:  {job_order_new_status: job_order_new_status},
-      success: function (result) {
-          if(result.success == true) {
-            $('#addNewJobOrderUpdate').modal('hide');
-            $(".loader").removeClass("d-none");
-            setTimeout(function(){ 
-             window.location.replace("/app/job-order/"+result.newJobOrderId);
-            }, 3000);
-          }
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
+   alert("pasok");
+  // $.ajax({
+  //   type: "get",
+  //   url: '/app/job-order/status-upgrade-now/'+job_order_id,
+  //     data:  {job_order_new_status: job_order_new_status},
+  //     success: function (result) {
+  //         if(result.success == true) {
+  //           $('#addNewJobOrderUpdate').modal('hide');
+  //           $(".loader").removeClass("d-none");
+  //           setTimeout(function(){ 
+  //            window.location.replace("/app/job-order/"+result.newJobOrderId);
+  //           }, 3000);
+  //         }
+  //       },
+  //     error: function (result, textStatus, errorThrown) {
+  //         console.log(result.success);
+  //     },
+  //   });
   }
 
   function populateOption(element) {
