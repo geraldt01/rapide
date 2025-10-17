@@ -52,6 +52,7 @@
 @section('content')
 @foreach($jobOrderInfo as $k => $data)
 <form id="form-job-order">
+   @csrf
   <input type="hidden" name="hidden-job-order-id" id="hidden-job-order-id" value="{{$job_order_id}}" />
   <input type="hidden" name="hidden-invoice-date" id="hidden-invoice-date" value="{{$invoice_date}}" />
   <input type="hidden" name="hidden-job-order-current-status" id="hidden-job-order-current-status" value="{{$data->job_order_status}}" />

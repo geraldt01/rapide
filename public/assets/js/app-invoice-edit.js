@@ -498,7 +498,7 @@ calculateAll();
   var job_order_new_status = document.getElementById('hidden-job-order-new-status').value;
   
   $.ajax({
-    type: "get",
+    type: "post",
     url: '/app/job-order/status-upgrade/'+job_order_id,
       data:  $("#form-job-order").serialize(),
       success: function (result) {
