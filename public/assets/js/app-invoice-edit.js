@@ -499,7 +499,7 @@ calculateAll();
    
   $.ajax({
     type: "get",
-    url: '/app/job-order/status-upgrade/'+job_order_id,
+    url: '/app/job-order/status-upgrade-now/'+job_order_id,
       data:  {job_order_new_status: job_order_new_status},
       success: function (result) {
           if(result.success == true) {

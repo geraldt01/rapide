@@ -242,7 +242,7 @@ Route::get('/app/save-job-order-item/{job_order_id}', [InvoiceEdit::class, 'save
 Route::get('/app/get-job-order-item-price/{job_order_id}', [InvoiceEdit::class, 'getJobOrderItemprice'])->middleware('auth');
 Route::get('/app/get-job-order-item-package-price/{job_order_id}', [InvoiceEdit::class, 'getJobOrderItemPackagePrice'])->middleware('auth');
 Route::get('/app/job-order/change-status/{status_id}', [InvoiceEdit::class, 'changeStatus'])->middleware('auth');
-Route::get('/app/job-order/status-upgrade/{job_order_id}', [InvoiceEdit::class, 'upgradeNewStatus'])->middleware('auth');
+Route::get('/app/job-order/status-upgrade-now/{job_order_id}', [InvoiceEdit::class, 'upgradeNewStatus'])->middleware('auth');
 Route::get('/app/duplicate-parts/{job_order_id}', [InvoiceEdit::class, 'duplicateParts'])->middleware('auth');
 
 
