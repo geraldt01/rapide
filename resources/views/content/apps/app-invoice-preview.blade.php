@@ -173,7 +173,7 @@
           @endforeach
            <tr>
               <td colspan="3"></td>
-              <td colspan="2" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{number_format($data->labor_total, 2)}}</b></td>
+              <td colspan="2" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{number_format((float)$data->labor_total, 2)}}</b></td>
             </tr>
           </tbody>
         </table>
@@ -210,7 +210,8 @@
           @endforeach
             <tr>
               <td colspan="3"></td>
-              <td colspan="3" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->part_total}}</b></td>
+              <td colspan="2" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{number_format((float)$data->part_total, 2)}}</b></td>
+
             </tr>
           </tbody>
         </table>
