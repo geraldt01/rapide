@@ -12,6 +12,7 @@ use App\Models\JobOrdersPackage;
 use App\Models\InvoiceNumber;
 use App\Models\RepairEstimateNumber;
 use App\Models\JobOrderNumber;
+use App\Models\Owner;
 
 use DB;
 
@@ -156,22 +157,32 @@ class EcommerceCustomerDetailsOverview extends Controller
 
 
 
-      for($x=0;$x<=10;$x++) {
+      for($x=0;$x<=19;$x++) {
         if($x == 0) {
           $pck = new JobOrdersPackage();
+          $pck->item_number = 1;
           $pck->job_order_id = $c->id;
           $pck->save(); 
         }
         $prt = new JobOrdersPartService();
+        $prt->item_number =$x+1;
         $prt->job_order_id = $c->id;
         $prt->part_value = "";
         $prt->part_number = "";
+        if($x > 9) {
+        $prt->status = 2;
+        }
+
         $prt->save();
 
         $lbr = new JobOrdersLabor();
         $lbr->job_order_id = $c->id;
+        $lbr->item_number =$x+1;
         $lbr->labor_value = "";
         $lbr->part_number = "";
+        if($x > 9) {
+          $lbr->status = 2;
+        }
         $lbr->save();
 
       } 
@@ -188,6 +199,7 @@ class EcommerceCustomerDetailsOverview extends Controller
 
       $k = 0;
       $key = 1;
+      $a = 1;
         $array = array();
 
  
@@ -223,7 +235,7 @@ class EcommerceCustomerDetailsOverview extends Controller
 
       }
          $array[] = array('id' => $jo_id,
-        'counter' => $key,
+        'counter' => $a,
         'order' => $number,
         'customer' => "Gabrielle Feyer",
         'email' => "gfeyer0@nyu.edu",
@@ -237,6 +249,7 @@ class EcommerceCustomerDetailsOverview extends Controller
         'time' => "2:11 AM",
         'method_number' => 6522);
       $key++;
+      $a++;
     }
   } 
   
@@ -311,4 +324,24 @@ class EcommerceCustomerDetailsOverview extends Controller
 
      return response()->json(['success'=> true, 'estimate_number' => $getLatestEstimateNumber->value+1]);
   }
+
+  function editCustomer() {
+    $customer_id = $_GET['hidden-customer-id-edit'];
+    $modalEditCustomerName = $_GET['modalEditCustomerName'];
+    $modalEditAddress = $_GET['modalEditAddress'];
+    $modalEditContact = $_GET['modalEditContact'];
+
+    Owner::where("id", $customer_id)->update(
+      [
+        "owner_name" => $modalEditCustomerName,
+        "address" => $modalEditAddress,
+        "mobile_number" => $modalEditContact,
+      ]);
+
+     return response()->json(['success'=> true, 'owner_name' => $modalEditCustomerName, 'address' => $modalEditAddress, 'mobile_number' => $modalEditContact, 'message' => 'Customer Information updated!' ]);
+
+  }
+
+
+  
 }

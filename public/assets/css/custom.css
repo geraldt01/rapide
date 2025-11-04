@@ -428,3 +428,9 @@ body.invoice-page .container-xxl {
 .tbl-gray-bg {
   background: #80808014;
 }
+.text-capital {
+  text-transform: uppercase;
+}
+.disable-part-item {
+  display: none;
+}

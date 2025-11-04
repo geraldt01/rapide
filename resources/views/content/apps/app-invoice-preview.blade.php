@@ -138,7 +138,7 @@
           @foreach($jobOrderPackageSelected as $k => $package)
             <tr>
               <td class="text-nowrap text-heading" colspan="4">{{$package->package_value}}</td>
-              <td  class="text-right"><b>₱ {{number_format($package->package_price, 2)}}</b></td>
+              <td  class="text-right"><b>₱ {{number_format((float)$package->package_price, 2)}}</b></td>
             </tr>
           @endforeach
           </tbody>
@@ -167,8 +167,8 @@
               <td  style="width: 10%" class="text-nowrap text-heading">{{$klabor + 1}}</td>
               <td style="width: 55%" class="capital-letter">{{$labor->labor_value}}</td>
               <td class="text-center">{{(($labor->labor_value) ? $labor->labor_qty : '' )}}</td>
-              <td class="text-right">{{(($labor->labor_value) ? number_format($labor->labor_price, 2) : '' )}}</td>
-              <td class="text-right">{{(($labor->labor_value) ?  number_format($labor->labor_amount, 2) : '' )}}</td>
+              <td class="text-right">{{(($labor->labor_value) ? number_format((float)$labor->labor_price, 2) : '' )}}</td>
+              <td class="text-right">{{(($labor->labor_value) ?  number_format((float)$labor->labor_amount, 2) : '' )}}</td>
             </tr>
           @endforeach
            <tr>
@@ -204,8 +204,8 @@
               <td class="text-left">{{$part->part_value}}</td>
               <td class="text-left">{{$part->part_number}}</td>
               <td class="text-center">{{(($part->part_value) ? $part->part_qty : '' )}}</td>
-              <td class="text-right">{{(($part->part_value) ? number_format($part->part_price, 2) : '' ) }}</td>
-              <td class="text-right">{{(($part->part_value) ? number_format($part->part_amount, 2)   : '' ) }}</td>
+              <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_price, 2) : '' ) }}</td>
+              <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_amount, 2)   : '' ) }}</td>
             </tr>
           @endforeach
             <tr>
@@ -234,6 +234,10 @@
                 <span class="">
                   <b>
                     This is merely an estimate. Cost of parts quoted may change depending on the availability of the above quoted parts. NO WARRANTY on service where PARTS/FLUIDS are provided by customer. NO WARRANTY on change oil service where OIL SLUDGE is detected upon inspection. Presence of oil sludge may cause engine trouble. ENGINE FLUSH does not guarantee the complete removal of oil sludge. Proper period of changing your oil is still the best way in preventing the build up of oil sludge.			
+                  <br>
+                  <br>
+                  PLEASE READ: Under MAP Uniform Inspection Guidelines, we are required to document all our findings on your vehicle. This is your estimate. Our Store Manager should bring you to your car, show you the needed repairs and go over the estimate with you, item by item. All your questions should be answered. We want you to know all your options. This is your car. We want to help you keep it in good running condition
+                 
                   </b>  
                 </span>
               </div>
@@ -241,6 +245,43 @@
           </div>
             <div class="col-md-4 d-flex justify-content-md-end mt-2">
              <div class="invoice-calculations">
+
+              <div class="d-flex justify-content-between mb-2 mt-4">
+                <span class="w-px-150"><b>SUBTOTAL</b></span>
+                <h6 class="mb-0 pt-1">₱ {{$data->sub_total}}</h6>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="w-px-150">VAT (12%)</span>
+                <h6 class="mb-0 pt-1">{{number_format((float)$data->vat, 2)}}</h6>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="w-px-150"><b>TOTAL AMOUNT</b></span>
+                <h6 class="mb-0 pt-1">₱ {{$data->total_amount}}</h6>
+              </div>
+               <div class="d-flex justify-content-between mb-2">
+                <span class="w-px-150"><b style="text-transform: uppercase;">{{$data->payment_label}}</b>
+                @if($data->payment2 > 0)
+                  <span>({{$data->mode_of_payment}})</span>
+                @endif
+              </span>
+                <h6 class="mb-0 pt-1">₱ {{number_format((float)$data->payment, 2)}}</h6>
+              </div>
+
+              @if($data->payment2 > 0)
+              <div class="d-flex justify-content-between mb-2">
+                <span class="w-px-150"><b>PAYMENT</b> 
+                @if($data->payment2 > 0)
+                  <span>({{$data->mode_of_payment2}})</span>
+                @endif
+                </span>
+                <h6 class="mb-0 pt-1">₱ {{number_format((float)$data->payment2, 2)}}</h6>
+              </div>
+              @endif
+              <hr />
+              <div class="d-flex justify-content-between">
+                <span class="w-px-150"><b>BALANCE</b></span>
+                <h6 class="mb-0 pt-1">₱ {{number_format((float)$data->balance, 2)}}</h6>
+              </div>
             </div>
           </div>
         </div>
@@ -255,7 +296,6 @@
               <div class=" justify-content-between mb-2">
                 <span class="">
                   <b>
-                  PLEASE READ: Under MAP Uniform Inspection Guidelines, we are required to document all our findings on your vehicle. This is your estimate. Our Store Manager should bring you to your car, show you the needed repairs and go over the estimate with you, item by item. All your questions should be answered. We want you to know all your options. This is your car. We want to help you keep it in good running condition
                   </b>  
                 </span>
               </div>
@@ -263,42 +303,7 @@
           </div>
             <div class="col-md-4 d-flex justify-content-md-end mt-2">
              <div class="invoice-calculations">
-              <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150"><b>SUBTOTAL</b></span>
-                <h6 class="mb-0 pt-1">₱ {{$data->sub_total}}</h6>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150">VAT (12%)</span>
-                <h6 class="mb-0 pt-1">{{number_format($data->vat, 2)}}</h6>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150"><b>TOTAL AMOUNT</b></span>
-                <h6 class="mb-0 pt-1">₱ {{$data->total_amount}}</h6>
-              </div>
-               <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150"><b>PAYMENT</b>
-                @if($data->payment2 > 0)
-                  <span>({{$data->mode_of_payment}})</span>
-                @endif
-              </span>
-                <h6 class="mb-0 pt-1">₱ {{number_format($data->payment, 2)}}</h6>
-              </div>
-
-              @if($data->payment2 > 0)
-              <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150"><b>PAYMENT</b> 
-                @if($data->payment2 > 0)
-                  <span>({{$data->mode_of_payment2}})</span>
-                @endif
-                </span>
-                <h6 class="mb-0 pt-1">₱ {{number_format($data->payment2, 2)}}</h6>
-              </div>
-              @endif
-              <hr />
-              <div class="d-flex justify-content-between">
-                <span class="w-px-150"><b>BALANCE</b></span>
-                <h6 class="mb-0 pt-1">₱ {{number_format($data->balance, 2)}}</h6>
-              </div>
+       
             </div>
           </div>
         </div>
@@ -312,7 +317,9 @@
             <div class="">
               <table>
                 <tr>
-                  <td>FERDINAND ENCARNACION</td>
+                  <td class="text-center">
+                    <span><img src="/assets/img/esig/sir-bong-sig.png" /></span><br>
+                    FERDINAND ENCARNACION</td>
                 </tr>
                   <tr>
                   <td style="border-top: 1px solid black;"> <p for="salesperson" class="fw-medium text-center">STORE MANAGER</p></td>
@@ -321,6 +328,9 @@
             </div>
           </div>
           <div class="col-md-6  justify-content-md-start ">
+            <br>
+            <br>
+            <br>
             <div class="form-floating form-floating-outline mb-4">
               <input type="text" class="form-control" id="invoiceMsg" placeholder="Gerald Tejero" value="{{$data->customer_name}}" />
               <label for="invoiceMsg">CUSTOMER NAME AND SIGNATURE</label>

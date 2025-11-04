@@ -118,7 +118,7 @@ foreach($var as $ctr => $d) {
 
         $overall_unit_selling_price_with_labor += $unit_selling_price_with_labor;
         $overall_total_sell_price  += $total_sell_price;
-        $total_inv_amount_package = $overall_unit_selling_price_with_labor + $overall_total_sell_price;
+        $total_inv_amount_package =  $overall_total_sell_price;
        
          $cosHtml[] ="<tr class='".(($ctr == 0) ? 'tbl-gray-bg' : '')."'>
          <td>".(($ctr == 0) ? $v['data']->date : '' )."</td>

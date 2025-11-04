@@ -41,7 +41,7 @@
 @section('page-script')
 <script src="{{asset('assets/js/modal-edit-user.js')}}"></script>
 <script src="{{asset('assets/js/app-ecommerce-customer-detail.js')}}"></script>
-<script src="{{asset('assets/js/app-ecommerce-customer-detail-overview.js')}}"></script>
+<script src="{{asset('assets/js/app-ecommerce-customer-detail-overview.js?v=1.3.0')}}"></script>
 
 <script src="{{asset('assets/js/forms-pickers.js')}}"></script>
 
@@ -59,6 +59,9 @@
 <input type="hidden" name="hidden-selected-vehicle-type" id="hidden-selected-vehicle-type" value="{{$customerInfo->vehicle_type}}" />
 <input type="hidden" name="hidden-selected-mileage" id="hidden-selected-mileage" value="{{$customerInfo->mileage}}" />
 <input type="hidden" name="hidden-selected-year" id="hidden-selected-year" value="{{$customerInfo->year}}" />
+<input type="hidden" name="hidden-customer-name" id="hidden-customer-name" value="{{$customerInfo->owner_name}}" />
+<input type="hidden" name="hidden-customer-address" id="hidden-customer-address" value="{{$customerInfo->address}}" />
+<input type="hidden" name="hidden-customer-contact" id="hidden-customer-contact" value="{{$customerInfo->mobile_number}}" />
 <!-- <input type="hidden" name="hidden-selected-invoice-number" id="hidden-selected-invoice-number" value="{{$invoice_number}}" /> -->
 
 
@@ -69,7 +72,6 @@
 <div class="d-flex flex-column flex-sm-row align-items-center justify-content-sm-between mb-4 text-center text-sm-start gap-2">
   <div class="mb-2 mb-sm-0">
     <h4 class="mb-1">
-
       Customer ID #00{{$customerInfo->owner_id}}
     </h4>
   
@@ -88,7 +90,7 @@
           <div class="d-flex align-items-center flex-column">
             <img class="img-fluid rounded mb-3 mt-4" src="{{asset('assets/img/avatars/12.png')}}" height="120" width="120" alt="User avatar" />
             <div class="customer-info text-center mb-4">
-              <h5 class="mb-1">{{$customerInfo->owner_name}}</h5>
+              <h5 class="mb-1" id="display-owner-name">{{$customerInfo->owner_name}}</h5>
               <span>Customer ID #00{{$customerInfo->owner_id}}</span>
             </div>
           </div>
@@ -130,15 +132,15 @@
             </li>
             <li class="mb-2">
               <span class="h6 me-1">Contact:</span>
-              <span>{{$customerInfo->mobile_number}}</span>
+              <span  id="display-contact">{{$customerInfo->mobile_number}}</span>
             </li>
              <li class="mb-2">
               <span class="h6 me-1">Address:</span>
-              <span>{{$customerInfo->address}}</span>
+              <span id="display-address">{{$customerInfo->address}}</span>
             </li>
           </ul>
           <div class="d-flex justify-content-center">
-            <a href="javascript:;" class="btn btn-primary me-3" data-bs-target="#editUser" data-bs-toggle="modal">Edit Details</a>
+            <a href="javascript:;" class="btn btn-primary me-3" data-bs-target="#editCustomerInfo" data-bs-toggle="modal">Edit Details</a>
           </div>
         </div>
       </div>
@@ -146,7 +148,7 @@
     <!-- /Customer-detail Card -->
     <!-- Plan Card -->
 
-    <div class="card mb-4 bg-gradient-primary">
+    <!-- <div class="card mb-4 bg-gradient-primary">
       <div class="card-body">
         <div class="row justify-content-between mb-3">
           <div class="col-md-12 col-lg-7 col-xl-12 col-xxl-7 text-center text-lg-start text-xl-center text-xxl-start order-1  order-lg-0 order-xl-1 order-xxl-0">
@@ -157,7 +159,7 @@
         </div>
         <button class="btn btn-white text-primary w-100 fw-medium shadow-sm" data-bs-target="#upgradePlanModal" data-bs-toggle="modal">Upgrade to premium</button>
       </div>
-    </div>
+    </div> -->
 
     <!-- /Plan Card -->
   </div>

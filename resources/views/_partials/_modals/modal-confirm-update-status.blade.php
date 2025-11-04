@@ -19,4 +19,28 @@
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="editPaymentLabel" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-simple modal-add-new-address">
+    <div class="modal-content p-3 p-md-5">
+      <div class="modal-body p-md-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        
+        <form id="editPaymentLabelForm" class="row g-4" onsubmit="return false">
+        <input type="hidden" name="hidden-job-order-id-payment-label" id="hidden-job-order-id-payment-label" value="" />
+          <div class="col-sm-12">
+                <div class="input-group input-group-merge ">
+                  <input type="text" class="form-control" name="payment-label-field" placeholder="" value="" id="payment-label-field" />
+                </div>
+           </div>
+          <div class="col-12 text-center">
+            <a class="btn btn-primary me-sm-3 me-1" onclick="changePaymentLabel()">Change</a>
+            <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 <!--/ Add New Address Modal -->

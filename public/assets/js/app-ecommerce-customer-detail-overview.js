@@ -202,8 +202,16 @@ $(function () {
 //     document.getElementById("modalVehicleType").value = vehicle_type;
  var modalMileage = document.getElementById("hidden-selected-mileage").value;
     document.getElementById("modalMileage").value = modalMileage;
- var modalEst = document.getElementById("hidden-selected-invoice-number").value;
+//  var modalEst = document.getElementById("hidden-selected-invoice-number").value;
     document.getElementById("modalEst").value = "INV#"+modalEst;
+
+    var customer_name = document.getElementById("hidden-customer-name").value;
+  document.getElementById("modalEditCustomerName").value = customer_name;
+  var customer_address = document.getElementById("hidden-customer-address").value;
+  document.getElementById("modalEditAddress").value = customer_address;
+  var customer_contact = document.getElementById("hidden-customer-contact").value;
+  document.getElementById("modalEditContact").value = customer_contact;
+    
         console.log(dt_order);
     $('div.head-label').html('<h5 class="card-title mb-0 text-nowrap">Estimates/Job Orders for <span id="selected-car-job-order" class="text-primary mb-0"><strong>'+plate_number+'</strong></span></h5>');
   }
@@ -335,6 +343,37 @@ function saveJobOrder() {
 
     },
   });
+}
+
+
+function editCustomerInfo() {
+
+    $.ajax({
+    type: "get",
+    url: '/app/edit-customer-info/',
+   data:  $("#editCustomerInfoForm").serialize(),
+    success: function (result) {
+        $("#display-owner-name").html(result.owner_name);
+        $("#display-address").html(result.address);
+        $("#display-contact").html(result.mobile_number);
+        $('#editCustomerInfo').modal('hide');
+        $(".alert-success p").html(result.message);
+        $(".alert-success").removeClass("d-none");
+      setTimeout(function(){ 
+        $(".alert-success").addClass("d-none");
+        const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
+    }, 3000);
+
+
+    },
+    error: function (data, textStatus, errorThrown) {
+        console.log(data.success);
+
+    },
+  });
+
+
+
 }
 
 

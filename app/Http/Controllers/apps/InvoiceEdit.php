@@ -50,7 +50,7 @@ class InvoiceEdit extends Controller
     ->where('status', '=', 1)
     ->get();
     $jobOrderPackageSelected = DB::table('job_orders_packages')
-    ->where('status', '=', 1)
+    // ->where('status', '=', 1)
     ->where('job_order_id', '=', $job_order_id)
     ->get();
 
@@ -59,7 +59,7 @@ class InvoiceEdit extends Controller
     if(isset($jobOrderPackageSelected[0]->job_order_id)) {
       foreach($jobOrderPackageSelected as $keypckg => $selected) {
       
-        $optionOneHtml[] = '<div class="border row w-100  p-2"  data-repeater-item><div class="col-md-6 col-12 mb-md-0 mb-3">
+        $optionOneHtml[] = '<div class="border row w-100  p-2 '.(($selected->status == 2) ? 'disable-package-item' : '').'" id="item-list-package-'.$keypckg.'"   data-repeater-item><div class="col-md-6 col-12 mb-md-0 mb-3">
         <input type="hidden" name="package-id" value="'.$selected->id.'" />
         <select id="package-option-'.$keypckg.' select1Basic'.$keypckg.'" name="package-option" class="select2" data-allow-clear="true"  onchange=" calculatePackage('.$keypckg.')" style="width: 0px;">
           <option value="">Select Package</option>';
@@ -86,7 +86,7 @@ class InvoiceEdit extends Controller
     ->orderBy('value','asc')
     ->get();
     $jobOrderLaborSelected = DB::table('job_orders_labors')
-    ->where('status', '=', 1)
+    // ->where('status', '=', 1)
     ->where('job_order_id', '=', $job_order_id)
     ->get();
 
@@ -110,7 +110,7 @@ class InvoiceEdit extends Controller
       foreach($jobOrderLaborSelected as $keyl => $selectedLabor) {
                 $keyl++;
                 $sub_amount = $selectedLabor->labor_price * $selectedLabor->labor_qty;
-                $optionTwoHtml[] = '<div class="border row w-100 p-3 pr-0" style="padding-right: 0px !important;" id="item-list-labor-'.$keyl.'"  data-repeater-item>
+                $optionTwoHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedLabor->status == 2) ? 'disable-labor-item' : '').'" style="padding-right: 0px !important;" id="item-list-labor-'.$keyl.'"  data-repeater-item>
                  <div class="col-md-1 col-12 mb-md-0 mb-3 color-black"  style="width: 4.333333%;">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
                     <span id="labor-counter-'.$keyl.'">'.$keyl.'</span>
@@ -120,14 +120,11 @@ class InvoiceEdit extends Controller
                         <input type="hidden" name="labor-id" value="'.$selectedLabor->id.'" />
                     <input type="text" class="form-control invoice-item-text " name="labor-text" id="labor-text-'.$keyl.'"  value="'.$selectedLabor->labor_value.'" onchange="calculateLabor('.$keyl.')" />
                   </div>
-                   <div class="col-md-1 col-12 mb-md-0 mb-3">
+                   <div class="col-md-3 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Cost</h6>
                     <input type="text" class="form-control invoice-item-cost labor customer-hidden" name="labor-cost" id="labor-cost-'.$keyl.'" value="'.$selectedLabor->cost.'" placeholder="" min="1" max="" onchange="calculateLabor('.$keyl.')"/>
                   </div>
-                  <div class="col-md-2 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium">Part Number</h6>
-                    <input type="text" class="form-control invoice-item-part-number labor" name="labor-part-number" id="labor-part-number-'.$keyl.'" value="'.$selectedLabor->part_number.'" placeholder="" min="1" max="" onchange="calculateLabor('.$keyl.')"/>
-                  </div>
+               
 
                      <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Qty</h6>
@@ -147,7 +144,7 @@ class InvoiceEdit extends Controller
                   </div>
 
                 <div class="col-md-1 col-12 border-start text-right" style="width: 2.333333%;">
-                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyl.', 1)" data-repeater-delete></i>
+                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyl.', 1);calculateLabor('.$keyl.')" ></i>
                   <div class="dropdown">
                     
                     </i>
@@ -197,7 +194,7 @@ class InvoiceEdit extends Controller
     ->get();
 
     $jobOrderPartSelected = DB::table('job_orders_part_services')
-    ->where('status', '=', 1)
+    // ->where('status', '=', 1)
     ->where('job_order_id', '=', $job_order_id)
     ->get();
 
@@ -209,12 +206,12 @@ class InvoiceEdit extends Controller
                 $keyprt++;
                 $sub_amount = $selectedPart->part_price * $selectedPart->part_qty;
 
-                $optionThreeHtml[] = '<div class="border row w-100 p-3 pr-0" style="padding-right: 0px !important;"  id="item-list-part-'.$keyprt.'"  data-repeater-item>
+                $optionThreeHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedPart->status == 2) ? 'disable-part-item' : '').'" style="padding-right: 0px !important;"  id="item-list-part-'.$keyprt.'"  data-repeater-item>
                  <div class="col-md-1 col-12 mb-md-0 mb-3 color-black" style="width: 4.333333%;">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
                      <span id="part-counter-'.$keyprt.'">'.$keyprt.'</span>
                   </div>
-                  <div class="col-md-3 col-12 mb-md-0 mb-3">
+                  <div class="col-md-3 col-12 mb-md-0 mb-3" id="refresh-div-'.$keyl.'">
                     <h6 class="mb-2 ml-2 repeater-title fw-medium"><strong>Service</strong></h6>
                       <div class="row">
                       <div class="col-1">
@@ -223,9 +220,9 @@ class InvoiceEdit extends Controller
                       <div class="col-11">
                         <input type="hidden" name="part-id" value="'.$selectedPart->id.'" />
                         <select id="part-option-'.$keyprt.' select2Basic'.$keyprt.'" name="part-option" class="select2" data-allow-clear="true"  onchange=" populateOption('.$keyprt.')">
-                         <option value="">Select Manufacturer</option>';
+                         <option value="" id="part-selected-'.$keyprt.'">Select Parts</option>';
                          foreach($jobOrderPartServiceOption as $optionsPart) {
-                                  $optionThreeHtml[] = '<option value="'.$optionsPart->id.'" '.(($optionsPart->id == $selectedPart->part_id) ? "selected" : "").'>'.$optionsPart->value.'</option>';
+                                $optionThreeHtml[] = '<option value="'.$optionsPart->id.'" '.(($optionsPart->id == $selectedPart->part_id) ? "selected" : "").'>'.$optionsPart->value.'</option>';
                               }
                                 $optionThreeHtml[] = '
                             </select>
@@ -245,7 +242,7 @@ class InvoiceEdit extends Controller
                   </div>
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
                       <h6 class="mb-2 repeater-title fw-medium">Supplier Inv</h6>
-                    <input type="text" class="form-control invoice-item-supplier-inv part customer-hidden" name="part-supplier-inv" id="supplier-'.$keyprt.'" value="'.$selectedPart->supplier_inv.'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
+                    <input type="text" class="form-control invoice-item-supplier-inv part customer-hidden" name="part-supplier-inv" id="supplier-inv-'.$keyprt.'" value="'.$selectedPart->supplier_inv.'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                   </div>
                    <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Unit Cost</h6>
@@ -274,7 +271,7 @@ class InvoiceEdit extends Controller
                     <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="part-amount" id="part-amount-'.$keyprt.'" value="'.$sub_amount.'" placeholder="" min="12"/>
                     </p>
 
-                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyprt.', 2)" data-repeater-delete></i>
+                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyprt.', 2);calculatePart('.$keyprt.')" ></i>
                   <div class="dropdown">
                     </i>
                     <div class="dropdown-menu dropdown-menu-end w-px-300 p-3" aria-labelledby="dropdownMenuButton">
@@ -332,7 +329,27 @@ class InvoiceEdit extends Controller
       $modeOfPayment[] = $mop->value;
     }
 
-    return view('content.apps.app-invoice-edit', ['invoice_date' => $newInvoiceDate, 'expire_date' => $jobOrderInfo[0]->expire_date, 'modeOfPayment' => $modeOfPayment, 'specialNotes' => $specialNotes, 'optionStatus' => $optionStatus, 'packageTotalItem' => $keypckg, 'partTotalItem' => $keyprt, 'laborTotalItem' => $keyl, 'optionThreeHtml' => $optionThreeHtml, 'optionTwoHtml' => $optionTwoHtml, 'optionOneHtml' => $optionOneHtml, 'job_order_id' => $job_order_id, 'jobOrderInfo' => $jobOrderInfo, 'jobOrderPartServiceOption' => $jobOrderPartServiceOption, 'jobOrderLaborOption' => $jobOrderLaborOption, 'jobOrderPackageOption' => $jobOrderPackageOption]);
+
+    $countEnabledPackageData = DB::table('job_orders_packages')
+    ->where('status', '=', 1)
+    ->where('job_order_id', '=', $job_order_id)
+    ->get();
+
+
+    $countEnabledLaborData = DB::table('job_orders_labors')
+    ->where('status', '=', 1)
+    ->where('job_order_id', '=', $job_order_id)
+    ->get();
+
+      $countEnabledPartData = DB::table('job_orders_part_services')
+    ->where('status', '=', 1)
+    ->where('job_order_id', '=', $job_order_id)
+    ->get();
+
+    $countEnabledPackage = count($countEnabledPackageData);
+    $countEnabledLabor = count($countEnabledLaborData);
+    $countEnabledPart = count($countEnabledPartData);
+    return view('content.apps.app-invoice-edit', ['invoice_date' => $newInvoiceDate, 'expire_date' => $jobOrderInfo[0]->expire_date, 'modeOfPayment' => $modeOfPayment, 'specialNotes' => $specialNotes, 'optionStatus' => $optionStatus, 'packageTotalItem' => $keypckg, 'partTotalItem' => $keyprt, 'laborTotalItem' => $keyl, 'optionThreeHtml' => $optionThreeHtml, 'optionTwoHtml' => $optionTwoHtml, 'optionOneHtml' => $optionOneHtml, 'job_order_id' => $job_order_id, 'jobOrderInfo' => $jobOrderInfo, 'jobOrderPartServiceOption' => $jobOrderPartServiceOption, 'jobOrderLaborOption' => $jobOrderLaborOption, 'jobOrderPackageOption' => $jobOrderPackageOption, 'countEnabledPart' => $countEnabledPart, 'countEnabledPackage' => $countEnabledPackage, 'countEnabledLabor' => $countEnabledLabor ]);
   }
 
 
@@ -603,16 +620,17 @@ class InvoiceEdit extends Controller
       ->orderBy('id','desc')
       ->get();
 
-      $final_invoice_number = $getLatestInvoice[0]->value + 1;
+      // $final_invoice_number = $getLatestInvoice[0]->value + 1;
 
-      $i = new JobOrderNumber();
-      $i->value = $final_invoice_number;
-      $i->save();
+      // $i = new JobOrderNumber();
+      // $i->value = $final_invoice_number;
+      // $i->save();
 
 
       $jo = new JobOrder();
       $jo->ex_job_order_id = $data->id;
-      $jo->job_order_number = $final_invoice_number;
+      // $jo->job_order_number = $final_invoice_number;
+      $jo->job_order_number = $data->job_order_number;
       $jo->car_id = $data->car_id;
       $jo->date = $data->date;
       $jo->plate_number = $data->plate_number;
@@ -629,6 +647,7 @@ class InvoiceEdit extends Controller
       $jo->total_amount = $data->total_amount;
       $jo->payment = $data->payment;
       $jo->payment2 = $data->payment2;
+      $jo->payment_label = $data->payment_label;
       $jo->mode_of_payment = $data->mode_of_payment;
       $jo->mode_of_payment2 = $data->mode_of_payment2;
       $jo->balance = $data->balance;
@@ -700,6 +719,37 @@ class InvoiceEdit extends Controller
 
   }
 
+  public function changePaymentLabel() {
+    JobOrder::where("id", $_GET['hidden-job-order-id-payment-label'])->update(
+      [
+        "payment_label" => $_GET['payment-label-field'],
   
+      ]
+    );
+     return response()->json(['success'=> true, 'message' => 'Label has been changed!', 'label' =>  $_GET['payment-label-field']]);
+
+  }
+
+  public function enableItem($type) {
+
+    $job_order_id = $_GET['job_order_id'];
+    $itemNum = $_GET['itemNum'];
+    if($type == 'package') {
+       JobOrdersPackage::where("job_order_id", $job_order_id)->where("item_number", $itemNum)->update([
+        "status" => 1,
+      ]);
+    } else if ($type == 'labor') {
+      JobOrdersLabor::where("job_order_id", $job_order_id)->where("item_number", $itemNum)->update([
+        "status" => 1,
+      ]);
+    } else {
+      JobOrdersPartService::where("job_order_id", $job_order_id)->where("item_number", $itemNum)->update([
+        "status" => 1,
+      ]);
+      echo "pasok";
+    }
+
+  }
+
   
 }
