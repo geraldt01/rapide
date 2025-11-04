@@ -224,6 +224,7 @@ Route::get('/json/ecommerce-job-order/{car_id}', [EcommerceCustomerDetailsOvervi
 Route::get('/app/add-new-car/', [EcommerceCustomerDetailsOverview::class, 'addNewCar']);
 Route::get('/app/get-dropdown-options', [EcommerceCustomerDetailsOverview::class, 'getDroptownOptions']);
 Route::get('/app/get-available-estimate-number', [EcommerceCustomerDetailsOverview::class, 'getEstimateNumber']);
+Route::get('/app/edit-customer-info', [EcommerceCustomerDetailsOverview::class, 'editCustomer']);
 
 Route::get('app/cost-of-sales/', [CostOfSales::class, 'index'])->name('cost-of-sales')->middleware('auth');
 Route::get('app/cost-of-sales/{date}', [CostOfSales::class, 'index'])->name('cost-of-sales')->middleware('auth');
@@ -244,6 +245,8 @@ Route::get('/app/get-job-order-item-package-price/{job_order_id}', [InvoiceEdit:
 Route::get('/app/job-order/change-status/{status_id}', [InvoiceEdit::class, 'changeStatus'])->middleware('auth');
 Route::get('/app/job-order/status-upgrade-now/{job_order_id}', [InvoiceEdit::class, 'upgradeNewStatus'])->middleware('auth');
 Route::get('/app/duplicate-parts/{job_order_id}', [InvoiceEdit::class, 'duplicateParts'])->middleware('auth');
+Route::get('/app/change-payment-label', [InvoiceEdit::class, 'changePaymentLabel'])->middleware('auth');
+Route::get('/app/enable-item/{type}', [InvoiceEdit::class, 'enableItem'])->middleware('auth');
 
 
 Route::get('/app/job-order/preview/{job_order_id}', [InvoicePreview::class, 'index'])->name('app-invoice-preview')->middleware('auth');

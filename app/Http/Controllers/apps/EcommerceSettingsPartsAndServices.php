@@ -26,6 +26,7 @@ class EcommerceSettingsPartsAndServices extends Controller
   public function getPartsAndServices($parts_and_services_id)
   {
 
+  
         $PartsAndServicesData = DB::table('job_orders_part_service_options')
         ->where('status', '=', 1)
         ->where('id', '=', $parts_and_services_id)
@@ -46,20 +47,25 @@ class EcommerceSettingsPartsAndServices extends Controller
      JobOrdersPartServiceOption::where("id", $parts_and_services_id)->update(
       [
         "value" => $_GET['modalPartsAndServices'],
+        "cost" => $_GET['modalCost'],
+        "price" => $_GET['modalPrice'],
       ]);
 
  
-    return response()->json( ['PartsAndServicesData' => $PartsAndServicesData, 'success'=> true, 'message' => 'Vehicle Type has been updated!']);
+    return response()->json( ['PartsAndServicesData' => $PartsAndServicesData, 'success'=> true, 'message' => 'Parts has been updated!']);
   }
 
 
   
     public function savePartsAndServices() {
+    
         $c = new JobOrdersPartServiceOption();
         $c->value = ((isset($_GET['modalPartsAndServices'])) ? $_GET['modalPartsAndServices'] : "");
+        $c->cost = ((isset($_GET['modalCost'])) ? $_GET['modalCost'] : "");
+        $c->price = ((isset($_GET['modalPrice'])) ? $_GET['modalPrice'] : "");
         $c->save();
 
-       return response()->json( ['success' => true, 'message' => 'Vehicle Type has been added!']);
+       return response()->json( ['success' => true, 'message' => 'Parts has been added!']);
 
     }
 
@@ -76,6 +82,8 @@ class EcommerceSettingsPartsAndServices extends Controller
         $partsAndServicesHtml[] = '<tr>
         <td>'.$key.'</td>
           <td>'.$data->value.'</td>
+          <td>'.$data->cost.'</td>
+          <td>'.$data->price.'</td>
           <td class="text-end">
             <div class="dropdown pe-3">
               <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></button>

@@ -99,6 +99,8 @@
                     <tr>
                       <th>#</th>
                       <th>Parts And Services</th>
+                      <th>Cost</th>
+                      <th>Price</th>
                       <th class="text-end">Actions</th>
                     </tr>
                   </thead>
@@ -107,6 +109,8 @@
                     <tr>
                       <td>{{$k +1}}</td>
                       <td>{{$partsandservices->value}}</td>
+                      <td>{{$partsandservices->cost}}</td>
+                      <td>{{$partsandservices->price}}</td>
                       <td class="text-end">
                         <div class="dropdown pe-3">
                           <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></button>

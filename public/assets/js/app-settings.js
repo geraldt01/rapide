@@ -393,6 +393,8 @@ function editPartsAndServices(parts_and_services_id) {
       data:  $("#formPartsAndServicesOption").serialize(),
         success: function (result) {
           document.getElementById('modalPartsAndServices').value = result.PartsAndServicesData.value;
+          document.getElementById('modalCost').value = result.PartsAndServicesData.cost;
+          document.getElementById('modalPrice').price = result.PartsAndServicesData.price;
 
         document.getElementById('btn-save-parts-and-services').setAttribute('onclick', 'savePartsAndServices('+result.PartsAndServicesData.id+')');
         },

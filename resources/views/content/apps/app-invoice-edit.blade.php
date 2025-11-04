@@ -22,6 +22,10 @@
 .tbl-header {
   background-color: #fce800;
 }
+.disable-part-item, .disable-labor-item, .disable-package-item {
+  display: none !important; 
+}
+
   </style>
 @section('vendor-script')
 <script src="{{asset('assets/vendor/libs/flatpickr/flatpickr.js')}}"></script>
@@ -41,7 +45,7 @@
 @section('page-script')
 <script src="{{asset('assets/js/offcanvas-add-payment.js')}}"></script>
 <script src="{{asset('assets/js/offcanvas-send-invoice.js')}}"></script>
-<script src="{{asset('assets/js/app-invoice-edit.js?v=2')}}"></script>
+<script src="{{asset('assets/js/app-invoice-edit.js?v=4.48.1')}}"></script>
 
 <script src="{{asset('assets/js/forms-selects.js')}}"></script>
 <script src="{{asset('assets/js/forms-tagify.js')}}"></script>
@@ -61,11 +65,12 @@
   <input type="hidden" name="hidden-labor-sub-totals" id="hidden-labor-sub-totals" value="" />
   <input type="hidden" name="hidden-part-sub-totals" id="hidden-part-sub-totals" value="" />
   
-  <input type="hidden" name="hidden-package-total-item" id="hidden-package-total-item" value="{{$packageTotalItem}}" />
-  <input type="hidden" name="hidden-labor-total-item" id="hidden-labor-total-item" value="{{$laborTotalItem}}" />
-  <input type="hidden" name="hidden-part-total-item" id="hidden-part-total-item" value="{{$partTotalItem}}" />
+  <input type="hidden" name="hidden-package-total-item" id="hidden-package-total-item" value="{{$countEnabledPackage}}" />
+  <input type="hidden" name="hidden-labor-total-item" id="hidden-labor-total-item" value="{{$countEnabledLabor}}" />
+  <input type="hidden" name="hidden-part-total-item" id="hidden-part-total-item" value="{{$countEnabledPart}}" />
   
   <input type="hidden" name="hidden-payment2" id="hidden-payment2" value="{{$data->payment2}}" />
+  <input type="hidden" name="hidden-payment-label" id="hidden-payment-label" value="{{$data->payment_label}}" />
 
 
 <div class="row invoice-edit">
@@ -207,7 +212,7 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <button type="button" class="btn btn-primary btn-sm" onclick="addItem('package')" data-repeater-create><i class="mdi mdi-plus me-1"></i> Add Item</button>
+              <!-- <button type="button" class="btn btn-primary btn-sm" onclick="addItem('package')" data-repeater-create><i class="mdi mdi-plus me-1"></i> Add Item</button> -->
             </div>
           </div>
         </div>
@@ -304,7 +309,7 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <button type="button" class="btn btn-primary btn-sm"  onclick="addItem('labor')" data-repeater-create><i class="mdi mdi-plus me-1"></i> Add Item</button>
+              <button type="button" class="btn btn-primary btn-sm"  onclick="addItem('labor')"><i class="mdi mdi-plus me-1"></i> Add Item</button>
             </div>
           </div>
         </div>
@@ -354,7 +359,7 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <button type="button" class="btn btn-primary btn-sm"  onclick="addItem('part')" data-repeater-create><i class="mdi mdi-plus me-1"></i> Add Item</button>
+              <button type="button" class="btn btn-primary btn-sm"  onclick="addItem('part', {{$countEnabledPart}})" ><i class="mdi mdi-plus me-1"></i> Add Item</button>
             </div>
           </div>
         </div>
@@ -586,28 +591,11 @@
                   <span class="">
                   <b>
                     This is merely an estimate. Cost of parts quoted may change depending on the availability of the above quoted parts. NO WARRANTY on service where PARTS/FLUIDS are provided by customer. NO WARRANTY on change oil service where OIL SLUDGE is detected upon inspection. Presence of oil sludge may cause engine trouble. ENGINE FLUSH does not guarantee the complete removal of oil sludge. Proper period of changing your oil is still the best way in preventing the build up of oil sludge.			
-                  </b>  
-                </span>
-              </div>
-            </div>
-          </div>
-            <div class="col-md-4 d-flex justify-content-md-end mt-2">
-             <div class="invoice-calculations">
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-
-      <div class="card-body pt-0">
-        <div class="row">
-          <div class="col-md-8 d-flex justify-content-md-start">
-            <div class="invoice-calculations">
-              <div class=" justify-content-between mb-2">
-                <span class="">
-                  <b>
+                    <br>
+                    <br>
                   PLEASE READ: Under MAP Uniform Inspection Guidelines, we are required to document all our findings on your vehicle. This is your estimate. Our Store Manager should bring you to your car, show you the needed repairs and go over the estimate with you, item by item. All your questions should be answered. We want you to know all your options. This is your car. We want to help you keep it in good running condition
+
+                
                   </b>  
                 </span>
               </div>
@@ -615,7 +603,7 @@
           </div>
             <div class="col-md-4 d-flex justify-content-md-end mt-2">
              <div class="invoice-calculations">
-              <div class="d-flex justify-content-between  ">
+              <div class="d-flex justify-content-between mt-4">
                 <span class="w-px-150 pt-1"><b>SUBTOTAL</b></span>
                 <h6 class="mb-0 pt-1">
                     <p class="mb-0 color-black d-flex width-95px">
@@ -644,7 +632,7 @@
                 </h6>
               </div>
               <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150 pt-3"><b>PAYMENT</b></span>
+                <span class="w-px-150 pt-3"><b><span id="display-payment"  style="text-transform: uppercase;">{{$data->payment_label}}</span><i class="mdi mdi-pencil me-1 js-textareacopybtn" id="note-icon" onclick="editPaymentLabel()"></i></b></span>
                 <span class="alert-coppied" id="icon-{{$k}}">Coppied!</span>
                   <i class="mdi mdi-arrow-down-right me-1 js-textareacopybtn" id="note-icon" onclick="copyPayment()"></i><span class="alert-coppied" id="icon-{{$k}}">Coppied!</span>
 
@@ -655,7 +643,7 @@
 
               </div>
               <div class="d-flex justify-content-between mb-2">
-          <i class="mdi mdi-plus me-1 mt-3 add-payment" onclick="addPayment()"></i>
+              <i class="mdi mdi-plus me-1 mt-3 add-payment" onclick="addPayment()"></i>
  
                 <span class="w-px-150 pt-3"><b>MODE OF PAYMENT</b></span>
                 <h6 class="mb-0 pt-1 width-95px">
@@ -708,6 +696,24 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+
+
+      <div class="card-body pt-0">
+        <div class="row">
+          <div class="col-md-8 d-flex justify-content-md-start">
+            <div class="invoice-calculations">
+              <div class=" justify-content-between mb-2">
+                <span class="">
+                  <b>
+                  </b>  
+                </span>
+              </div>
+            </div>
+          </div>
+           <!--  -->
         </div>
       </div>
       

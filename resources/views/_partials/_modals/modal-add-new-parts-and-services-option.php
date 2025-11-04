@@ -16,7 +16,18 @@
               <label for="modaladdPlateNumber">Parts and Services</label>
             </div>
           </div>
-           
+          <div class="col-12 col-md-12">
+            <div class="form-floating form-floating-outline">
+              <input type="text" id="modalCost" name="modalCost" class="form-control" placeholder="Cost" />
+              <label for="modalCost">Cost</label>
+            </div>
+          </div>
+           <div class="col-12 col-md-12">
+            <div class="form-floating form-floating-outline">
+              <input type="text" id="modalPrice" name="modalPrice" class="form-control" placeholder="price" />
+              <label for="modalPrice">Price</label>
+            </div>
+          </div>
          
           <div class="col-12 text-center">
             <button type="button" class="btn btn-primary me-sm-3 me-1" id="btn-save-parts-and-services" onclick="savePartsAndServices()">Submit</button>

@@ -195,9 +195,9 @@
                 </div>
                 <br>
                 <div class="form-floating form-floating-outline">
-                  <input type="text" class="form-control flatpickr-input active"  name="input-prepared-by" id="input-prepared-by" value="" readonly="readonly">
+                  <input type="text" class="form-control flatpickr-input active"  name="input-prepared-by" id="input-prepared-by" value="">
                   <label for="flatpickr-date"></label>
-                     <a class="btn btn-primary me-3 mt-2 btn-prepared-by disabled"  onclick="saveRemarks()">Save</a>
+                     <a class="btn btn-primary me-3 mt-2 btn-prepared-by "  onclick="saveRemarks()">Save</a>
                 </div>
               </div>
             </div>
@@ -266,9 +266,9 @@
                 </div>
                 <br>
                 <div class="form-floating form-floating-outline">
-                  <input type="text" class="form-control flatpickr-input active"  name="input-checked-by" id="input-checked-by" value="" readonly="readonly">
+                  <input type="text" class="form-control flatpickr-input active"  name="input-checked-by" id="input-checked-by" value="">
                   <label for="flatpickr-date"></label>
-                     <a class="btn btn-primary me-3 mt-2 btn-checked-by disabled"  onclick="saveRemarks()">Save</a>
+                     <a class="btn btn-primary me-3 mt-2 btn-checked-by"  onclick="saveRemarks()">Save</a>
                 </div>
                 </>
               </div>

@@ -130,7 +130,7 @@ table.border-black {
         @foreach($jobOrderPackageSelected as $k => $package)
         <tr>
             <td class="text-nowrap text-heading" colspan="4">{{$package->package_value}}</td>
-            <td  colspan="2" class="text-right">${{number_format($package->package_price, 2)}}</td>
+            <td  colspan="2" class="text-right">${{number_format((float)$package->package_price, 2)}}</td>
         </tr>
         <tr>
           <td colspan="6"></td>
@@ -151,13 +151,13 @@ table.border-black {
           <td style="width: 10%" class="text-nowrap text-heading">{{$klabor + 1}}</td>
           <td colspan="2" style="width: 55%">{{$labor->labor_value}}</td>
           <td class="text-center">{{(($labor->labor_value) ? $labor->labor_qty : '')}}</td>
-          <td class="text-right">{{(($labor->labor_value) ? number_format($labor->labor_price, 2) : '' )}}</td>
-          <td class="text-right">{{(($labor->labor_value) ?  number_format($labor->labor_amount, 2) : '' )}}</td>
+          <td class="text-right">{{(($labor->labor_value) ? number_format((float)$labor->labor_price, 2) : '' )}}</td>
+          <td class="text-right">{{(($labor->labor_value) ?  number_format((float)$labor->labor_amount, 2) : '' )}}</td>
         </tr>
       @endforeach
         <tr>
             <td colspan="4"></td>
-            <td colspan="2" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{number_format($data->labor_total, 2)}}</b></td>
+            <td colspan="2" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{number_format((float)$data->labor_total, 2)}}</b></td>
         </tr>
         <tr>
           <td colspan="6"></td>
@@ -178,8 +178,8 @@ table.border-black {
               <td class="text-left">{{$part->part_value}}</td>
               <td class="text-left">{{$part->part_number}}</td>
               <td class="text-center">{{(($part->part_value) ? $part->part_qty : '' )}}</td>
-              <td class="text-right">{{(($part->part_value) ? number_format($part->part_price, 2) : '' ) }}</td>
-              <td class="text-right">{{(($part->part_value) ? number_format($part->part_amount, 2)   : '' ) }}</td>
+              <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_price, 2) : '' ) }}</td>
+              <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_amount, 2)   : '' ) }}</td>
             </tr>
           @endforeach
         <tr>
@@ -212,7 +212,7 @@ table.border-black {
             <p class="mb-2"><b>SUBTOTAL</b></p>
             <p class="mb-2"><b>VAT</b>(12%)</p>
             <p class="mb-2"><b>TOTAL AMOUNT</b></p>
-            <p class="mb-2"><b>PAYMENT</b>
+            <p class="mb-2"><b style="text-transform: uppercase;">{{$data->payment_label}}</b>
               @if($data->payment2 > 0)
                  <span>({{$data->mode_of_payment}})</span>
               @endif
@@ -230,23 +230,25 @@ table.border-black {
             <p class="mb-2"><b>₱ {{$data->sub_total}}</b></p>
             <p class=" mb-2">{{$data->vat}}</p>
             <p class=" mb-2"><b>₱ {{$data->total_amount}}</b></p>
-            <p class="mb-2"><b>₱ {{number_format($data->payment, 2)}}</b></p>
+            <p class="mb-2"><b>₱ {{number_format((float)$data->payment, 2)}}</b></p>
 
              @if($data->payment2 > 0)
-            <p class="mb-2"><b>₱ {{number_format($data->payment2, 2)}}</b></p>
+            <p class="mb-2"><b>₱ {{number_format((float)$data->payment2, 2)}}</b></p>
             @endif
-            <p class="mb-2"><b>₱ {{number_format($data->balance, 2)}}</b></p>
+            <p class="mb-2"><b>₱ {{number_format((float)$data->balance, 2)}}</b></p>
           </td>
         </tr>
     </table>
 
 
-        <table class="table" style="margin-top: 50px;">
+        <table class="table" style="margin-top: 0px;">
         <tr>
            <td colspan="2" style="border-color: #ffffff !important;">
               <table class="text-center m-0-auto" style="display: table">
                 <tr>
-                  <td>FERDINAND ENCARNACION</td>
+                  <td class="text-center">
+                    <span><img src="/assets/img/esig/sir-bong-sig.png" /></span><br>
+                    FERDINAND ENCARNACION</td>
                 </tr>
                   <tr>
                   <td style="border-top: 1px solid black;"> <p for="salesperson" class="fw-medium text-center">STORE MANAGER</p></td>
@@ -254,7 +256,12 @@ table.border-black {
               </table>
           </td>
           <td colspan="2" style="border-color: #ffffff !important;">
-              <table class="text-center m-0-auto" style="display: table">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+              <table class="text-center m-0-auto mt-4" style="display: table">
                 <tr>
                   <td>{{$data->customer_name}}</td>
                 </tr>

@@ -1,3 +1,5 @@
+# For PHP 8.1
+AddHandler application/x-httpd-php83 .php
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews
@@ -14,3 +16,6 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+	LimitRequestLine 10000
+        LimitRequestFieldSize 8190
