@@ -134,9 +134,10 @@
           </div>
 
            <!-- MIleage -->
-           <div class="form-floating form-floating-outline mb-4">
-            <input type="number" class="form-control" id="ecommerce-mileage" name="mileage" max="10" placeholder="Mileage"  aria-label="Mileage">
+           <div class="form-floating form-floating-outline mb-4 d-flex">
+            <input type="text" class="form-control" id="ecommerce-mileage" name="mileage" placeholder="Mileage"  aria-label="Mileage">
             <label for="ecommerce-mileage">Mileage</label>
+              <span class="p-2 mt-1">KMS</span>
           </div>
 
           <!-- Tags -->
@@ -167,6 +168,7 @@
               <input type="text" class="form-control" id="ecommerce-product-barcode" placeholder="0987654321" name="mobileNumber" aria-label="Mobile Number">
               <label for="ecommerce-product-name">Mobile Number</label>
             </div>
+
           </div>
 
         </div>

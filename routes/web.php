@@ -240,6 +240,10 @@ Route::get('/cost-of-sales/download/{filename}', [CostOfSales::class, 'download'
 Route::get('/app/job-order/get-selected-part/{part_id}', [InvoiceEdit::class, 'getPartValue'])->name('app-invoice-edit')->middleware('auth');
 Route::get('/app/job-order/{job_order_id}', [InvoiceEdit::class, 'index'])->name('app-invoice-edit')->middleware('auth');
 Route::post('/app/save-job-order-item/{job_order_id}', [InvoiceEdit::class, 'saveJobOrderItem'])->middleware('auth');
+Route::post('/app/delete-job-order-item/{item_id}', [InvoiceEdit::class, 'deleteJobOrderItem'])->middleware('auth');
+Route::post('/app/delete-labor-item/{item_id}', [InvoiceEdit::class, 'deleteLaborItem'])->middleware('auth');
+
+
 Route::get('/app/get-job-order-item-price/{job_order_id}', [InvoiceEdit::class, 'getJobOrderItemprice'])->middleware('auth');
 Route::get('/app/get-job-order-item-package-price/{job_order_id}', [InvoiceEdit::class, 'getJobOrderItemPackagePrice'])->middleware('auth');
 Route::get('/app/job-order/change-status/{status_id}', [InvoiceEdit::class, 'changeStatus'])->middleware('auth');

@@ -67,10 +67,13 @@ class InvoiceEdit extends Controller
                   $optionOneHtml[] = '<option value="'.$options->id.'" '.(($options->id == $selected->package_id) ? "selected" : "").'>'.$options->value.'</option>';
               }
         $optionOneHtml[] =  '</select></div>
-            <div class="col-md-3 col-12">
+            <div class="col-md-2 col-12">
+             <input type="text" class="form-control package mb-3" name="package-note2" id="package-note2-'.$keypckg.'" value="'.$selected->package_note2.'" onchange="calculatePrice('.$keypckg.')" />
+            </div>
+              <div class="col-md-2 col-12">
              <input type="text" class="form-control customer-hidden package mb-3" name="package-note" id="package-note-'.$keypckg.'" value="'.$selected->package_note.'" onchange="calculatePrice('.$keypckg.')" />
             </div>
-            <div class="col-md-3 col-12 mb-md-0 mb-3 color-black d-flex">
+            <div class="col-md-2 col-12 mb-md-0 mb-3 color-black d-flex">
                       <span class="pt-2 pl-2">₱</span>
                     <input type="text" class="form-control invoice-item-price package mb-3" name="package-price" id="package-price-'.$keypckg.'" value="'.$selected->package_price.'" placeholder="0" min="12" onchange="calculatePrice('.$keypckg.')" />
          </div>
@@ -144,7 +147,7 @@ class InvoiceEdit extends Controller
                   </div>
 
                 <div class="col-md-1 col-12 border-start text-right" style="width: 2.333333%;">
-                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyl.', 1);calculateLabor('.$keyl.')" ></i>
+                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyl.', 1, '.$selectedLabor->id.');calculateLabor('.$keyl.')" ></i>
                   <div class="dropdown">
                     
                     </i>
@@ -271,7 +274,7 @@ class InvoiceEdit extends Controller
                     <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="part-amount" id="part-amount-'.$keyprt.'" value="'.$sub_amount.'" placeholder="" min="12"/>
                     </p>
 
-                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyprt.', 2);calculatePart('.$keyprt.')" ></i>
+                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyprt.', 2, '.$selectedPart->id.');calculatePart('.$keyprt.')" ></i>
                   <div class="dropdown">
                     </i>
                     <div class="dropdown-menu dropdown-menu-end w-px-300 p-3" aria-labelledby="dropdownMenuButton">
@@ -359,10 +362,44 @@ class InvoiceEdit extends Controller
     ->where('id', '=', $part_id)
     ->get();
 
-     return response()->json(['success'=> true, 'value' => $jobOrderOption[0]->value, 'cost' => $jobOrderOption[0]->cost, 'price' => $jobOrderOption[0]->price]);
+     return response()->json(['success'=> true, 'value' => $jobOrderOption[0]->value, 'part_number' => $jobOrderOption[0]->part_number, 'cost' => $jobOrderOption[0]->cost, 'price' => $jobOrderOption[0]->price]);
+  }
+
+  
+  public function deleteJobOrderItem($item_id){
+    JobOrdersPartService::where("id", $item_id)->update(
+          [
+            "part_qty"     => 1,
+            "part_value"   =>  NULL,
+            "part_number"   =>  NULL,
+            "supplier"   =>  NULL,
+            "supplier_inv"   =>  NULL,
+            "unit_cost"   => 0,
+            "total_cost"   =>  0,
+            "part_price"  =>  0,
+            "part_amount"   =>  0,
+          ] );
+     return response()->json(['success'=> true, 'message' => 'Item deleted!']);
+
+  }
+
+   public function deleteLaborItem($item_id){
+    JobOrdersLabor::where("id", $item_id)->update(
+          [
+             "labor_qty"     => 1,
+            "labor_value"  =>  NULL,
+            "cost"  =>  NULL,
+            "part_number"   =>  NULL,
+            "labor_price"   => 0,
+            "labor_amount"   => 0,
+          ] );
+     return response()->json(['success'=> true, 'message' => 'Item deleted!']);
+
   }
 
 
+
+  
   public function saveJobOrderItem($job_order_id){
 
     
@@ -438,6 +475,7 @@ class InvoiceEdit extends Controller
             "package_id"    => $package['package-option'],
               "package_value"    =>  JobOrdersPackageOption::find($package['package-option'])->value,
               "package_price"    => JobOrdersPackageOption::find($package['package-option'])->package_price,
+              "package_note2"    => ((isset($package['package-note2'])) ? $package['package-note2'] : ""),
               "package_note"    => ((isset($package['package-note'])) ? $package['package-note'] : ""),
           ]
         );
@@ -668,6 +706,8 @@ class InvoiceEdit extends Controller
       $pa->job_order_id = $new_job_order_id;
       $pa->package_id = $package->package_id;
       $pa->package_value = $package->package_value;
+      $pa->package_note = $package->package_note;
+      $pa->package_note2 = $package->package_note2;
       $pa->package_qty = $package->package_qty;
       $pa->package_price = $package->package_price;
       $pa->save();

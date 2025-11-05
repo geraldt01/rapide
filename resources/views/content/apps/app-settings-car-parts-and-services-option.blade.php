@@ -13,7 +13,7 @@
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/app-settings.js')}}"></script>
+<script src="{{asset('assets/js/app-settings.js?v=1.1.1')}}"></script>
 @endsection
 
 @section('content')
@@ -99,6 +99,7 @@
                     <tr>
                       <th>#</th>
                       <th>Parts And Services</th>
+                      <th>Part Number</th>
                       <th>Cost</th>
                       <th>Price</th>
                       <th class="text-end">Actions</th>
@@ -109,6 +110,7 @@
                     <tr>
                       <td>{{$k +1}}</td>
                       <td>{{$partsandservices->value}}</td>
+                      <td>{{$partsandservices->part_number}}</td>
                       <td>{{$partsandservices->cost}}</td>
                       <td>{{$partsandservices->price}}</td>
                       <td class="text-end">

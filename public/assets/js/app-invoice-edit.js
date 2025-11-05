@@ -265,24 +265,40 @@ calculateAll();
     }, 1000);
   }
 
-  function deleteItem(id, type) {
+  function deleteItem(id, type, delete_item_id) {
     var item_id = id;
     if(type == 1) {
-      deleteItemNow(id, 1);
+      deleteItemNow(id, 1, delete_item_id);
     } else {
-      deleteItemNow(id, 2);
+      deleteItemNow(id, 2, delete_item_id);
     }
+    $(".bt-save-changes").removeClass("disabled");
   }
 
-  function deleteItemNow(id, type) {
+  function deleteItemNow(id, type, delete_item_id) {
     if(type == 1) {
       document.getElementById('labor-text-'+id).value = "";
-      document.getElementById('labor-cost-'+id).value = "";
+      document.getElementById('labor-cost-'+id).value = 0;
       document.getElementById('labor-price-'+id).value = 0;
       document.getElementById('labor-qty-'+id).value = 1;
       document.getElementById('labor-amount-'+id).value = "";
       // document.getElementById('labor-part-number-'+id).value = "";
       calculateLabor(id);
+       $.ajax({
+      type: "post",
+      url: '/app/delete-labor-item/'+ delete_item_id,
+        data:  $("#form-job-order").serialize(),
+        success: function (result) {
+            $(".alert-success p").html(result.message);
+            $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+          }, 3000);
+        },
+        error: function (result, textStatus, errorThrown) {
+          
+        },
+      });
     } else {
    
       calculatePart(id);
@@ -298,6 +314,22 @@ calculateAll();
       document.getElementById('supplier-'+id).value = "";
       document.getElementById('supplier-inv-'+id).value = "";
       document.getElementById('part-qty-'+id).value = "";
+
+     $.ajax({
+      type: "post",
+      url: '/app/delete-job-order-item/'+ delete_item_id,
+        data:  $("#form-job-order").serialize(),
+        success: function (result) {
+            $(".alert-success p").html(result.message);
+            $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+          }, 3000);
+        },
+        error: function (result, textStatus, errorThrown) {
+          
+        },
+      });
     }
      
   }
@@ -315,8 +347,6 @@ calculateAll();
             setTimeout(function(){ 
               $(".alert-success").addClass("d-none");
               const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
-              // form.reset();
-              // location.reload();
           }, 3000);
         },
       error: function (result, textStatus, errorThrown) {
@@ -424,6 +454,9 @@ calculateAll();
 
   function duplicateParts(job_order_id) {
          saveInvoice(job_order_id)
+
+    $(".bt-save-changes").removeClass("disabled");
+         
 
    var job_order_id = document.getElementById("hidden-job-order-id").value;
      $.ajax({
@@ -590,6 +623,7 @@ const first = element -1;
       data:  $("").serialize(),
       success: function (result) {
         document.getElementById("part-text-"+element).value = result.value;
+        document.getElementById("part-part-number-"+element).value = result.part_number;
         document.getElementById("part-unit-cost-"+element).value = result.cost;
         document.getElementById("part-price-"+element).value = result.price;
 

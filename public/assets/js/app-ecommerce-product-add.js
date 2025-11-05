@@ -6,6 +6,27 @@
 //Javascript to handle the e-commerce product add page
 
 (function () {
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const numberInput = document.getElementById('ecommerce-mileage'); // Replace with your input's ID
+    numberInput.addEventListener('change', function(event) {
+      // Get the current value and remove existing commas
+      const options = {
+        minimumFractionDigits: 2, // Ensures at least two decimal places
+        maximumFractionDigits: 2, // Limits to a maximum of two decimal places
+        style: 'decimal'          // Specifies decimal formatting
+      };
+      var inputValue = event.target.value;
+      const finalNum =  parseInt(inputValue).toLocaleString(undefined, options).replace(".00", "");
+        document.getElementById("ecommerce-mileage").value = finalNum;
+    });
+  });
+
+
+
+
+
+
   const addCar = document.querySelector('.btn-add-car');
     $('.btn-add-car').on('click',  function () {
         $.ajax({

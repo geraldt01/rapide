@@ -129,7 +129,8 @@ table.border-black {
         </tr>
         @foreach($jobOrderPackageSelected as $k => $package)
         <tr>
-            <td class="text-nowrap text-heading" colspan="4">{{$package->package_value}}</td>
+            <td class="text-nowrap text-heading" colspan="2">{{$package->package_value}}</td>
+            <td class="text-nowrap text-heading" colspan="2">{{$package->package_note2}}</td>
             <td  colspan="2" class="text-right">${{number_format((float)$package->package_price, 2)}}</td>
         </tr>
         <tr>

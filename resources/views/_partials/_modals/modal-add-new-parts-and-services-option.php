@@ -18,13 +18,19 @@
           </div>
           <div class="col-12 col-md-12">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalCost" name="modalCost" class="form-control" placeholder="Cost" />
+              <input type="text" id="modalPartNumber" name="modalPartNumber" class="form-control" placeholder="Part Number" />
+              <label for="modalPartNumber">Part Number</label>
+            </div>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="form-floating form-floating-outline">
+              <input type="number" id="modalCost" name="modalCost" class="form-control" placeholder="Cost" />
               <label for="modalCost">Cost</label>
             </div>
           </div>
            <div class="col-12 col-md-12">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalPrice" name="modalPrice" class="form-control" placeholder="price" />
+              <input type="number" id="modalPrice" name="modalPrice" class="form-control" placeholder="price" />
               <label for="modalPrice">Price</label>
             </div>
           </div>

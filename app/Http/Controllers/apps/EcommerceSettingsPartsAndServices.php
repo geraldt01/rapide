@@ -47,6 +47,7 @@ class EcommerceSettingsPartsAndServices extends Controller
      JobOrdersPartServiceOption::where("id", $parts_and_services_id)->update(
       [
         "value" => $_GET['modalPartsAndServices'],
+        "part_number" => $_GET['modalPartNumber'],
         "cost" => $_GET['modalCost'],
         "price" => $_GET['modalPrice'],
       ]);
@@ -61,6 +62,7 @@ class EcommerceSettingsPartsAndServices extends Controller
     
         $c = new JobOrdersPartServiceOption();
         $c->value = ((isset($_GET['modalPartsAndServices'])) ? $_GET['modalPartsAndServices'] : "");
+        $c->part_number = ((isset($_GET['modalPartNumber'])) ? $_GET['modalPartNumber'] : "");
         $c->cost = ((isset($_GET['modalCost'])) ? $_GET['modalCost'] : "");
         $c->price = ((isset($_GET['modalPrice'])) ? $_GET['modalPrice'] : "");
         $c->save();
@@ -82,6 +84,7 @@ class EcommerceSettingsPartsAndServices extends Controller
         $partsAndServicesHtml[] = '<tr>
         <td>'.$key.'</td>
           <td>'.$data->value.'</td>
+          <td>'.$data->part_number.'</td>
           <td>'.$data->cost.'</td>
           <td>'.$data->price.'</td>
           <td class="text-end">
