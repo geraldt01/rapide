@@ -144,6 +144,7 @@ class EcommerceCustomerDetailsOverview extends Controller
       $c->plate_number            = $_GET['modalPlateNumber'] ? $_GET['modalPlateNumber'] : "";
       $c->manufacturer    = $_GET['modalManufacturer'] ? $_GET['modalManufacturer'] : "";
       $c->model    = $_GET['modalVehicleModel'] ? $_GET['modalVehicleModel'] : "";
+      $c->year    = $_GET['modalYear'] ? $_GET['modalYear'] : "";
       $c->mileage    = $_GET['modalMileage'] ? $_GET['modalMileage'] : "";
       $c->status_display    = $_GET['modalStatus'] ? $_GET['modalStatus'] : "";
       $c->customer_name    = $getOwner[0]->owner_name;

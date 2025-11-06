@@ -113,7 +113,7 @@ table.border-black {
             <td></td>
           </tr>
           <tr>
-            <td colspan="2" class="capital-letter">{{$data->manufacturer}} {{$data->vehicle_model}} {{$data->transmission}} {{$data->fuel_type}}</td>
+            <td colspan="2" class="capital-letter">{{$data->manufacturer}} {{$data->vehicle_model}} {{$data->transmission}} {{$data->fuel_type}} {{$data->year}}</td>
           </tr>
         
         </tbody>
@@ -131,7 +131,7 @@ table.border-black {
         <tr>
             <td class="text-nowrap text-heading" colspan="2">{{$package->package_value}}</td>
             <td class="text-nowrap text-heading" colspan="2">{{$package->package_note2}}</td>
-            <td  colspan="2" class="text-right">${{number_format((float)$package->package_price, 2)}}</td>
+            <td  colspan="2" class="text-right">₱ {{number_format((float)$package->package_price, 2)}}</td>
         </tr>
         <tr>
           <td colspan="6"></td>
@@ -158,7 +158,7 @@ table.border-black {
       @endforeach
         <tr>
             <td colspan="4"></td>
-            <td colspan="2" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{number_format((float)$data->labor_total, 2)}}</b></td>
+            <td colspan="2" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->labor_total}}</b></td>
         </tr>
         <tr>
           <td colspan="6"></td>
@@ -209,9 +209,13 @@ table.border-black {
             </p>
           
           </td>
-          <td class="text-end px-4 py-3" style="width: 20%;vertical-align: top;">
-            <p class="mb-2"><b>SUBTOTAL</b></p>
+          <td class="text-end px-4 py-3" style="width: 25%;vertical-align: top;">
+            <p class="mb-2"><b>TOTAL SALES (VAT Inclusive)</b></p>
             <p class="mb-2"><b>VAT</b>(12%)</p>
+            <p class="mb-2"><b>AMOUNT: Net of VAT</b></p>
+            @if($data->discount > 0)
+              <p class="mb-2"><b>DISCOUNT</b></p>
+            @endif
             <p class="mb-2"><b>TOTAL AMOUNT</b></p>
             <p class="mb-2"><b style="text-transform: uppercase;">{{$data->payment_label}}</b>
               @if($data->payment2 > 0)
@@ -230,13 +234,17 @@ table.border-black {
           <td class="text-end px-4 py-3" style="width: 15%;vertical-align: top;">
             <p class="mb-2"><b>₱ {{$data->sub_total}}</b></p>
             <p class=" mb-2">{{$data->vat}}</p>
+            <p class=" mb-2">{{$data->amount_net_vat}}</p>
+            @if($data->discount > 0)
+              <p class=" mb-2">{{$data->discount}}</p>
+            @endif
             <p class=" mb-2"><b>₱ {{$data->total_amount}}</b></p>
-            <p class="mb-2"><b>₱ {{number_format((float)$data->payment, 2)}}</b></p>
+            <p class="mb-2"><b>₱ {{$data->payment}}</b></p>
 
              @if($data->payment2 > 0)
-            <p class="mb-2"><b>₱ {{number_format((float)$data->payment2, 2)}}</b></p>
+            <p class="mb-2"><b>₱ {{$data->payment2}}</b></p>
             @endif
-            <p class="mb-2"><b>₱ {{number_format((float)$data->balance, 2)}}</b></p>
+            <p class="mb-2"><b>₱ {{$data->balance}}</b></p>
           </td>
         </tr>
     </table>

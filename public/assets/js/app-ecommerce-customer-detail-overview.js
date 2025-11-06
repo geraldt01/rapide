@@ -196,6 +196,8 @@ $(function () {
     document.getElementById("modalPlateNumber").value = plate_number;
     var vehicle_model = document.getElementById("hidden-selected-vehicle-model").value;
     document.getElementById("modalVehicleModel").value = vehicle_model;
+       var year_model = document.getElementById("hidden-selected-year").value;
+    document.getElementById("modalYear").value = year_model;
     var vehicle_model = document.getElementById("hidden-selected-vehicle-manufacturer").value;
     document.getElementById("modalManufacturer").value = vehicle_model;
 //  var vehicle_type = document.getElementById("hidden-selected-vehicle-type").value;
@@ -204,7 +206,7 @@ $(function () {
     document.getElementById("modalMileage").value = modalMileage;
 //  var modalEst = document.getElementById("hidden-selected-invoice-number").value;
     document.getElementById("modalEst").value = "INV#"+modalEst;
-
+ 
     var customer_name = document.getElementById("hidden-customer-name").value;
   document.getElementById("modalEditCustomerName").value = customer_name;
   var customer_address = document.getElementById("hidden-customer-address").value;
@@ -272,7 +274,7 @@ function addJobOrder() {
     var car_id = document.getElementById("hidden-selected-car-id").value;
     $("#car-plate-number").html(plate_number);
 
-modalMileage
+
   const dateInput = document.getElementById('bs-rangepicker-single');
     const today = new Date();
     const year = today.getFullYear();
@@ -306,12 +308,13 @@ function saveJobOrder() {
     var modalManufacturer = document.getElementById("modalManufacturer").value;
     var modalVehicleModel = document.getElementById("modalVehicleModel").value;
     var modalMileage = document.getElementById("modalMileage").value;
+    var modalYear = document.getElementById("modalYear").value;
     var modalStatus = "estimate";
    
   $.ajax({
     type: "get",
     url: '/app/save-job-order/'+ car_id,
-    data:  {car_id: car_id,date:date,est:est,modalPlateNumber:modalPlateNumber,modalManufacturer:modalManufacturer,modalVehicleModel:modalVehicleModel,modalMileage:modalMileage,modalStatus:modalStatus },
+    data:  {car_id: car_id,date:date,est:est,modalPlateNumber:modalPlateNumber,modalManufacturer:modalManufacturer,modalVehicleModel:modalVehicleModel,modalMileage:modalMileage,modalStatus:modalStatus,modalYear:modalYear },
     success: function (result) {
       console.log(result.success);
       if(result.success == true) {

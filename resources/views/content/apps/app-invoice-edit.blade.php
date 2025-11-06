@@ -164,7 +164,7 @@
                 </tr>
                 <tr>
                   <td class="pe-3 fw-medium">{{$data->mobile_number}}</td>
-                  <td colspan="2" class="capital-letter">{{$data->manufacturer}} {{$data->vehicle_model}} {{$data->transmission}} {{$data->fuel_type}}</td>
+                  <td colspan="2" class="capital-letter">{{$data->manufacturer}} {{$data->vehicle_model}} {{$data->transmission}} {{$data->fuel_type}} {{$data->year}}</td>
                   <td></td>
                 </tr>
                 
@@ -182,24 +182,10 @@
         <div class="source-item pt-1">
           <div class="mb-3" data-repeater-list="group-a">
             <div class="repeater-wrapper pt-0 pt-md-2">
-              <div class=" rounded position-relative pe-0 color-white">
+              <div class=" rounded position-relative pe-0 color-white" id="package-item-section">
                 @if($optionOneHtml == false)
                   @for ($p = 1; $p < 2; $p++)
-                  <div class="border row w-100  p-2"  data-repeater-item>
-                    <div class="col-md-9 col-12 mb-md-0 mb-3">
-                      <select class="form-select item-details mb-3" name="package" id="package-{{$p}}" onchange="calculatePackage({{$p}})">
-                          <option value="" selected></option>
-                        @foreach($jobOrderPackageOption as $k => $op)
-                          <option value="{{$op->id}}">{{$op->value}}</option>
-                        @endforeach
-                        </select>
-                    </div> 
-                    <div class="col-md-3 col-12 mb-md-0 mb-3 color-black d-flex">
-                      <span class="pt-2 pl-2">₱</span>
-                    <input type="text" class="form-control invoice-item-price mb-3" name="package-price" id="package-price-{{$p}}" value="0" placeholder="0" min="12" onchange="calculatePrice({{$p}})" />
-
-                  </div>
-                  </div>
+                  
                   @endfor
                 @else 
                   @foreach($optionOneHtml as $k => $d)
@@ -601,10 +587,10 @@
               </div>
             </div>
           </div>
-            <div class="col-md-4 d-flex justify-content-md-end mt-2">
+            <div class="col-md-4 d-flex justify-content-md-center mt-2">
              <div class="invoice-calculations">
               <div class="d-flex justify-content-between mt-4">
-                <span class="w-px-150 pt-1"><b>SUBTOTAL</b></span>
+                <span class="w-px-250 pt-1 text-right"><b>TOTAL SALES (VAT Inclusive)</b></span>
                 <h6 class="mb-0 pt-1">
                     <p class="mb-0 color-black d-flex width-95px">
                       <span class="pt-1">₱</span>
@@ -613,7 +599,7 @@
                 </h6>
               </div>
               <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150"><b>VAT</b>(12%)</span>
+                <span class="w-px-250 text-right"><b>VAT</b>(12%)</span>
                 <h6 class="mb-0">
                   <p class="mb-0 color-black d-flex width-95px">
                       <span class="pt-1">₱</span>
@@ -621,18 +607,40 @@
                     </p>
                 </h6>
               </div>
+
               <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150"><b>TOTAL AMOUNT</b></span>
+                <span class="w-px-250 text-right"><b>AMOUNT: Net of VAT</b></span>
+                <h6 class="mb-0">
+                  <p class="mb-0 color-black d-flex width-95px">
+                      <span class="pt-1">₱</span>
+                    <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none text-right font-bold" name="amount-net-vat" id="amount-net-vat" value="0" placeholder="" min="12">
+                    </p>
+                </h6>
+              </div>
+
+                <div class="d-flex justify-content-between mb-2">
+                <span class="w-px-250 text-right pt-2"><b>DISCOUNT</b></span>
+                <h6 class="mb-0">
+                  <p class="mb-0 color-black d-flex width-95px">
+                      <span class="pt-2">₱</span>
+                    <input type="text" class="form-control invoice-discount mb-1 text-right" name="discount" id="discount" value="{{$data->discount}}" placeholder="" onkeyup="calculateAll()" min="12">
+                    </p>
+                </h6>
+              </div>
+
+
+              <div class="d-flex justify-content-between mb-2">
+                <span class="w-px-250 text-right"><b>TOTAL </b></span>
                 <h6 class="mb-0">
                     <p class="mb-0 color-black d-flex width-95px">
                       <span class="pt-1">₱</span>
-                    <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none text-right font-bold" name="total-amount" id="total-amount" value="0" placeholder="" min="12">
+                    <input type="text" class="form-control invoice-item-amount mb-3 ml-1 p-0 border-0 pe-none text-right font-bold" name="total_amount" id="total-amount" placeholder="" min="12">
                     </p>
 
                 </h6>
               </div>
               <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150 pt-3"><b><span id="display-payment"  style="text-transform: uppercase;">{{$data->payment_label}}</span><i class="mdi mdi-pencil me-1 js-textareacopybtn" id="note-icon" onclick="editPaymentLabel()"></i></b></span>
+                <span class="w-px-250 text-right pt-3"><b><span id="display-payment"  style="text-transform: uppercase;">{{$data->payment_label}}</span><i class="mdi mdi-pencil me-1 js-textareacopybtn" id="note-icon" onclick="editPaymentLabel()"></i></b></span>
                 <span class="alert-coppied" id="icon-{{$k}}">Coppied!</span>
                   <i class="mdi mdi-arrow-down-right me-1 js-textareacopybtn" id="note-icon" onclick="copyPayment()"></i><span class="alert-coppied" id="icon-{{$k}}">Coppied!</span>
 
@@ -645,7 +653,7 @@
               <div class="d-flex justify-content-between mb-2">
               <i class="mdi mdi-plus me-1 mt-3 add-payment" onclick="addPayment()"></i>
  
-                <span class="w-px-150 pt-3"><b>MODE OF PAYMENT</b></span>
+                <span class="w-px-250 text-right pt-3"><b>MODE OF PAYMENT</b></span>
                 <h6 class="mb-0 pt-1 width-95px">
                    <select class="form-select mb-3" name="mop" id="mop" onchange="filterOption()">
                           <option value="" selected></option>
@@ -662,7 +670,7 @@
               <div class="second-payment d-none">
                 <hr class="my-0 mb-2" />
                 <div class="d-flex justify-content-between mb-2">
-                  <span class="w-px-150 pt-3"><b>PAYMENT</b></span>
+                  <span class="w-px-250 text-right pt-3"><b>PAYMENT</b></span>
                   <!-- <i class="mdi mdi-arrow-down-right me-1 js-textareacopybtn" id="note-icon" onclick="copyPayment()"></i><span class="alert-coppied" id="icon-{{$k}}">Coppied!</span> -->
 
                   <h6 class="mb-0 pt-1 width-95px">
@@ -671,7 +679,7 @@
 
                 </div>
                 <div class="d-flex justify-content-between mb-2">
-                  <span class="w-px-150 pt-3"><b>MODE OF PAYMENT</b></span>
+                  <span class="w-px-250 text-right pt-3"><b>MODE OF PAYMENT</b></span>
                   <h6 class="mb-0 pt-1 width-95px">
                     <select class="form-select item-details mb-3" name="mop2" id="mop2">
                         <option value="" selected></option>
@@ -686,7 +694,7 @@
 
 
               <div class="d-flex justify-content-between">
-                <span class="w-px-150"><b>BALANCE</b></span>
+                <span class="w-px-250 text-right pt-1"><b>BALANCE</b></span>
                 <h6 class="mb-0 pt-1">
                   <p class="mb-0 color-black d-flex width-95px">
                     <span class="pt-1">₱</span>

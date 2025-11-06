@@ -267,7 +267,9 @@ calculateAll();
 
   function deleteItem(id, type, delete_item_id) {
     var item_id = id;
-    if(type == 1) {
+    if(type == 0) {
+      deleteItemNow(id, 0, delete_item_id);
+    }else if(type == 1) {
       deleteItemNow(id, 1, delete_item_id);
     } else {
       deleteItemNow(id, 2, delete_item_id);
@@ -276,7 +278,48 @@ calculateAll();
   }
 
   function deleteItemNow(id, type, delete_item_id) {
-    if(type == 1) {
+    if(type == 0) {
+      $.ajax({
+      type: "post",
+      url: '/app/delete-package-item/'+ delete_item_id,
+        data:  $("#form-job-order").serialize(),
+        success: function (result) {
+              document.getElementById('package-note2-'+id).value = "";
+              document.getElementById('package-note-'+id).value = "";
+              document.getElementById('package-price-'+id).value = 0;
+            $(".alert-success p").html(result.message);
+            $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+          }, 3000);
+
+        //   job_order_id = document.getElementById('hidden-job-order-id').value;
+
+        //     $.ajax({
+        //       type: "post",
+        //       url: '/app/job-order/'+ job_order_id,
+        //         data:  $("#form-job-order").serialize(),
+        //         success: function (result) {
+             
+        // //           const myIframe = document.getElementById('myIframe');
+        // // myIframe.contentWindow.location.reload(true); 
+        // //           $(".package-item-section").html(result.optionOneHtml);
+        //         },
+        //         error: function (result, textStatus, errorThrown) {
+                  
+        //         },
+        //       });
+
+
+        },
+        error: function (result, textStatus, errorThrown) {
+          
+        },
+      });
+
+      calculateAll();
+
+    }else if(type == 1) {
       document.getElementById('labor-text-'+id).value = "";
       document.getElementById('labor-cost-'+id).value = 0;
       document.getElementById('labor-price-'+id).value = 0;
@@ -369,22 +412,19 @@ calculateAll();
   const inputElements  =  document.getElementsByName('group-a['+option_id+'][package-option]');
   var package_id = inputElements[0].value;
 
-
-    $.ajax({
-      type: "get",
-      url: '/app/get-job-order-item-package-price/'+ package_id,
-        data:  $("").serialize(),
-        success: function (result) {
-
-                 const amount = result.price * 1;
-                document.getElementById('package-price-'+option_id).value = amount;
-                calculateAll();
+     $.ajax({
+        type: "get",
+        url: '/app/get-job-order-item-package-price/'+ package_id,
+          data:  $("").serialize(),
+          success: function (result) {
+                  const amount = result.price * 1;
+                    document.getElementById('package-price-'+option_id).value = amount;
+                  calculateAll();
+          },
+        error: function (result, textStatus, errorThrown) {
+            console.log(result.success);
         },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-      },
-    });
-
+      });
   }
 
 
@@ -396,7 +436,7 @@ calculateAll();
       style: 'decimal'          // Specifies decimal formatting
     };
 
-    if(option_id > '') {
+    if(option_id > 0) {
       const part_qty = document.getElementById('part-qty-'+option_id).value ;
       const part_price = document.getElementById('part-price-'+option_id).value ;
 
@@ -415,7 +455,7 @@ calculateAll();
 
   }
   function calculateLabor(option_id) {
-    if(option_id > '') {
+    if(option_id > 0) {
     // var job_order_id = document.getElementById('labor-option-'+option_id).value ;
       const labor_qty = document.getElementById('labor-qty-'+option_id).value ;
       const labor_price = document.getElementById('labor-price-'+option_id).value ;
@@ -1010,34 +1050,52 @@ const first = element -1;
 
 
     const total_sub = parseFloat(package_sub_total) + parseFloat(labor_sub_total) + parseFloat(part_sub_total); 
-    const vat = parseFloat(total_sub) * 0.12;
+    const amount_net_vat =  parseFloat(total_sub) / 1.12;
+
+    const vat = parseFloat(amount_net_vat) * 0.12;
 
      const total_sub_with_vat = parseFloat(total_sub) + parseFloat(vat);
       
     document.getElementById('sub-total').value =  total_sub.toLocaleString(undefined, options); 
+    document.getElementById('amount-net-vat').value =  amount_net_vat.toLocaleString(undefined, options); 
+
+
 
     document.getElementById('vat').value =  vat.toLocaleString(undefined, options); 
-    document.getElementById('total-amount').value =  total_sub_with_vat.toLocaleString(undefined, options); 
 
-     var payment =  document.getElementById('payment').value;
+     const discount =  document.getElementById('discount').value;
+
+    if(discount > 0) {
+      const caculateWithDiscount =  parseFloat(total_sub) -  parseFloat(discount);
+      document.getElementById('total-amount').value =  caculateWithDiscount.toLocaleString(undefined, options); 
+    } else {
+    document.getElementById('total-amount').value =  total_sub.toLocaleString(undefined, options); 
+
+    }
+
+    var payment =  document.getElementById('payment').value;
 
      var payment2 = document.getElementById('payment2').value;
     console.log(payment);
 
-      payment = payment.replace(/,/g, "");
+      payment = payment.replace(/,/g, ""); 
       payment2 = payment2.replace(/,/g, "");
 
 
+     const total_amount =  document.getElementById('total-amount').value;
+
+
      if(payment2 > 0) {
-        var balance = parseFloat(total_sub_with_vat) - parseFloat(payment) -  parseFloat(payment2);
+        const final_total_amount = total_amount.replace(/,/g, "");
+        var balance = parseFloat(final_total_amount) - parseFloat(payment) -  parseFloat(payment2);
      } else {
-        var balance = parseFloat(total_sub_with_vat) - parseFloat(payment);
+      const final_total_amount = total_amount.replace(/,/g, "");
+        var balance = parseFloat(final_total_amount) - parseFloat(payment);
+
     }
 
-  //  alert(total_sub_with_vat);
-    console.log(payment);
     console.log(balance);
-    // alert(balance);
+    console.log(balance);
     document.getElementById('balance').value =  balance.toLocaleString(undefined, options); 
 
 

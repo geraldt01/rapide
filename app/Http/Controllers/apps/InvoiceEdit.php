@@ -27,6 +27,7 @@ class InvoiceEdit extends Controller
 {
   public function index($job_order_id)
   {
+
     $jobOrderInfo = DB::table('job_orders')
     ->join('cars', 'cars.id', '=', 'job_orders.car_id')
     ->join('owners', 'owners.id', '=', 'cars.owner_id')
@@ -64,19 +65,21 @@ class InvoiceEdit extends Controller
         <select id="package-option-'.$keypckg.' select1Basic'.$keypckg.'" name="package-option" class="select2" data-allow-clear="true"  onchange=" calculatePackage('.$keypckg.')" style="width: 0px;">
           <option value="">Select Package</option>';
           foreach($jobOrderPackageOption as $options) {
+       
                   $optionOneHtml[] = '<option value="'.$options->id.'" '.(($options->id == $selected->package_id) ? "selected" : "").'>'.$options->value.'</option>';
               }
         $optionOneHtml[] =  '</select></div>
             <div class="col-md-2 col-12">
-             <input type="text" class="form-control package mb-3" name="package-note2" id="package-note2-'.$keypckg.'" value="'.$selected->package_note2.'" onchange="calculatePrice('.$keypckg.')" />
+             <input type="text" class="form-control package mb-3" name="package-note2" id="package-note2-'.$keypckg.'" value="'.$selected->package_note2.'" onchange="calculatePackage('.$keypckg.')" />
             </div>
               <div class="col-md-2 col-12">
-             <input type="text" class="form-control customer-hidden package mb-3" name="package-note" id="package-note-'.$keypckg.'" value="'.$selected->package_note.'" onchange="calculatePrice('.$keypckg.')" />
+             <input type="text" class="form-control customer-hidden package mb-3" name="package-note" id="package-note-'.$keypckg.'" value="'.$selected->package_note.'" onchange="calculatePackage('.$keypckg.')" />
             </div>
             <div class="col-md-2 col-12 mb-md-0 mb-3 color-black d-flex">
                       <span class="pt-2 pl-2">₱</span>
-                    <input type="text" class="form-control invoice-item-price package mb-3" name="package-price" id="package-price-'.$keypckg.'" value="'.$selected->package_price.'" placeholder="0" min="12" onchange="calculatePrice('.$keypckg.')" />
-         </div>
+                    <input type="text" class="form-control invoice-item-price package mb-3" name="package-price" id="package-price-'.$keypckg.'" value="'.$selected->package_price.'" placeholder="0" onchange="calculatePackage('.$keypckg.')" />
+                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keypckg.', 0, '.$selected->id.');calculatePackage('.$keypckg.')" ></i>
+            </div>
         </div>';
         $keypckg++;
       }
@@ -93,19 +96,7 @@ class InvoiceEdit extends Controller
     ->where('job_order_id', '=', $job_order_id)
     ->get();
 
-    // $optionTwoHtml = array();
-    // if(isset($jobOrderLaborSelected[0]->job_order_id)) {
-    //   foreach($jobOrderLaborSelected as $selectedLabor) {
-    //     $optionTwoHtml[] = '<div class="border row w-100  p-2"  data-repeater-item><div class="col-md-7 col-12 mb-md-0 mb-3"><select class="form-select item-details mb-3" name="package">';
-    //     foreach($jobOrderLaborOption as $options) {
-    //         $optionTwoHtml[] = '<option value="'.$options->id.'" '.(($options->id == $selectedLabor->labor_id) ? "selected" : "").'>'.$options->value.'</option>';
-    //     }
-    //     $optionTwoHtml[] =  '</select></div></div>';
-    //   }
-    // } else {
-    //   $optionTwoHtml = false;
-    // }
-
+    
 
     $keyl = 1;
     $optionTwoHtml = array();
@@ -264,7 +255,7 @@ class InvoiceEdit extends Controller
 
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Price</h6>
-                    <input type="text" class="form-control invoice-item-price part mb-3" name="part-price" id="part-price-'.$keyprt.'" value="'.$selectedPart->part_price.'" placeholder="" min="" />
+                    <input type="text" class="form-control invoice-item-price part mb-3" name="part-price" id="part-price-'.$keyprt.'" value="'.$selectedPart->part_price.'" placeholder="" min="" onchange="calculatePart('.$keyprt.')" />
                   </div>
                
              
@@ -352,7 +343,12 @@ class InvoiceEdit extends Controller
     $countEnabledPackage = count($countEnabledPackageData);
     $countEnabledLabor = count($countEnabledLaborData);
     $countEnabledPart = count($countEnabledPartData);
-    return view('content.apps.app-invoice-edit', ['invoice_date' => $newInvoiceDate, 'expire_date' => $jobOrderInfo[0]->expire_date, 'modeOfPayment' => $modeOfPayment, 'specialNotes' => $specialNotes, 'optionStatus' => $optionStatus, 'packageTotalItem' => $keypckg, 'partTotalItem' => $keyprt, 'laborTotalItem' => $keyl, 'optionThreeHtml' => $optionThreeHtml, 'optionTwoHtml' => $optionTwoHtml, 'optionOneHtml' => $optionOneHtml, 'job_order_id' => $job_order_id, 'jobOrderInfo' => $jobOrderInfo, 'jobOrderPartServiceOption' => $jobOrderPartServiceOption, 'jobOrderLaborOption' => $jobOrderLaborOption, 'jobOrderPackageOption' => $jobOrderPackageOption, 'countEnabledPart' => $countEnabledPart, 'countEnabledPackage' => $countEnabledPackage, 'countEnabledLabor' => $countEnabledLabor ]);
+
+    if(!empty($_POST)) {
+    return response()->json(['success'=> true, 'optionOneHtml' => $optionOneHtml]);
+    } else {
+     return view('content.apps.app-invoice-edit', ['invoice_date' => $newInvoiceDate, 'expire_date' => $jobOrderInfo[0]->expire_date, 'modeOfPayment' => $modeOfPayment, 'specialNotes' => $specialNotes, 'optionStatus' => $optionStatus, 'packageTotalItem' => $keypckg, 'partTotalItem' => $keyprt, 'laborTotalItem' => $keyl, 'optionThreeHtml' => $optionThreeHtml, 'optionTwoHtml' => $optionTwoHtml, 'optionOneHtml' => $optionOneHtml, 'job_order_id' => $job_order_id, 'jobOrderInfo' => $jobOrderInfo, 'jobOrderPartServiceOption' => $jobOrderPartServiceOption, 'jobOrderLaborOption' => $jobOrderLaborOption, 'jobOrderPackageOption' => $jobOrderPackageOption, 'countEnabledPart' => $countEnabledPart, 'countEnabledPackage' => $countEnabledPackage, 'countEnabledLabor' => $countEnabledLabor ]);
+    }
   }
 
 
@@ -398,6 +394,20 @@ class InvoiceEdit extends Controller
   }
 
 
+     public function deletePackageItem($item_id){
+    JobOrdersPackage::where("id", $item_id)->update(
+          [
+            "package_qty"     => 1,
+            "package_id"  =>  NULL,
+            "package_value"  =>  NULL,
+            "package_note"  =>  NULL,
+            "package_note2"   =>  NULL,
+            "package_price"   => 0,
+          ] );
+     return response()->json(['success'=> true, 'message' => 'Item deleted!']);
+
+  }
+
 
   
   public function saveJobOrderItem($job_order_id){
@@ -430,6 +440,7 @@ class InvoiceEdit extends Controller
     $payment =  $_POST['payment'];
     // $payment2 = intval(preg_replace('/[^\d.]/', '', $_POST['payment2']));
     $payment2 = $_POST['payment2'];
+    $amount_net_vat = $_POST['amount-net-vat'];
 
     JobOrder::where("id", $job_order_id)->update(
       [
@@ -442,10 +453,12 @@ class InvoiceEdit extends Controller
         "part_total" => (($_POST['part-total']) ? $_POST['part-total'] : 0),
         "sub_total" => (($_POST['sub_total']) ? $_POST['sub_total'] : 0),
         "vat" => (($_POST['vat']) ?  $_POST['vat'] : 0),
-        "total_amount" => (($_POST['total-amount']) ?  $_POST['total-amount'] : 0),
+        "total_amount" => (($_POST['total_amount']) ?  $_POST['total_amount'] : 0),
         "payment" => (($_POST['payment']) ? $payment : 0),
         "payment2" => (($_POST['payment2']) ? $payment2 : 0),
+        "amount_net_vat" => (($_POST['amount-net-vat']) ? $amount_net_vat : 0),
         "balance" => (($_POST['balance']) ? $_POST['balance'] : 0),
+        "discount" => (($_POST['discount']) ? $_POST['discount'] : 0),
         "remarks" => (($_POST['remarks']) ?  $_POST['remarks'] : ''),
         "mode_of_payment" => (($_POST['mop']) ?  $_POST['mop'] : ''),
         "mode_of_payment2" => (($_POST['mop2']) ?  $_POST['mop2'] : ''),

@@ -39,8 +39,6 @@ class InvoicePreview extends Controller
     $unixTimestamp = strtotime($originalDate);
     $newInvoiceDate = date("m/d/Y", $unixTimestamp);
 
-
-
     
     return view('content.apps.app-invoice-preview', ['invoice_date' => $newInvoiceDate, 'expire_date' => $jobOrderInfo[0]->expire_date, 'job_order_id' => $job_order_id, 'jobOrderInfo' => $jobOrderInfo, 'jobOrderPackageSelected' => $jobOrderPackageSelected, 'jobOrderLaborSelected' => $jobOrderLaborSelected, 'jobOrderPartSelected' => $jobOrderPartSelected]);
 

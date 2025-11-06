@@ -71,7 +71,7 @@
               </div>
               <div class="col-sm-6">
                 <div class="input-group input-group-merge disabled align-items-right">
-                  <input type="text" class="form-control disabled-preview text-right mr-3"  placeholder="74909" value="{{$data->job_order_number}}"" id="invoiceId" />
+                  <input type="text" class="form-control disabled-preview text-right mr-3"  placeholder="74909" value="{{$data->job_order_number}}" id="invoiceId" />
                 </div>
               </div>
               <div class="col-sm-6 mb-2 d-md-flex align-items-right justify-content-end pt-2">
@@ -116,7 +116,7 @@
                 </tr>
                 <tr>
                   <td class="pe-3 fw-medium">{{$data->mobile_number}}</td>
-                  <td colspan="2" class="capital-letter">{{$data->manufacturer}} {{$data->vehicle_model}} {{$data->transmission}} {{$data->fuel_type}}</td>
+                  <td colspan="2" class="capital-letter">{{$data->manufacturer}} {{$data->vehicle_model}} {{$data->transmission}} {{$data->fuel_type}} {{$data->year}}</td>
                   <td></td>
                 </tr>
                 
@@ -174,7 +174,7 @@
           @endforeach
            <tr>
               <td colspan="3"></td>
-              <td colspan="2" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{number_format((float)$data->labor_total, 2)}}</b></td>
+              <td colspan="2" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->labor_total}}</b></td>
             </tr>
           </tbody>
         </table>
@@ -211,7 +211,7 @@
           @endforeach
             <tr>
               <td colspan="3"></td>
-              <td colspan="2" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{number_format((float)$data->part_total, 2)}}</b></td>
+              <td colspan="3" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->part_total}}</b></td>
 
             </tr>
           </tbody>
@@ -248,40 +248,51 @@
              <div class="invoice-calculations">
 
               <div class="d-flex justify-content-between mb-2 mt-4">
-                <span class="w-px-150"><b>SUBTOTAL</b></span>
+                <span class="w-px-200"><b>TOTAL SALES (VAT Inclusive)</b></span>
                 <h6 class="mb-0 pt-1">₱ {{$data->sub_total}}</h6>
               </div>
               <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150">VAT (12%)</span>
-                <h6 class="mb-0 pt-1">{{number_format((float)$data->vat, 2)}}</h6>
+                <span class="w-px-200">VAT (12%)</span>
+                <h6 class="mb-0 pt-1">₱ {{number_format((float)$data->vat, 2)}}</h6>
               </div>
               <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150"><b>TOTAL AMOUNT</b></span>
+                <span class="w-px-200">AMOUNT: Net of VAT</span>
+                <h6 class="mb-0 pt-1">₱ {{$data->amount_net_vat}}</h6>
+              </div>
+
+              @if($data->discount > 0)
+              <div class="d-flex justify-content-between mb-2">
+                <span class="w-px-200">DISCOUNT</span>
+                <h6 class="mb-0 pt-1">₱ {{number_format((float)$data->discount, 2)}}</h6>
+              </div>
+              @endif
+              <div class="d-flex justify-content-between mb-2">
+                <span class="w-px-200"><b>TOTAL AMOUNT</b></span>
                 <h6 class="mb-0 pt-1">₱ {{$data->total_amount}}</h6>
               </div>
                <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150"><b style="text-transform: uppercase;">{{$data->payment_label}}</b>
+                <span class="w-px-200"><b style="text-transform: uppercase;">{{$data->payment_label}}</b>
                 @if($data->payment2 > 0)
                   <span>({{$data->mode_of_payment}})</span>
                 @endif
               </span>
-                <h6 class="mb-0 pt-1">₱ {{number_format((float)$data->payment, 2)}}</h6>
+                <h6 class="mb-0 pt-1">₱ {{$data->payment}}</h6>
               </div>
 
               @if($data->payment2 > 0)
               <div class="d-flex justify-content-between mb-2">
-                <span class="w-px-150"><b>PAYMENT</b> 
+                <span class="w-px-200"><b>PAYMENT</b> 
                 @if($data->payment2 > 0)
                   <span>({{$data->mode_of_payment2}})</span>
                 @endif
                 </span>
-                <h6 class="mb-0 pt-1">₱ {{number_format((float)$data->payment2, 2)}}</h6>
+                <h6 class="mb-0 pt-1">₱ {{$data->payment2}}</h6>
               </div>
               @endif
               <hr />
               <div class="d-flex justify-content-between">
-                <span class="w-px-150"><b>BALANCE</b></span>
-                <h6 class="mb-0 pt-1">₱ {{number_format((float)$data->balance, 2)}}</h6>
+                <span class="w-px-200"><b>BALANCE</b></span>
+                <h6 class="mb-0 pt-1">₱ {{$data->balance}}</h6>
               </div>
             </div>
           </div>

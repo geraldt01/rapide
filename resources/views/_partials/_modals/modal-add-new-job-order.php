@@ -52,6 +52,12 @@
               <label for="Fuel Type">Fuel Type</label>
             </div>
           </div>
+          <div class="col-12 col-md-6">
+            <div class="form-floating form-floating-outline">
+              <input type="number" id="modalYear" name="modalYear" class="form-control" placeholder="Year" />
+              <label for="Fuel Type">Year</label>
+            </div>
+          </div>
            <div class="col-12 col-md-6">
             <div class="form-floating form-floating-outline">
               <input type="text" id="modalMileage" name="modalMileage" class="form-control" placeholder="Mileage" />
