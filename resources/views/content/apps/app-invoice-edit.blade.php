@@ -45,7 +45,7 @@
 @section('page-script')
 <script src="{{asset('assets/js/offcanvas-add-payment.js')}}"></script>
 <script src="{{asset('assets/js/offcanvas-send-invoice.js')}}"></script>
-<script src="{{asset('assets/js/app-invoice-edit.js?v=4.48.1')}}"></script>
+<script src="{{asset('assets/js/app-invoice-edit.js?v=4.49.1')}}"></script>
 
 <script src="{{asset('assets/js/forms-selects.js')}}"></script>
 <script src="{{asset('assets/js/forms-tagify.js')}}"></script>
