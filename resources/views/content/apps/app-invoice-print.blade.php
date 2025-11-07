@@ -102,7 +102,7 @@ table.border-black {
         <tbody>
           <tr>
              <td style="width:20%"><strong>MILEAGE</strong></td>
-            <td style="width:20%">{{$data->mileage}}</td>
+            <td style="width:20%">{{$data->mileage}} KMS</td>
           </tr>
           <tr>
         <td><strong>PLATE NUMBER</strong></td>

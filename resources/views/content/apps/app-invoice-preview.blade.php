@@ -101,7 +101,7 @@
                   <td rowspan="4"style="width:15%;vertical-align: top;" class="pe-3 fw-medium"><strong>Customer</strong></td>
                   <td class="pe-3 fw-medium capital-letter" style="width:45%">{{$data->owner_name}}</td>
                   <td style="width:20%"><strong>MILEAGE</strong></td>
-                  <td style="width:20%">{{$data->mileage}}</td>
+                  <td style="width:20%">{{$data->mileage}} KMS</td>
                 </tr>
                 <tr>
                   <td  rowspan="2" class="pe-3 fw-medium">{{$data->address}}</td>
