@@ -817,7 +817,7 @@ const first = element -1;
   }
   function calculateAll(id) {
     
-    $(".invoice-actions").addClass("fixed-section");
+    // $(".invoice-actions").addClass("fixed-section");
 
   const options = {
     minimumFractionDigits: 2, // Ensures at least two decimal places

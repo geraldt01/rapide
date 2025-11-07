@@ -69,12 +69,10 @@ class InvoiceEdit extends Controller
                   $optionOneHtml[] = '<option value="'.$options->id.'" '.(($options->id == $selected->package_id) ? "selected" : "").'>'.$options->value.'</option>';
               }
         $optionOneHtml[] =  '</select></div>
-            <div class="col-md-2 col-12">
+            <div class="col-md-4 col-12">
              <input type="text" class="form-control package mb-3" name="package-note2" id="package-note2-'.$keypckg.'" value="'.$selected->package_note2.'" onchange="calculatePackage('.$keypckg.')" />
             </div>
-              <div class="col-md-2 col-12">
-             <input type="text" class="form-control customer-hidden package mb-3" name="package-note" id="package-note-'.$keypckg.'" value="'.$selected->package_note.'" onchange="calculatePackage('.$keypckg.')" />
-            </div>
+              
             <div class="col-md-2 col-12 mb-md-0 mb-3 color-black d-flex">
                       <span class="pt-2 pl-2">₱</span>
                     <input type="text" class="form-control invoice-item-price package mb-3" name="package-price" id="package-price-'.$keypckg.'" value="'.$selected->package_price.'" placeholder="0" onchange="calculatePackage('.$keypckg.')" />
