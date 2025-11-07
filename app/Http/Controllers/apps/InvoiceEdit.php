@@ -713,17 +713,21 @@ class InvoiceEdit extends Controller
     ->get();
 
     foreach($jobOrderPackageInfo as $package) {
-      if($package->status == 1) {
         $pa = new JobOrdersPackage();
         $pa->job_order_id = $new_job_order_id;
+        $pa->item_number = $package->item_number;
         $pa->package_id = $package->package_id;
         $pa->package_value = $package->package_value;
         $pa->package_note = $package->package_note;
         $pa->package_note2 = $package->package_note2;
         $pa->package_qty = $package->package_qty;
         $pa->package_price = $package->package_price;
+          if($package->status == 1) {
+            $pa->status = 1;
+          } else {
+            $pa->status = 2;
+          }
         $pa->save();
-      }
       
     }
 
@@ -732,15 +736,19 @@ class InvoiceEdit extends Controller
     ->get();
 
     foreach($jobOrderLaborInfo as $labor) {
-      if($labor->status == 1) {
         $la = new JobOrdersLabor();
         $la->job_order_id = $new_job_order_id;
+        $la->item_number = $labor->item_number;
         $la->labor_id = $labor->labor_id;
         $la->labor_value = $labor->labor_value;
         $la->labor_qty = $labor->labor_qty;
         $la->labor_price = $labor->labor_price;
+          if($labor->status == 1) {
+            $la->status = 1;
+          } else {
+            $la->status = 2;
+          }
         $la->save();
-      }
     }
 
 
@@ -749,15 +757,19 @@ class InvoiceEdit extends Controller
     ->get();
 
      foreach($jobOrderPartInfo as $part) {
-      if($part->status == 1) {
         $par = new JobOrdersPartService();
         $par->job_order_id = $new_job_order_id;
+        $par->item_number = $part->item_number;
         $par->part_id = $part->part_id;
         $par->part_value = $part->part_value;
         $par->part_qty = $part->part_qty;
         $par->part_price = $part->part_price;
+        if($part->status == 1) {
+          $par->status = 1;
+        } else {
+          $par->status = 2;
+        }
         $par->save();
-      }
     }
    } else {
       $new_job_order_id = $check[0]->id;
@@ -796,14 +808,17 @@ class InvoiceEdit extends Controller
         "status" => 1,
       ]);
     } else if ($type == 'labor') {
+   
       JobOrdersLabor::where("job_order_id", $job_order_id)->where("item_number", $itemNum)->update([
         "status" => 1,
       ]);
     } else {
+    
       JobOrdersPartService::where("job_order_id", $job_order_id)->where("item_number", $itemNum)->update([
         "status" => 1,
       ]);
-      echo "pasok";
+           echo $itemNum;
+      echo $job_order_id;
     }
 
   }
