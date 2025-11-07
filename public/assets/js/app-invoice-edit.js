@@ -348,6 +348,7 @@ calculateAll();
        $('#part-option-'+id).html("<option>test</option>");
       document.getElementById('part-text-'+id).value = "";
       // document.getElementById('part-option-'+id).value = "";
+      document.getElementById('part-part-note-'+id).value = "";
       document.getElementById('part-part-number-'+id).value = "";
       document.getElementById('part-unit-cost-'+id).value = 0;
       document.getElementById('part-total-cost-'+id).value = 0;
@@ -663,6 +664,7 @@ const first = element -1;
       data:  $("").serialize(),
       success: function (result) {
         document.getElementById("part-text-"+element).value = result.value;
+        document.getElementById("part-part-note-"+element).value = result.part_note;
         document.getElementById("part-part-number-"+element).value = result.part_number;
         document.getElementById("part-unit-cost-"+element).value = result.cost;
         document.getElementById("part-price-"+element).value = result.price;

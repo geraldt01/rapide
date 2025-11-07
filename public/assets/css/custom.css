@@ -434,3 +434,22 @@ body.invoice-page .container-xxl {
 .disable-part-item {
   display: none;
 }
+
+
+@media (min-width: 768px) {
+  .invoice-min-width .col-md-1.number {
+    width: 7.333333% !important
+    }
+    .invoice-min-width .col-md-1 {
+        -ms-flex: 0 0 auto;
+        flex: 0 0 auto;
+        width: 7.333333%;
+    }
+
+    
+    .invoice-min-width  .col-md-2 {
+        -ms-flex: 0 0 auto;
+        flex: 0 0 auto;
+        width: 28.666667% !important;
+    }
+}

@@ -125,51 +125,56 @@ table.border-black {
   <div class="table-responsive">
     <table class="table m-0 border-black">
         <tr>
-          <th colspan="6"><strong>PACKAGE, EXPRESS</strong></th>
+          <th colspan="7"><strong>PACKAGE, EXPRESS</strong></th>
         </tr>
         @foreach($jobOrderPackageSelected as $k => $package)
         <tr>
-            <td class="text-nowrap text-heading" colspan="2">{{$package->package_value}}</td>
-            <td class="text-nowrap text-heading" colspan="2">{{$package->package_note2}}</td>
-            <td  colspan="2" class="text-right">₱ {{number_format((float)$package->package_price, 2)}}</td>
+            <td class="text-nowrap text-heading" colspan="4">{{$package->package_value}}</td>
+            <td  colspan="3" class="text-right">₱ {{number_format((float)$package->package_price, 2)}}</td>
         </tr>
         <tr>
-          <td colspan="6"></td>
+            <td class="text-nowrap text-heading" colspan="4">{{$package->package_note2}}</td>
+            <td  colspan="3" class="text-right"></td>
+        </tr>
+        <tr>
+          <td colspan="7"></td>
         </tr>
         @endforeach
         <tr>
-          <th colspan="6"><strong>LABOR</strong></th>
+          <th colspan="7"><strong>LABOR</strong></th>
         </tr>
         <tr>
           <th style="width: 4%"><strong>NO</strong></th>
-          <th colspan="2">SERVICE</th>
-          <th>Qty</th>
+          <th colspan="3">SERVICE</th>
+          <th class="text-right">Qty</th>
           <th class="text-right">Price</th>
           <th  class="text-right">Amount</th>
         </tr>
       @foreach($jobOrderLaborSelected as $klabor => $labor)
         <tr>
           <td style="width: 10%" class="text-nowrap text-heading">{{$klabor + 1}}</td>
-          <td colspan="2" style="width: 55%">{{$labor->labor_value}}</td>
-          <td class="text-center">{{(($labor->labor_value) ? $labor->labor_qty : '')}}</td>
+          <td colspan="3" style="width: 55%">{{$labor->labor_value}}</td>
+          <td class="text-right">{{(($labor->labor_value) ? $labor->labor_qty : '')}}</td>
           <td class="text-right">{{(($labor->labor_value) ? number_format((float)$labor->labor_price, 2) : '' )}}</td>
           <td class="text-right">{{(($labor->labor_value) ?  number_format((float)$labor->labor_amount, 2) : '' )}}</td>
         </tr>
       @endforeach
         <tr>
             <td colspan="4"></td>
-            <td colspan="2" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->labor_total}}</b></td>
+            <td colspan="3" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->labor_total}}</b></td>
         </tr>
         <tr>
-          <td colspan="6"></td>
+          <td colspan="7"></td>
         </tr>
          <tr>
-          <th colspan="6"><strong>PARTS & SERVICES</strong></th>
+          <th colspan="7"><strong>PARTS & SERVICES</strong></th>
         </tr>
         <tr>
           <th style="width: 4%"><strong>NO</strong></th>
-          <th colspan="2">SERVICE</th>
-          <th>Qty</th>
+          <th>SERVICE</th>
+          <th></th>
+          <th class="text-right">PART NO.</th>
+          <th class="text-right">Qty</th>
           <th class="text-right">Price</th>
           <th  class="text-right">Amount</th>
         </tr>
@@ -177,28 +182,29 @@ table.border-black {
             <tr>
                <td class="text-nowrap text-heading text-left">{{$kpart + 1}}</td>
               <td class="text-left">{{$part->part_value}}</td>
-              <td class="text-left">{{$part->part_number}}</td>
-              <td class="text-center">{{(($part->part_value) ? $part->part_qty : '' )}}</td>
-              <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_price, 2) : '' ) }}</td>
-              <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_amount, 2)   : '' ) }}</td>
+              <td class="text-left" style="width: 10%">{{$part->part_note}}</td>
+              <td class="text-right" style="width: 10%">{{$part->part_number}}</td>
+              <td class="text-right" style="width: 10%">{{(($part->part_value) ? $part->part_qty : '' )}}</td>
+              <td class="text-right" style="width: 10%">{{(($part->part_value) ? number_format((float)$part->part_price, 2) : '' ) }}</td>
+              <td class="text-right" style="width: 10%">{{(($part->part_value) ? number_format((float)$part->part_amount, 2)   : '' ) }}</td>
             </tr>
           @endforeach
         <tr>
-          <td colspan="3"></td>
+          <td colspan="4"></td>
           <td colspan="3" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->part_total}}</b></td>
         </tr>
          <tr>
-          <td colspan="6"></td>
+          <td colspan="7"></td>
         </tr>
          <tr>
-          <td colspan="6"><strong>REMARKS</strong><br>
+          <td colspan="7"><strong>REMARKS</strong><br>
             <b>{!! nl2br($data->remarks)  !!}</b>
         </td>
         </tr>
     </table>
     <table class="table m-0 " style="border-top: none;border-left: 1px solid rgba(76, 78, 100, 0.5);border-right: 1px solid rgba(76, 78, 100, 0.5);">
         <tr  style="border-top: none;border-left: 1px solid rgba(76, 78, 100, 0.5);border-right: 1px solid rgba(76, 78, 100, 0.5);">
-          <td colspan="3"  style="border-top: none;width: 65%;" class="align-top px-4 py-3">
+          <td colspan="3"  style="border-top: none;width: 62%;" class="align-top px-4 py-3">
             <p class="mb-2">
               <strong>
                    This is merely an estimate. Cost of parts quoted may change depending on the availability of the above quoted parts. NO WARRANTY on service where PARTS/FLUIDS are provided by customer. NO WARRANTY on change oil service where OIL SLUDGE is detected upon inspection. Presence of oil sludge may cause engine trouble. ENGINE FLUSH does not guarantee the complete removal of oil sludge. Proper period of changing your oil is still the best way in preventing the build up of oil sludge.			
@@ -231,7 +237,7 @@ table.border-black {
             @endif
             <p class="mb-2"><b>BALANCE</b></p>
           </td>
-          <td class="text-end px-4 py-3" style="width: 15%;vertical-align: top;">
+          <td class="text-end px-4 py-3" style="width: 23%;vertical-align: top;">
             <p class="mb-2"><b>₱ {{$data->sub_total}}</b></p>
             <p class=" mb-2">{{$data->vat}}</p>
             <p class=" mb-2">{{$data->amount_net_vat}}</p>

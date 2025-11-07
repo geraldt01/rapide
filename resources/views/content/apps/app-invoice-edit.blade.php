@@ -350,7 +350,7 @@
           </div>
         </div>
       </div>
-      <div class="card-body pt-0 invoice-min-width bg-white">
+      <div class="card-body pt-0 bg-white float-right">
         <div class="row">
           <div class="col-md-10">
           </div>

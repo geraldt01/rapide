@@ -137,9 +137,12 @@
           <tbody>
           @foreach($jobOrderPackageSelected as $k => $package)
             <tr>
-              <td class="text-nowrap text-heading" colspan="2">{{$package->package_value}}</td>
-              <td class="text-nowrap text-heading" colspan="2">{{$package->package_note2}}</td>
+              <td class="text-nowrap text-heading" colspan="4">{{$package->package_value}}</td>
               <td  class="text-right"><b>₱ {{number_format((float)$package->package_price, 2)}}</b></td>
+            </tr>
+                <tr>
+              <td class="text-nowrap text-heading" colspan="4">{{$package->package_note2}}</td>
+              <td  class="text-right"></td>
             </tr>
           @endforeach
           </tbody>
@@ -191,8 +194,9 @@
             </tr>
             <tr>
               <th style="width: 10%">No</th>
-              <th style="width: 55%">Item</th>
-              <th class="text-center"></th>
+              <th style="width: 45%">Item</th>
+              <th class="text-center" style="width: 20%"></th>
+              <th class="text-center" style="width: 20%">Part No.</th>
               <th class="text-center">Qty</th>
               <th  class="text-right">Price</th>
               <th  class="text-right">Amount</th>
@@ -203,6 +207,7 @@
             <tr>
               <td class="text-nowrap text-heading text-left">{{$kpart + 1}}</td>
               <td class="text-left">{{$part->part_value}}</td>
+              <td class="text-left">{{$part->part_note}}</td>
               <td class="text-left">{{$part->part_number}}</td>
               <td class="text-center">{{(($part->part_value) ? $part->part_qty : '' )}}</td>
               <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_price, 2) : '' ) }}</td>
@@ -211,7 +216,7 @@
           @endforeach
             <tr>
               <td colspan="3"></td>
-              <td colspan="3" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->part_total}}</b></td>
+              <td colspan="4" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->part_total}}</b></td>
 
             </tr>
           </tbody>

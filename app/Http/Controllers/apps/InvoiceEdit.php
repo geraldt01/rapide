@@ -135,7 +135,7 @@ class InvoiceEdit extends Controller
                     </p>
                   </div>
 
-                <div class="col-md-1 col-12 border-start text-right" style="width: 2.333333%;">
+                <div class="col-md-1 col-12 border-start text-right">
                   <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyl.', 1, '.$selectedLabor->id.');calculateLabor('.$keyl.')" ></i>
                   <div class="dropdown">
                     
@@ -199,11 +199,11 @@ class InvoiceEdit extends Controller
                 $sub_amount = $selectedPart->part_price * $selectedPart->part_qty;
 
                 $optionThreeHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedPart->status == 2) ? 'disable-part-item' : '').'" style="padding-right: 0px !important;"  id="item-list-part-'.$keyprt.'"  data-repeater-item>
-                 <div class="col-md-1 col-12 mb-md-0 mb-3 color-black" style="width: 4.333333%;">
+                 <div class="col-md-1 mumber col-12 mb-md-0 mb-3 color-black" style="width: 2.333333%;">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
                      <span id="part-counter-'.$keyprt.'">'.$keyprt.'</span>
                   </div>
-                  <div class="col-md-3 col-12 mb-md-0 mb-3" id="refresh-div-'.$keyl.'">
+                  <div class="col-md-2 col-12 mb-md-0 mb-3 " id="refresh-div-'.$keyl.'">
                     <h6 class="mb-2 ml-2 repeater-title fw-medium"><strong>Service</strong></h6>
                       <div class="row">
                       <div class="col-1">
@@ -224,7 +224,11 @@ class InvoiceEdit extends Controller
                         </div>
                      </div>
 
-                  <div class="col-md-1 col-12 mb-md-0 mb-3">
+                  <div class="col-md-1 col-12 mb-md-0 mb-3"  style="width: 8.333333%;">
+                    <h6 class="mb-2 repeater-title fw-medium"></h6>
+                    <input type="text" class="form-control invoice-item-part-note part" name="part-part-note" id="part-part-note-'.$keyprt.'" value="'.$selectedPart->part_note.'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')" style="font-size: 12px;"/>
+                  </div> 
+                       <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Part Number</h6>
                     <input type="text" class="form-control invoice-item-part-number part" name="part-part-number" id="part-part-number-'.$keyprt.'" value="'.$selectedPart->part_number.'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                   </div>            
@@ -257,7 +261,7 @@ class InvoiceEdit extends Controller
                   </div>
                
              
-                  <div class="col-md-1 col-12 border-start text-right" style="">
+                  <div class="col-md-1 number col-12 border-start text-right">
                    <h6 class="mb-2 repeater-title fw-medium">Amount</h6>
                     <p class="mb-0 pt-2 color-black amount-part-sub d-flex" id="amount-part-sub-'.$keyprt.'">₱
                     <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="part-amount" id="part-amount-'.$keyprt.'" value="'.$sub_amount.'" placeholder="" min="12"/>
@@ -365,6 +369,7 @@ class InvoiceEdit extends Controller
           [
             "part_qty"     => 1,
             "part_value"   =>  NULL,
+            "part_note"   =>  NULL,
             "part_number"   =>  NULL,
             "supplier"   =>  NULL,
             "supplier_inv"   =>  NULL,
@@ -546,6 +551,7 @@ class InvoiceEdit extends Controller
             "part_id"      => ((isset($part['part-option']))? $part['part-option'] : ""),
             "part_qty"     => ((isset($part['part-qty'])) ? $part['part-qty'] : 1),
             "part_value"   =>  JobOrdersPartServiceOption::find($part['part-option'])->value,
+            "part_note"   => ((isset($part['part-part-note'])) ? $part['part-part-note'] : ""),
             "part_number"   => ((isset($part['part-part-number'])) ? $part['part-part-number'] : ""),
             "supplier"   => ((isset($part['part-supplier'])) ? $part['part-supplier'] : ""),
             "supplier_inv"   => ((isset($part['part-supplier-inv'])) ? $part['part-supplier-inv'] : ""),
