@@ -713,15 +713,18 @@ class InvoiceEdit extends Controller
     ->get();
 
     foreach($jobOrderPackageInfo as $package) {
-      $pa = new JobOrdersPackage();
-      $pa->job_order_id = $new_job_order_id;
-      $pa->package_id = $package->package_id;
-      $pa->package_value = $package->package_value;
-      $pa->package_note = $package->package_note;
-      $pa->package_note2 = $package->package_note2;
-      $pa->package_qty = $package->package_qty;
-      $pa->package_price = $package->package_price;
-      $pa->save();
+      if($package->status == 1) {
+        $pa = new JobOrdersPackage();
+        $pa->job_order_id = $new_job_order_id;
+        $pa->package_id = $package->package_id;
+        $pa->package_value = $package->package_value;
+        $pa->package_note = $package->package_note;
+        $pa->package_note2 = $package->package_note2;
+        $pa->package_qty = $package->package_qty;
+        $pa->package_price = $package->package_price;
+        $pa->save();
+      }
+      
     }
 
     $jobOrderLaborInfo = DB::table('job_orders_labors')
@@ -729,13 +732,15 @@ class InvoiceEdit extends Controller
     ->get();
 
     foreach($jobOrderLaborInfo as $labor) {
-      $la = new JobOrdersLabor();
-      $la->job_order_id = $new_job_order_id;
-      $la->labor_id = $labor->labor_id;
-      $la->labor_value = $labor->labor_value;
-      $la->labor_qty = $labor->labor_qty;
-      $la->labor_price = $labor->labor_price;
-      $la->save();
+      if($labor->status == 1) {
+        $la = new JobOrdersLabor();
+        $la->job_order_id = $new_job_order_id;
+        $la->labor_id = $labor->labor_id;
+        $la->labor_value = $labor->labor_value;
+        $la->labor_qty = $labor->labor_qty;
+        $la->labor_price = $labor->labor_price;
+        $la->save();
+      }
     }
 
 
@@ -744,14 +749,15 @@ class InvoiceEdit extends Controller
     ->get();
 
      foreach($jobOrderPartInfo as $part) {
-      $par = new JobOrdersPartService();
-      $par->job_order_id = $new_job_order_id;
-      $par->part_id = $part->part_id;
-      $par->part_value = $part->part_value;
-      $par->part_qty = $part->part_qty;
-      $par->part_price = $part->part_price;
-      $par->save();
-      
+      if($part->status == 1) {
+        $par = new JobOrdersPartService();
+        $par->job_order_id = $new_job_order_id;
+        $par->part_id = $part->part_id;
+        $par->part_value = $part->part_value;
+        $par->part_qty = $part->part_qty;
+        $par->part_price = $part->part_price;
+        $par->save();
+      }
     }
    } else {
       $new_job_order_id = $check[0]->id;
