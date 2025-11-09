@@ -447,9 +447,16 @@ body.invoice-page .container-xxl {
     }
 
     
-    .invoice-min-width  .col-md-2 {
+    .invoice-min-width .col-md-2 {
         -ms-flex: 0 0 auto;
         flex: 0 0 auto;
-        width: 28.666667% !important;
+        width: 19.666667% !important;
     }
+     .invoice-min-width input {
+        font-size: 14px !important;
+     }
+
+     .invoice-min-width .light-style .select2-container--default .select2-selection--single .select2-selection__rendered {
+          font-size: 12px !important;
+     }
 }

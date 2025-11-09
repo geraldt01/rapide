@@ -25,6 +25,9 @@
 .disable-part-item, .disable-labor-item, .disable-package-item {
   display: none !important; 
 }
+#item-counter-font {
+  font-size: 12px !important;
+}
 
   </style>
 @section('vendor-script')

@@ -172,7 +172,7 @@
               <td style="width: 55%" class="capital-letter">{{$labor->labor_value}}</td>
               <td class="text-center">{{(($labor->labor_value) ? $labor->labor_qty : '' )}}</td>
               <td class="text-right">{{(($labor->labor_value) ? number_format((float)$labor->labor_price, 2) : '' )}}</td>
-              <td class="text-right">{{(($labor->labor_value) ?  number_format((float)$labor->labor_amount, 2) : '' )}}</td>
+              <td class="text-right">{{(($labor->labor_value) ?  $labor->labor_amount : '' )}}</td>
             </tr>
           @endforeach
            <tr>
@@ -211,7 +211,7 @@
               <td class="text-left">{{$part->part_number}}</td>
               <td class="text-center">{{(($part->part_value) ? $part->part_qty : '' )}}</td>
               <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_price, 2) : '' ) }}</td>
-              <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_amount, 2)   : '' ) }}</td>
+              <td class="text-right">{{(($part->part_value) ? $part->part_amount   : '' ) }}</td>
             </tr>
           @endforeach
             <tr>
@@ -258,7 +258,7 @@
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <span class="w-px-200">VAT (12%)</span>
-                <h6 class="mb-0 pt-1">₱ {{number_format((float)$data->vat, 2)}}</h6>
+                <h6 class="mb-0 pt-1">₱ {{$data->vat}}</h6>
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <span class="w-px-200">AMOUNT: Net of VAT</span>

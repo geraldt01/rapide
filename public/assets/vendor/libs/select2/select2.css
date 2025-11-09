@@ -397,6 +397,7 @@ html:not([dir=rtl]) .form-floating.form-floating-select2 label {
   line-height: calc(2.278125rem + 4px);
   color: #636578;
   padding-left: 0.875rem;
+  font-size: 12px !important;
 }
 .light-style .select2-container--default[dir=rtl] .select2-selection--single .select2-selection__rendered {
   padding-right: 0.875rem;

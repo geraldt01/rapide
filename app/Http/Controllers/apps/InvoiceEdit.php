@@ -105,7 +105,7 @@ class InvoiceEdit extends Controller
                 $optionTwoHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedLabor->status == 2) ? 'disable-labor-item' : '').'" style="padding-right: 0px !important;" id="item-list-labor-'.$keyl.'"  data-repeater-item>
                  <div class="col-md-1 col-12 mb-md-0 mb-3 color-black"  style="width: 4.333333%;">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
-                    <span id="labor-counter-'.$keyl.'">'.$keyl.'</span>
+                    <span id="item-counter-font labor-counter-'.$keyl.'" style="font-size: 12px;padding-top: 15px;">'.$keyl.'</span>
                   </div>
                   <div class="col-md-4 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>Service</strong></h6>
@@ -195,13 +195,15 @@ class InvoiceEdit extends Controller
     $optionThreeHtml = array();
     // if(isset($jobOrderPartSelected[0]->job_order_id)) {
       foreach($jobOrderPartSelected as $keyprt => $selectedPart) {
+          // print_r($selectedPart);
+          // exit();
                 $keyprt++;
                 $sub_amount = $selectedPart->part_price * $selectedPart->part_qty;
 
                 $optionThreeHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedPart->status == 2) ? 'disable-part-item' : '').'" style="padding-right: 0px !important;"  id="item-list-part-'.$keyprt.'"  data-repeater-item>
                  <div class="col-md-1 mumber col-12 mb-md-0 mb-3 color-black" style="width: 2.333333%;">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
-                     <span id="part-counter-'.$keyprt.'">'.$keyprt.'</span>
+                     <span id="item-counter-font part-counter-'.$keyprt.'" style="font-size: 13px;margin-top: 25px;">'.$keyprt.'</span>
                   </div>
                   <div class="col-md-2 col-12 mb-md-0 mb-3 " id="refresh-div-'.$keyl.'">
                     <h6 class="mb-2 ml-2 repeater-title fw-medium"><strong>Service</strong></h6>
@@ -226,7 +228,7 @@ class InvoiceEdit extends Controller
 
                   <div class="col-md-1 col-12 mb-md-0 mb-3"  style="width: 8.333333%;">
                     <h6 class="mb-2 repeater-title fw-medium"></h6>
-                    <input type="text" class="form-control invoice-item-part-note part" name="part-part-note" id="part-part-note-'.$keyprt.'" value="'.$selectedPart->part_note.'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')" style="font-size: 12px;"/>
+                    <input type="text" class="form-control invoice-item-part-note part" name="part-part-note" id="part-part-note-'.$keyprt.'" value="'.((isset($selectedPart->part_note)) ? $selectedPart->part_note : '').'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')" style="font-size: 12px;"/>
                   </div> 
                        <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Part Number</h6>

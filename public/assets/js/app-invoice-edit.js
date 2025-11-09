@@ -513,6 +513,9 @@ calculateAll();
           console.log(value.part_value);
           const count = index+1;
           console.log(count);
+          if(count > 10 && value.part_value > '') {
+            addItem('labor');
+          }
 
           if(value.part_value > '') {
             document.getElementById('labor-text-'+count).value = "Replace " + value.part_value;
@@ -664,7 +667,7 @@ const first = element -1;
       data:  $("").serialize(),
       success: function (result) {
         document.getElementById("part-text-"+element).value = result.value;
-        document.getElementById("part-part-note-"+element).value = result.part_note;
+        // document.getElementById("part-part-note-"+element).value = result.part_note;
         document.getElementById("part-part-number-"+element).value = result.part_number;
         document.getElementById("part-unit-cost-"+element).value = result.cost;
         document.getElementById("part-price-"+element).value = result.price;
