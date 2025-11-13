@@ -415,7 +415,7 @@ body.invoice-page .container-xxl {
    max-width: 1840px;
 }
 .invoice-min-width {
-  min-width: 1735px;
+  min-width: 1707px;
 }
 .bg-white {
   background-color: #ffffff;
@@ -437,6 +437,9 @@ body.invoice-page .container-xxl {
 
 
 @media (min-width: 768px) {
+  .form-control {
+    font-size: 13px !important;
+  }
   .invoice-min-width .col-md-1.number {
     width: 7.333333% !important
     }
@@ -453,10 +456,20 @@ body.invoice-page .container-xxl {
         width: 19.666667% !important;
     }
      .invoice-min-width input {
-        font-size: 14px !important;
+        font-size: 13px !important;
      }
 
      .invoice-min-width .light-style .select2-container--default .select2-selection--single .select2-selection__rendered {
           font-size: 12px !important;
      }
+
+     .invoice-min-width .light-style .select2-container--default .select2-selection--single {
+      height: 33px !important;
+    }
+    .invoice-min-width .light-style .select2-container--default .select2-selection--single {
+      height: 30px !important;
+    }
+    .invoice-min-width .mb-md-0 {
+       padding: 0 4px !important;
+    }
 }

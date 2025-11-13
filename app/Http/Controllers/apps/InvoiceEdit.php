@@ -690,6 +690,7 @@ class InvoiceEdit extends Controller
       $jo->job_order_number = $data->job_order_number;
       $jo->car_id = $data->car_id;
       $jo->date = $data->date;
+      $jo->year = $data->year;
       $jo->plate_number = $data->plate_number;
       $jo->manufacturer = $data->manufacturer; 
       $jo->mileage = $data->mileage; 

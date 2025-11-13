@@ -381,7 +381,8 @@ html:not([dir=rtl]) .form-floating.form-floating-select2 label {
   color: #bbbcc4;
 }
 .light-style .select2-container--default .select2-selection--single {
-  height: 2.47rem;
+  /* height: 2.47rem; */
+  height: 31px !important;
 }
 .light-style .select2-container--default .select2-selection--single .select2-selection__clear {
   color: #bbbcc4;
@@ -394,7 +395,8 @@ html:not([dir=rtl]) .form-floating.form-floating-select2 label {
   border-color: #bbbcc4 transparent transparent transparent;
 }
 .light-style .select2-container--default .select2-selection--single .select2-selection__rendered {
-  line-height: calc(2.278125rem + 4px);
+  /* line-height: calc(2.278125rem + 4px); */
+  line-height: 2.2;
   color: #636578;
   padding-left: 0.875rem;
   font-size: 12px !important;

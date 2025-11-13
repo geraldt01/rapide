@@ -179,7 +179,7 @@
 
       <hr class="my-0" />
         <div class="card-body pb-0 tbl-header">
-            <h6 class=""><strong>PACKAGE, EXPRESS</strong></h6>
+            <h6 class=""><strong>PACKAGE</strong></h6>
       </div>
       <div class="card-body">
         <div class="source-item pt-1">

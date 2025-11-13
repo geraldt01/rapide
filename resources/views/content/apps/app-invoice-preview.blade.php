@@ -131,7 +131,7 @@
         <table class="table table-borderless m-0">
           <thead class="border-top">
             <tr>
-              <th colspan="5"><h6 class="mb-0"><strong>PACKAGE, EXPRESS</strong></h6></th>
+              <th colspan="5"><h6 class="mb-0"><strong>PACKAGE</strong></h6></th>
             </tr>
           </thead>
           <tbody>
