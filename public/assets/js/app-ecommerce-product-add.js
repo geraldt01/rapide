@@ -17,7 +17,7 @@
         style: 'decimal'          // Specifies decimal formatting
       };
       var inputValue = event.target.value;
-      const finalNum =  parseInt(inputValue).toLocaleString(undefined, options).replace(".00", "");
+      const finalNum =  parseInt(inputValue).toLocaleString(undefined, options);
         document.getElementById("ecommerce-mileage").value = finalNum;
     });
   });

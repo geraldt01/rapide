@@ -208,10 +208,10 @@ class InvoiceEdit extends Controller
                   <div class="col-md-2 col-12 mb-md-0 mb-3 " id="refresh-div-'.$keyl.'">
                     <h6 class="mb-2 ml-2 repeater-title fw-medium"><strong>Service</strong></h6>
                       <div class="row">
-                      <div class="col-1">
+                      <div class="col-2">
                       <i class="mdi mdi-content-copy me-1 js-textareacopybtn" id="part-icon" onclick="copyParts('.$keyprt.')"></i><span class="alert-coppied" id="icon-part-'.$keyprt.'">Coppied!</span>
                       </div>
-                      <div class="col-11">
+                      <div class="col-10">
                         <input type="hidden" name="part-id" value="'.$selectedPart->id.'" />
                         <select id="part-option-'.$keyprt.' select2Basic'.$keyprt.'" name="part-option" class="select2" data-allow-clear="true"  onchange=" populateOption('.$keyprt.')">
                          <option value="" id="part-selected-'.$keyprt.'">Select Parts</option>';
@@ -259,14 +259,14 @@ class InvoiceEdit extends Controller
 
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Price</h6>
-                    <input type="text" class="form-control invoice-item-price part mb-3" name="part-price" id="part-price-'.$keyprt.'" value="'.$selectedPart->part_price.'" placeholder="" min="" onchange="calculatePart('.$keyprt.')" />
+                    <input type="text" class="form-control invoice-item-price part mb-3" name="part-price" id="part-price-'.$keyprt.'" value="'.$selectedPart->part_price.'" placeholder="" min="" onchange="calculatePart('.$keyprt.');formatNumberWithCommas(this)" />
                   </div>
                
              
                   <div class="col-md-1 number col-12 border-start text-right">
                    <h6 class="mb-2 repeater-title fw-medium">Amount</h6>
                     <p class="mb-0 pt-2 color-black amount-part-sub d-flex" id="amount-part-sub-'.$keyprt.'">₱
-                    <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="part-amount" id="part-amount-'.$keyprt.'" value="'.$sub_amount.'" placeholder="" min="12"/>
+                    <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="part-amount" id="part-amount-'.$keyprt.'" value="'.$sub_amount.'" placeholder="" min="12" onchange="formatNumberWithCommas(this)" />
                     </p>
 
                   <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyprt.', 2, '.$selectedPart->id.');calculatePart('.$keyprt.')" ></i>

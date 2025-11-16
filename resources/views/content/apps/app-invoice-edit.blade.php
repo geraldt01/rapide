@@ -86,7 +86,7 @@
     </div>
   </div>
   <br>
-  <div class="col-lg-9 col-12 mb-lg-0 mb-4">
+  <div class="col-md-12 col-lg-9 col-12 mb-lg-0 mb-4">
     <div class="card invoice-preview-card">
       <div class="card-body">
         <div class="row mx-0">
@@ -221,7 +221,7 @@
       <div class="card-body">
         <div class="source-item pt-1">
           <div class="mb-3" data-repeater-list="group-b">
-            <div class="d-flex repeater-wrapper pt-0 pt-md-4">
+            <div class="repeater-wrapper pt-0 pt-md-4">
               <div class="rounded position-relative pe-0 color-white">
                 @if($optionTwoHtml == false)
                   @for ($i = 1; $i < 11; $i++)
@@ -766,7 +766,7 @@
   <!-- /Invoice Edit-->
 
   <!-- Invoice Actions -->
-  <div class="col-lg-3 col-12 invoice-actions fixed-section" id="myFixedDiv" >
+  <div class="col-md-12 col-lg-3 col-12 invoice-actions fixed-section" id="myFixedDiv" >
     <div class="card mb-4">
       <div class="card-body">
         <!-- <button class="btn btn-primary d-grid w-100 mb-3" data-bs-toggle="offcanvas" data-bs-target="#sendInvoiceOffcanvas">
@@ -844,3 +844,22 @@
 
 <!-- /Offcanvas -->
 @endsection
+
+<script>
+   function formatNumberWithCommas(inputElement) {
+        let rawValue = inputElement.value;
+
+        // Remove any existing commas for accurate number conversion
+        let numericValue = parseFloat(rawValue.replace(/,/g, ''));
+
+        if (!isNaN(numericValue)) {
+            // Format the number with commas using toLocaleString()
+            // You can specify a locale for specific comma/decimal behavior, e.g., 'en-US'
+            let formattedValue = numericValue.toLocaleString('en-US'); 
+            inputElement.value = formattedValue;
+        } else {
+            // Handle cases where the input is not a valid number
+            inputElement.value = ''; // Clear or set a default value
+        }
+    }
+  </script>
