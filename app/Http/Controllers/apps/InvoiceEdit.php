@@ -198,7 +198,7 @@ class InvoiceEdit extends Controller
           // print_r($selectedPart);
           // exit();
                 $keyprt++;
-                $sub_amount = $selectedPart->part_price * $selectedPart->part_qty;
+                @$sub_amount = $selectedPart->part_price * $selectedPart->part_qty;
 
                 $optionThreeHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedPart->status == 2) ? 'disable-part-item' : '').'" style="padding-right: 0px !important;"  id="item-list-part-'.$keyprt.'"  data-repeater-item>
                  <div class="col-md-1 mumber col-12 mb-md-0 mb-3 color-black" style="width: 2.333333%;">
@@ -710,6 +710,7 @@ class InvoiceEdit extends Controller
       $jo->mode_of_payment2 = $data->mode_of_payment2;
       $jo->balance = $data->balance;
       $jo->remarks = $data->remarks;
+      $jo->customer_name = $data->customer_name;
 
       $jo->save();
 
@@ -773,6 +774,12 @@ class InvoiceEdit extends Controller
         $par->part_value = $part->part_value;
         $par->part_qty = $part->part_qty;
         $par->part_price = $part->part_price;
+        $par->part_number = $part->part_number;
+        $par->part_note = $part->part_note;
+        $par->supplier = $part->supplier;
+        $par->supplier_inv = $part->supplier_inv;
+        $par->unit_cost = $part->unit_cost;
+        $par->total_cost = $part->total_cost;
         if($part->status == 1) {
           $par->status = 1;
         } else {

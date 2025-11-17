@@ -125,7 +125,7 @@ table.border-black {
   <div class="table-responsive">
     <table class="table m-0 border-black">
         <tr>
-          <th colspan="7"><strong>PACKAGE, EXPRESS</strong></th>
+          <th colspan="7"><strong>PACKAGE</strong></th>
         </tr>
         @foreach($jobOrderPackageSelected as $k => $package)
         <tr>
@@ -173,7 +173,7 @@ table.border-black {
           <th style="width: 4%"><strong>NO</strong></th>
           <th>SERVICE</th>
           <th></th>
-          <th class="text-right">PART NO.</th>
+          <th class="text-right"></th>
           <th class="text-right">Qty</th>
           <th class="text-right">Price</th>
           <th  class="text-right">Amount</th>
@@ -183,7 +183,7 @@ table.border-black {
                <td class="text-nowrap text-heading text-left">{{$kpart + 1}}</td>
               <td class="text-left">{{$part->part_value}}</td>
               <td class="text-left" style="width: 10%">{{$part->part_note}}</td>
-              <td class="text-right" style="width: 10%">{{$part->part_number}}</td>
+              <td class="text-right" style="width: 10%"></td>
               <td class="text-right" style="width: 10%">{{(($part->part_value) ? $part->part_qty : '' )}}</td>
               <td class="text-right" style="width: 10%">{{(($part->part_value) ? number_format((float)$part->part_price, 2) : '' ) }}</td>
               <td class="text-right" style="width: 10%">{{(($part->part_value) ? number_format((float)$part->part_amount, 2)   : '' ) }}</td>

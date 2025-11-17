@@ -382,6 +382,10 @@ html:not([dir=rtl]) .form-floating.form-floating-select2 label {
 }
 .light-style .select2-container--default .select2-selection--single {
   /* height: 2.47rem; */
+}
+
+
+.invoice-edit .light-style .select2-container--default .select2-selection--single {
   height: 31px !important;
 }
 .light-style .select2-container--default .select2-selection--single .select2-selection__clear {
