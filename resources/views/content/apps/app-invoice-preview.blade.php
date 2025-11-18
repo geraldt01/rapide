@@ -168,11 +168,11 @@
           <tbody>
           @foreach($jobOrderLaborSelected as $klabor => $labor)
             <tr>
-              <td  style="width: 10%" class="text-nowrap text-heading">{{$klabor + 1}}</td>
+              <td  style="width: 10%" class="text-nowrap text-heading">{{$klabor + 1}} </td>
               <td style="width: 55%" class="capital-letter">{{$labor->labor_value}}</td>
               <td class="text-center">{{(($labor->labor_value) ? $labor->labor_qty : '' )}}</td>
               <td class="text-right">{{(($labor->labor_value) ? number_format((float)$labor->labor_price, 2) : '' )}}</td>
-              <td class="text-right">{{(($labor->labor_value) ?  $labor->labor_amount : '' )}}</td>
+              <td class="text-right">{{(($labor->labor_amount) ?  number_format((float)$labor->labor_amount, 2)  : '' )}}</td>
             </tr>
           @endforeach
            <tr>
@@ -196,7 +196,7 @@
               <th style="width: 10%">No</th>
               <th style="width: 45%">Item</th>
               <th class="text-center" style="width: 20%"></th>
-              <th class="text-center" style="width: 20%">Part No.</th>
+              <th class="text-center" style="width: 20%"></th>
               <th class="text-center">Qty</th>
               <th  class="text-right">Price</th>
               <th  class="text-right">Amount</th>
@@ -208,10 +208,10 @@
               <td class="text-nowrap text-heading text-left">{{$kpart + 1}}</td>
               <td class="text-left">{{$part->part_value}}</td>
               <td class="text-left">{{$part->part_note}}</td>
-              <td class="text-left">{{$part->part_number}}</td>
+              <td class="text-left"></td>
               <td class="text-center">{{(($part->part_value) ? $part->part_qty : '' )}}</td>
               <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_price, 2) : '' ) }}</td>
-              <td class="text-right">{{(($part->part_value) ? $part->part_amount   : '' ) }}</td>
+              <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_amount, 2)   : '' ) }}</td>
             </tr>
           @endforeach
             <tr>

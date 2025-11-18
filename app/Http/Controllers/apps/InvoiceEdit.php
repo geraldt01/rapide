@@ -70,12 +70,12 @@ class InvoiceEdit extends Controller
               }
         $optionOneHtml[] =  '</select></div>
             <div class="col-md-4 col-12">
-             <input type="text" class="form-control package mb-3" name="package-note2" id="package-note2-'.$keypckg.'" value="'.$selected->package_note2.'" onchange="calculatePackage('.$keypckg.')" />
+             <input type="text" class="form-control package mb-3" name="package-note2" id="package-note2-'.$keypckg.'" value="'.$selected->package_note2.'" onchange="calculatePackage('.$keypckg.');formatNumberWithCommas(this)" />
             </div>
               
             <div class="col-md-2 col-12 mb-md-0 mb-3 color-black d-flex">
                       <span class="pt-2 pl-2">₱</span>
-                    <input type="text" class="form-control invoice-item-price package mb-3" name="package-price" id="package-price-'.$keypckg.'" value="'.$selected->package_price.'" placeholder="0" onchange="calculatePackage('.$keypckg.')" />
+                    <input type="text" class="form-control package mb-3" name="package-price" id="package-price-'.$keypckg.'" value="' .number_format($selected->package_price, 2, '.', ',').'" placeholder="0" onchange="calculatePackage('.$keypckg.')" />
                   <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keypckg.', 0, '.$selected->id.');calculatePackage('.$keypckg.')" ></i>
             </div>
         </div>';
@@ -101,7 +101,7 @@ class InvoiceEdit extends Controller
     if(isset($jobOrderLaborSelected[0]->job_order_id)) {
       foreach($jobOrderLaborSelected as $keyl => $selectedLabor) {
                 $keyl++;
-                $sub_amount = $selectedLabor->labor_price * $selectedLabor->labor_qty;
+                @$sub_amount = $selectedLabor->labor_price * $selectedLabor->labor_qty;
                 $optionTwoHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedLabor->status == 2) ? 'disable-labor-item' : '').'" style="padding-right: 0px !important;" id="item-list-labor-'.$keyl.'"  data-repeater-item>
                  <div class="col-md-1 col-12 mb-md-0 mb-3 color-black"  style="width: 4.333333%;">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
@@ -124,14 +124,14 @@ class InvoiceEdit extends Controller
                   </div>
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Price</h6>
-                    <input type="text" class="form-control invoice-item-price labor mb-3" name="labor-price" id="labor-price-'.$keyl.'" value="'.$selectedLabor->labor_price.'" placeholder="" min=""  onchange="calculateLabor('.$keyl.')" pattern="^(?=.)(\d{1,3}(,\d{3})*)?(\.\d+)?$"/>
+                    <input type="text" class="form-control  labor mb-3" name="labor-price" id="labor-price-'.$keyl.'" value="'.number_format($selectedLabor->labor_price, 2, '.', ',').'" placeholder="" min=""  onchange="calculateLabor('.$keyl.');formatNumberWithCommas(this)" />
                     
                   </div>
                
                   <div class="col-md-1 col-12 pe-0">
                     <h6 class="mb-2 repeater-title fw-medium">Amount</h6>
                     <p class="mb-0 pt-2 color-black amount-labor-sub d-flex" id="amount-labor-sub-'.$keyl.'">₱
-                    <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="labor-amount" id="labor-amount-'.$keyl.'" value="'.$sub_amount.'"  placeholder="" min="12"/>
+                    <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="labor-amount" id="labor-amount-'.$keyl.'" value="'.number_format($selectedLabor->labor_amount, 2, '.', ',').'"  placeholder="" min="12" onchange="formatNumberWithCommas(this)"/>
                     </p>
                   </div>
 
@@ -259,14 +259,14 @@ class InvoiceEdit extends Controller
 
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Price</h6>
-                    <input type="text" class="form-control invoice-item-price part mb-3" name="part-price" id="part-price-'.$keyprt.'" value="'.$selectedPart->part_price.'" placeholder="" min="" onchange="calculatePart('.$keyprt.');formatNumberWithCommas(this)" />
+                    <input type="text" class="form-control part mb-3" name="part-price" id="part-price-'.$keyprt.'" value="'.number_format($selectedPart->part_price, 2, '.', ',').'" placeholder="" min="" onchange="calculatePart('.$keyprt.');formatNumberWithCommas(this)" />
                   </div>
                
              
                   <div class="col-md-1 number col-12 border-start text-right">
                    <h6 class="mb-2 repeater-title fw-medium">Amount</h6>
                     <p class="mb-0 pt-2 color-black amount-part-sub d-flex" id="amount-part-sub-'.$keyprt.'">₱
-                    <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="part-amount" id="part-amount-'.$keyprt.'" value="'.$sub_amount.'" placeholder="" min="12" onchange="formatNumberWithCommas(this)" />
+                    <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="part-amount" id="part-amount-'.$keyprt.'" value="'.number_format($selectedPart->part_amount, 2, '.', ',').'" placeholder="" min="12" onchange="formatNumberWithCommas(this)" />
                     </p>
 
                   <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyprt.', 2, '.$selectedPart->id.');calculatePart('.$keyprt.')" ></i>
@@ -512,6 +512,7 @@ class InvoiceEdit extends Controller
       }
       if($key== 'group-b') {
         foreach($value as $labor){
+        
          if(isset($labor['labor-text']) && $labor['labor-text'] > "") {
             // $lbr = new JobOrdersLabor();
             // $lbr->job_order_id = $job_order_id;
@@ -529,8 +530,8 @@ class InvoiceEdit extends Controller
             "labor_value"  =>  ((isset($labor['labor-text'])) ? $labor['labor-text'] : ""),
             "cost"  =>  ((isset($labor['labor-cost'])) ? $labor['labor-cost'] : ""),
             "part_number"   =>  ((isset($labor['labor-part-number'])) ? $labor['labor-part-number'] : ""),
-            "labor_price"   => ((isset($labor['labor-price'])) ? $labor['labor-price'] : 0),
-            "labor_amount"   => ((isset($labor['labor-amount'])) ? $labor['labor-amount'] : 0),
+            "labor_price"   => ((isset($labor['labor-price'])) ?  str_replace(",", "", $labor['labor-price'] ) : 0),
+            "labor_amount"   => ((isset($labor['labor-amount'])) ? str_replace(",", "", $labor['labor-amount'])  : 0),
             ]
           );
 
@@ -559,8 +560,8 @@ class InvoiceEdit extends Controller
             "supplier_inv"   => ((isset($part['part-supplier-inv'])) ? $part['part-supplier-inv'] : ""),
             "unit_cost"   => ((isset($part['part-unit-cost'])) ? $part['part-unit-cost'] : ""),
             "total_cost"   => ((isset($part['part-total-cost'])) ? $part['part-total-cost'] : ""),
-            "part_price"  => ((isset($part['part-price'])) ? $part['part-price'] : 0),
-            "part_amount"   => ((isset($part['part-amount'])) ? $part['part-amount'] : 0),
+            "part_price"  => ((isset($part['part-price'])) ? str_replace(",", "", $part['part-price'] )  : 0),
+            "part_amount"   => ((isset($part['part-amount'])) ? str_replace(",", "", $part['part-amount'] ) : 0),
           ] );
 
           } else {
@@ -711,9 +712,12 @@ class InvoiceEdit extends Controller
       $jo->balance = $data->balance;
       $jo->remarks = $data->remarks;
       $jo->customer_name = $data->customer_name;
+      $jo->amount_net_vat = $data->amount_net_vat;
+      $jo->expire_date = $data->expire_date;
+      $jo->discount = $data->discount;
 
       $jo->save();
-
+ 
 
     }
     $new_job_order_id = $jo->id;
@@ -753,6 +757,8 @@ class InvoiceEdit extends Controller
         $la->labor_value = $labor->labor_value;
         $la->labor_qty = $labor->labor_qty;
         $la->labor_price = $labor->labor_price;
+        $la->labor_amount = $labor->labor_amount;
+
           if($labor->status == 1) {
             $la->status = 1;
           } else {
@@ -780,6 +786,7 @@ class InvoiceEdit extends Controller
         $par->supplier_inv = $part->supplier_inv;
         $par->unit_cost = $part->unit_cost;
         $par->total_cost = $part->total_cost;
+        $par->part_amount = $part->part_amount;
         if($part->status == 1) {
           $par->status = 1;
         } else {

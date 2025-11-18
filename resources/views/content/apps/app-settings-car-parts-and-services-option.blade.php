@@ -21,7 +21,7 @@
   <span class="text-muted fw-light">Global Settings /</span> Parts and Services
 </h4>
 
-<div class="row g-4">
+<div class="row g-4 settings-section">
 
   <!-- Navigation -->
   <div class="col-12 col-lg-4">
@@ -94,7 +94,7 @@
           <div class="card-body">
             <div class="mb-3">
               <div class="table-responsive text-nowrap border rounded">
-                <table class="table">
+                <table class="table tbl-settings">
                   <thead class="table-light">
                     <tr>
                       <th>#</th>

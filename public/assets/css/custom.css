@@ -512,4 +512,13 @@ body.invoice-page .container-xxl {
       font-size: 11px !important;
     }
 
+    .tbl-settings td {
+      font-size: 12px;
+    }
+    .settings-section .col-lg-4 {
+        width: 100% !important;
+    }
+    .settings-section .col-lg-8 {
+        width: 100% !important;
+    }
 }

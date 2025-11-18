@@ -303,13 +303,13 @@
           </div>
         </div>
       </div>
-      <div class="card-body pt-0">
+      <div class="card-body pt-0 float-right">
         <div class="row">
           <div class="col-md-10">
           </div>
           <div class="col-md-2 d-flex justify-content-md-end mt-2 bg-white">
             <div class="invoice-calculations">
-              <div class="d-flex justify-content-between mb-2">
+              <div class=" justify-content-between mb-2">
                 <span class="w-px-150">Total:</span>
                 <h6 class="mb-0  d-flex" id="">
                     <span style="padding-top: 3px;">₱ </span><input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" style="font-weight: 800" name="labor-total" id="labor-total" value="0" placeholder="" min="12"/>
@@ -355,7 +355,7 @@
       </div>
       <div class="card-body pt-0 bg-white float-right">
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-8">
           </div>
           <div class="col-md-2 d-flex justify-content-md-end mt-2">
             <div class="invoice-calculations">
@@ -369,6 +369,8 @@
               </div>
            
             </div>
+          </div>
+           <div class="col-md-2">
           </div>
         </div>
       </div>

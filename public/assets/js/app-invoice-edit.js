@@ -441,11 +441,20 @@ calculateAll();
     };
 
     if(option_id > 0) {
-      const part_qty = document.getElementById('part-qty-'+option_id).value ;
-      const part_price = document.getElementById('part-price-'+option_id).value ;
+      let part_qty = document.getElementById('part-qty-'+option_id).value ;
+      let part_price = document.getElementById('part-price-'+option_id).value ;
 
-      const amount =part_price * part_qty;
-      document.getElementById('part-amount-'+option_id).value = amount.toFixed(2);
+      part_price = part_price.replace(/\,/g,'');
+      part_qty = part_qty.replace(/[^0-9]/g, '');
+
+      console.log(part_price);
+      console.log(part_qty);
+      let amount = part_price * part_qty;
+
+         amount = amount.toLocaleString(undefined, options);
+
+
+      document.getElementById('part-amount-'+option_id).value = amount;
 
 
       calculateAll(option_id);
@@ -459,14 +468,29 @@ calculateAll();
 
   }
   function calculateLabor(option_id) {
+
+  const options = {
+      minimumFractionDigits: 2, // Ensures at least two decimal places
+      maximumFractionDigits: 2, // Limits to a maximum of two decimal places
+      style: 'decimal'          // Specifies decimal formatting
+    };
+
+
     if(option_id > 0) {
     // var job_order_id = document.getElementById('labor-option-'+option_id).value ;
-      const labor_qty = document.getElementById('labor-qty-'+option_id).value ;
-      const labor_price = document.getElementById('labor-price-'+option_id).value ;
+      let labor_qty = document.getElementById('labor-qty-'+option_id).value ;
+      let labor_price = document.getElementById('labor-price-'+option_id).value ;
 
-      const labor_amount = labor_price * parseFloat(labor_qty);
+
+      labor_price = labor_price.replace(/\,/g,'');
+      labor_qty = labor_qty.replace(/[^0-9]/g, '').toLocaleString(undefined, options);
+
+
+      let labor_amount = labor_price * parseFloat(labor_qty);
+      console.log(labor_price);
       console.log(labor_amount);
-      document.getElementById('labor-amount-'+option_id).value = labor_amount.toFixed(2);
+      labor_amount = labor_amount.toLocaleString(undefined, options);
+      document.getElementById('labor-amount-'+option_id).value = labor_amount;
     
       calculateAll();
     }
@@ -865,95 +889,127 @@ const first = element -1;
       //Labor
     const myElementLabor1 = document.getElementById('labor-amount-1');
     if (myElementLabor1) {
-        var labor_amount1 = myElementLabor1.value;
+        var labor_amount1 = myElementLabor1.value.replace(/,/g, '') ;
     } else {
         var labor_amount1  = 0;
     }
     const myElementLabor2 = document.getElementById('labor-amount-2');
     if (myElementLabor2) {
-        var labor_amount2 = myElementLabor2.value;
+        var labor_amount2 = myElementLabor2.value.replace(/,/g, '');
     } else {
         var labor_amount2  = 0;
     }
     const myElementLabor3 = document.getElementById('labor-amount-3');
     if (myElementLabor3) {
-        var labor_amount3 = myElementLabor3.value;
+        var labor_amount3 = myElementLabor3.value.replace(/,/g, '');
     } else {
         var labor_amount3  = 0;
     }
      const myElementLabor4 = document.getElementById('labor-amount-4');
     if (myElementLabor4) {
-        var labor_amount4 = myElementLabor4.value;
+        var labor_amount4 = myElementLabor4.value.replace(/,/g, '');
     } else {
         var labor_amount4  = 0;
     }
      const myElementLabor5 = document.getElementById('labor-amount-5');
     if (myElementLabor5) {
-        var labor_amount5 = myElementLabor5.value;
+        var labor_amount5 = myElementLabor5.value.replace(/,/g, '');
     } else {
         var labor_amount5  = 0;
     }
     const myElementLabor6 = document.getElementById('labor-amount-6');
     if (myElementLabor6) {
-        var labor_amount6 = myElementLabor6.value;
+        var labor_amount6 = myElementLabor6.value.replace(/,/g, '');
     } else {
         var labor_amount6  = 0;
     }
      const myElementLabor7 = document.getElementById('labor-amount-7');
     if (myElementLabor7) {
-        var labor_amount7 = myElementLabor7.value;
+        var labor_amount7 = myElementLabor7.value.replace(/,/g, '');
     } else {
         var labor_amount7  = 0;
     }
      const myElementLabor8 = document.getElementById('labor-amount-8');
     if (myElementLabor8) {
-        var labor_amount8 = myElementLabor8.value;
+        var labor_amount8 = myElementLabor8.value.replace(/,/g, '');
     } else {
         var labor_amount8  = 0;
     }
      const myElementLabor9 = document.getElementById('labor-amount-9');
     if (myElementLabor9) {
-        var labor_amount9 = myElementLabor9.value;
+        var labor_amount9 = myElementLabor9.value.replace(/,/g, '');
     } else {
         var labor_amount9  = 0;
     }
      const myElementLabor10 = document.getElementById('labor-amount-10');
     if (myElementLabor10) {
-        var labor_amount10 = myElementLabor10.value;
+        var labor_amount10 = myElementLabor10.value.replace(/,/g, '');
     } else {
         var labor_amount10  = 0;
     }
      const myElementLabor11 = document.getElementById('labor-amount-11');
     if (myElementLabor11) {
-        var labor_amount11 = myElementLabor11.value;
+        var labor_amount11 = myElementLabor11.value.replace(/,/g, '');
     } else {
         var labor_amount11  = 0;
     }
      const myElementLabor12 = document.getElementById('labor-amount-12');
     if (myElementLabor12) {
-        var labor_amount12 = myElementLabor12.value;
+        var labor_amount12 = myElementLabor12.value.replace(/,/g, '');
     } else {
         var labor_amount12  = 0;
     }
     const myElementLabor13 = document.getElementById('labor-amount-13');
     if (myElementLabor13) {
-        var labor_amount13 = myElementLabor13.value;
+        var labor_amount13 = myElementLabor13.value.replace(/,/g, '');
     } else {
         var labor_amount13  = 0;
     }
     const myElementLabor14 = document.getElementById('labor-amount-14');
     if (myElementLabor14) {
-        var labor_amount14 = myElementLabor14.value;
+        var labor_amount14 = myElementLabor14.value.replace(/,/g, '');
     } else {
         var labor_amount14  = 0;
     }
     const myElementLabor15 = document.getElementById('labor-amount-15');
     if (myElementLabor15) {
-        var labor_amount15 = myElementLabor15.value;
+        var labor_amount15 = myElementLabor15.value.replace(/,/g, '');
     } else {
         var labor_amount15  = 0;
     }
-    const labor_sub_total = parseFloat(labor_amount1)+parseFloat(labor_amount2)+parseFloat(labor_amount3)+parseFloat(labor_amount4)+parseFloat(labor_amount5)+parseFloat(labor_amount6)+parseFloat(labor_amount7)+parseFloat(labor_amount8)+parseFloat(labor_amount9)+parseFloat(labor_amount10)+parseFloat(labor_amount11)+parseFloat(labor_amount12)+parseFloat(labor_amount13)+parseFloat(labor_amount14)+parseFloat(labor_amount15);
+
+
+      const myElementLabor16 = document.getElementById('labor-amount-16');
+    if (myElementLabor16) {
+        var labor_amount16 = myElementLabor16.value.replace(/,/g, '');
+    } else {
+        var labor_amount16  = 0;
+    }
+      const myElementLabor17 = document.getElementById('labor-amount-17');
+    if (myElementLabor17) {
+        var labor_amount17 = myElementLabor17.value.replace(/,/g, '');
+    } else {
+        var labor_amount15  = 0;
+    }
+      const myElementLabor18 = document.getElementById('labor-amount-18');
+    if (myElementLabor18) {
+        var labor_amount18 = myElementLabor18.value.replace(/,/g, '');
+    } else {
+        var labor_amount18  = 0;
+    }
+      const myElementLabor19 = document.getElementById('labor-amount-19');
+    if (myElementLabor19) {
+        var labor_amount19 = myElementLabor19.value.replace(/,/g, '');
+    } else {
+        var labor_amount19  = 0;
+    }
+      const myElementLabor20 = document.getElementById('labor-amount-20');
+    if (myElementLabor20) {
+        var labor_amount20 = myElementLabor20.value.replace(/,/g, '');
+    } else {
+        var labor_amount20  = 0;
+    }
+    const labor_sub_total = parseFloat(labor_amount1)+parseFloat(labor_amount2)+parseFloat(labor_amount3)+parseFloat(labor_amount4)+parseFloat(labor_amount5)+parseFloat(labor_amount6)+parseFloat(labor_amount7)+parseFloat(labor_amount8)+parseFloat(labor_amount9)+parseFloat(labor_amount10)+parseFloat(labor_amount11)+parseFloat(labor_amount12)+parseFloat(labor_amount13)+parseFloat(labor_amount14)+parseFloat(labor_amount15)+parseFloat(labor_amount16)+parseFloat(labor_amount17)+parseFloat(labor_amount18)+parseFloat(labor_amount19)+parseFloat(labor_amount20);
     document.getElementById('hidden-labor-sub-totals').value = labor_sub_total;
     document.getElementById('labor-total').value = labor_sub_total.toLocaleString(undefined, options);
 
@@ -962,95 +1018,127 @@ const first = element -1;
     //Parts
     const myElementPart1 = document.getElementById('part-amount-1');
     if (myElementPart1) {
-        var prt_amount1 = myElementPart1.value;
+        var prt_amount1 = myElementPart1.value.replace(/,/g, '');
     } else {
         var prt_amount1  = 0;
     }
     const myElementPart2 = document.getElementById('part-amount-2');
     if (myElementPart2) {
-        var prt_amount2 = myElementPart2.value;
+        var prt_amount2 = myElementPart2.value.replace(/,/g, '');
     } else {
         var prt_amount2  = 0;
     }
     const myElementPart3 = document.getElementById('part-amount-3');
     if (myElementPart3) {
-        var prt_amount3 = myElementPart3.value;
+        var prt_amount3 = myElementPart3.value.replace(/,/g, '');
     } else {
         var prt_amount3  = 0;
     }
      const myElementPart4 = document.getElementById('part-amount-4');
     if (myElementPart4) {
-        var prt_amount4 = myElementPart4.value;
+        var prt_amount4 = myElementPart4.value.replace(/,/g, '');
     } else {
         var prt_amount4  = 0;
     }
      const myElementPart5 = document.getElementById('part-amount-5');
     if (myElementPart5) {
-        var prt_amount5 = myElementPart5.value;
+        var prt_amount5 = myElementPart5.value.replace(/,/g, '');
     } else {
         var prt_amount5  = 0;
     }
     const myElementPart6 = document.getElementById('part-amount-6');
     if (myElementPart6) {
-        var prt_amount6 = myElementPart6.value;
+        var prt_amount6 = myElementPart6.value.replace(/,/g, '');
     } else {
         var prt_amount6  = 0;
     }
      const myElementPart7 = document.getElementById('part-amount-7');
     if (myElementPart7) {
-        var prt_amount7 = myElementPart7.value;
+        var prt_amount7 = myElementPart7.value.replace(/,/g, '');
     } else {
         var prt_amount7  = 0;
     }
      const myElementPart8 = document.getElementById('part-amount-8');
     if (myElementPart8) {
-        var prt_amount8 = myElementPart8.value;
+        var prt_amount8 = myElementPart8.value.replace(/,/g, '');
     } else {
         var prt_amount8  = 0;
     }
      const myElementPart9 = document.getElementById('part-amount-9');
     if (myElementPart9) {
-        var prt_amount9 = myElementPart9.value;
+        var prt_amount9 = myElementPart9.value.replace(/,/g, '');
     } else {
         var prt_amount9  = 0;
     }
      const myElementPart10 = document.getElementById('part-amount-10');
     if (myElementPart10) {
-        var prt_amount10 = myElementPart10.value;
+        var prt_amount10 = myElementPart10.value.replace(/,/g, '');
     } else {
         var prt_amount10  = 0;
     }
      const myElementPart11 = document.getElementById('part-amount-11');
     if (myElementPart11) {
-        var prt_amount11 = myElementPart11.value;
+        var prt_amount11 = myElementPart11.value.replace(/,/g, '');
     } else {
         var prt_amount11  = 0;
     }
      const myElementPart12 = document.getElementById('part-amount-12');
     if (myElementPart12) {
-        var prt_amount12 = myElementPart12.value;
+        var prt_amount12 = myElementPart12.value.replace(/,/g, '');
     } else {
         var prt_amount12  = 0;
     }
     const myElementPart13 = document.getElementById('part-amount-13');
     if (myElementPart13) {
-        var prt_amount13 = myElementPart13.value;
+        var prt_amount13 = myElementPart13.value.replace(/,/g, '');
     } else {
         var prt_amount13  = 0;
     }
     const myElementPart14 = document.getElementById('part-amount-14');
     if (myElementPart14) {
-        var prt_amount14 = myElementPart14.value;
+        var prt_amount14 = myElementPart14.value.replace(/,/g, '');
     } else {
         var prt_amount14  = 0;
     }
     const myElementPart15 = document.getElementById('part-amount-15');
     if (myElementPart15) {
-        var prt_amount15 = myElementPart15.value;
+        var prt_amount15 = myElementPart15.value.replace(/,/g, '');
     } else {
         var prt_amount15  = 0;
     }
-    const part_sub_total = parseFloat(prt_amount1)+parseFloat(prt_amount2)+parseFloat(prt_amount3)+parseFloat(prt_amount4)+parseFloat(prt_amount5)+parseFloat(prt_amount6)+parseFloat(prt_amount7)+parseFloat(prt_amount8)+parseFloat(prt_amount9)+parseFloat(prt_amount10)+parseFloat(prt_amount11)+parseFloat(prt_amount12)+parseFloat(prt_amount13)+parseFloat(prt_amount14)+parseFloat(prt_amount15);
+
+      const myElementPart16 = document.getElementById('part-amount-16');
+    if (myElementPart16) {
+        var prt_amount16 = myElementPart16.value.replace(/,/g, '');
+    } else {
+        var prt_amount16  = 0;
+    }
+      const myElementPart17 = document.getElementById('part-amount-17');
+    if (myElementPart17) {
+        var prt_amount17 = myElementPart17.value.replace(/,/g, '');
+    } else {
+        var prt_amount17  = 0;
+    }
+      const myElementPart18 = document.getElementById('part-amount-18');
+    if (myElementPart18) {
+        var prt_amount18 = myElementPart18.value.replace(/,/g, '');
+    } else {
+        var prt_amount18  = 0;
+    }
+      const myElementPart19 = document.getElementById('part-amount-19');
+    if (myElementPart19) {
+        var prt_amount19 = myElementPart19.value.replace(/,/g, '');
+    } else {
+        var prt_amount19  = 0;
+    }
+
+      const myElementPart20 = document.getElementById('part-amount-20');
+    if (myElementPart20) {
+        var prt_amount20 = myElementPart20.value.replace(/,/g, '');
+    } else {
+        var prt_amount20  = 0;
+    }
+    const part_sub_total = parseFloat(prt_amount1)+parseFloat(prt_amount2)+parseFloat(prt_amount3)+parseFloat(prt_amount4)+parseFloat(prt_amount5)+parseFloat(prt_amount6)+parseFloat(prt_amount7)+parseFloat(prt_amount8)+parseFloat(prt_amount9)+parseFloat(prt_amount10)+parseFloat(prt_amount11)+parseFloat(prt_amount12)+parseFloat(prt_amount13)+parseFloat(prt_amount14)+parseFloat(prt_amount15)+parseFloat(prt_amount16)+parseFloat(prt_amount17)+parseFloat(prt_amount18)+parseFloat(prt_amount19)+parseFloat(prt_amount20);
 
     document.getElementById('hidden-part-sub-totals').value = part_sub_total;
     document.getElementById('part-total').value = part_sub_total.toLocaleString(undefined, options);
