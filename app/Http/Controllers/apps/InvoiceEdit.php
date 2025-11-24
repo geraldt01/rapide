@@ -209,7 +209,7 @@ class InvoiceEdit extends Controller
                      <span id="item-counter-font part-counter-'.$keyprt.'" style="font-size: 13px;margin-top: 25px;">'.$keyprt.'</span>
                   </div>
                   <div class="col-md-2 col-12 mb-md-0 mb-3 " id="refresh-div-'.$keyl.'">
-                    <h6 class="mb-2 ml-2 repeater-title fw-medium"><strong>Service</strong></h6>
+                    <h6 class="mb-2 ml-2 repeater-title fw-medium"><strong>Item</strong></h6>
                       <div class="row">
                       <div class="col-2">
                       <i class="mdi mdi-content-copy me-1 js-textareacopybtn" id="part-icon" onclick="copyParts('.$keyprt.')"></i><span class="alert-coppied" id="icon-part-'.$keyprt.'">Coppied!</span>
