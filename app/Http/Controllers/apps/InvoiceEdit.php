@@ -108,7 +108,7 @@ class InvoiceEdit extends Controller
                     <span id="item-counter-font labor-counter-'.$keyl.'" style="font-size: 12px;padding-top: 15px;">'.$keyl.'</span>
                   </div>
                   <div class="col-md-4 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>Item</strong></h6>
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Service</strong></h6>
                         <input type="hidden" name="labor-id" value="'.$selectedLabor->id.'" />
                     <input type="text" class="form-control invoice-item-text " name="labor-text" id="labor-text-'.$keyl.'"  value="'.$selectedLabor->labor_value.'" onchange="calculateLabor('.$keyl.')" />
                   </div>
