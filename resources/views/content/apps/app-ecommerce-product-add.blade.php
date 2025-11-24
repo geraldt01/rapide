@@ -157,7 +157,7 @@
         <div class="card-body">
           <div class="form-floating form-floating-outline mb-4">
             <input type="text" class="form-control" id="ecommerce-owner-name" placeholder="Owner Name" name="ownerName" aria-label="Owner Name">
-            <label for="ecommerce-product-name">Owner Name</label>
+            <label for="ecommerce-product-name">Last Name, First Name, Middle Initial</label>
           </div>
           <div class="form-floating form-floating-outline mb-4">
             <input type="text" class="form-control" id="ecommerce-owner-address" placeholder="Owner Addess" name="ownerAddress" aria-label="Owner Addess">

@@ -70,7 +70,7 @@ class InvoiceEdit extends Controller
               }
         $optionOneHtml[] =  '</select></div>
             <div class="col-md-4 col-12">
-             <input type="text" class="form-control package mb-3" name="package-note2" id="package-note2-'.$keypckg.'" value="'.$selected->package_note2.'" onchange="calculatePackage('.$keypckg.');formatNumberWithCommas(this)" />
+             <input type="text" class="form-control package mb-3" name="package-note2" id="package-note2-'.$keypckg.'" value="'.$selected->package_note2.'" />
             </div>
               
             <div class="col-md-2 col-12 mb-md-0 mb-3 color-black d-flex">
@@ -108,7 +108,7 @@ class InvoiceEdit extends Controller
                     <span id="item-counter-font labor-counter-'.$keyl.'" style="font-size: 12px;padding-top: 15px;">'.$keyl.'</span>
                   </div>
                   <div class="col-md-4 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>Service</strong></h6>
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Item</strong></h6>
                         <input type="hidden" name="labor-id" value="'.$selectedLabor->id.'" />
                     <input type="text" class="form-control invoice-item-text " name="labor-text" id="labor-text-'.$keyl.'"  value="'.$selectedLabor->labor_value.'" onchange="calculateLabor('.$keyl.')" />
                   </div>
@@ -198,7 +198,10 @@ class InvoiceEdit extends Controller
           // print_r($selectedPart);
           // exit();
                 $keyprt++;
-                @$sub_amount = $selectedPart->part_price * $selectedPart->part_qty;
+     
+                $part_price = $selectedPart->part_price;
+                $part_qty = $selectedPart->part_qty;
+                @$sub_amount = (int)$part_price * (int)$part_qty;
 
                 $optionThreeHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedPart->status == 2) ? 'disable-part-item' : '').'" style="padding-right: 0px !important;"  id="item-list-part-'.$keyprt.'"  data-repeater-item>
                  <div class="col-md-1 mumber col-12 mb-md-0 mb-3 color-black" style="width: 2.333333%;">
@@ -254,12 +257,12 @@ class InvoiceEdit extends Controller
 
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Qty</h6>
-                    <input type="text" class="form-control invoice-item-qty part" name="part-qty" id="part-qty-'.$keyprt.'" value="'.$selectedPart->part_qty.'" placeholder="1" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
+                    <input type="text" class="form-control invoice-item-qty part" name="part-qty" id="part-qty-'.$keyprt.'" value="'.$part_qty.'" placeholder="1" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                   </div>
 
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium">Price</h6>
-                    <input type="text" class="form-control part mb-3" name="part-price" id="part-price-'.$keyprt.'" value="'.number_format($selectedPart->part_price, 2, '.', ',').'" placeholder="" min="" onchange="calculatePart('.$keyprt.');formatNumberWithCommas(this)" />
+                    <input type="text" class="form-control part mb-3" name="part-price" id="part-price-'.$keyprt.'" value="'.((is_float($part_price)) ? number_format($part_price, 2, '.', ',') : $part_price ).'" placeholder="" min="" onchange="calculatePart('.$keyprt.');formatNumberWithCommas(this)" />
                   </div>
                
              
@@ -559,9 +562,9 @@ class InvoiceEdit extends Controller
             "supplier"   => ((isset($part['part-supplier'])) ? $part['part-supplier'] : ""),
             "supplier_inv"   => ((isset($part['part-supplier-inv'])) ? $part['part-supplier-inv'] : ""),
             "unit_cost"   => ((isset($part['part-unit-cost'])) ? $part['part-unit-cost'] : ""),
-            "total_cost"   => ((isset($part['part-total-cost'])) ? $part['part-total-cost'] : ""),
-            "part_price"  => ((isset($part['part-price'])) ? str_replace(",", "", $part['part-price'] )  : 0),
-            "part_amount"   => ((isset($part['part-amount'])) ? str_replace(",", "", $part['part-amount'] ) : 0),
+            "total_cost"   => ((isset($part['part-total-cost'])) ? number_format($part['part-total-cost'], 2, '.', '') : ""),
+            "part_price"  => ((isset($part['part-price'])) ? intval(str_replace(",", "", $part['part-price'] ))  : 0),
+            "part_amount"   => ((isset($part['part-amount'])) ? intval(str_replace(",", "", $part['part-amount'] )) : 0),
           ] );
 
           } else {

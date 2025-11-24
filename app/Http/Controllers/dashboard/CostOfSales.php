@@ -112,8 +112,10 @@ foreach($var as $ctr => $d) {
         } else {
           $get_labor_price = 0;
         }
+
+        $unit_cost = intval($pdata->unit_cost);
         $unit_selling_price_with_labor = $get_labor_price  + $pdata->part_price;
-        $total_cost = $pdata->part_qty * $pdata->unit_cost;
+        $total_cost = $pdata->part_qty * $unit_cost;
         $total_sell_price = $pdata->part_qty * $unit_selling_price_with_labor;
 
         $overall_unit_selling_price_with_labor += $unit_selling_price_with_labor;
@@ -132,7 +134,7 @@ foreach($var as $ctr => $d) {
          <td>". $pdata->part_number."</td>
          <td>". $pdata->supplier."</td>
          <td>". $pdata->supplier_inv."</td>
-         <td>". number_format($pdata->unit_cost, 2) ."</td>
+         <td>". number_format($unit_cost, 2) ."</td>
          <td>". number_format($total_cost, 2)."</td>
          <td>". number_format($unit_selling_price_with_labor, 2)."</td>
          <td>". number_format($total_sell_price, 2)."</td>

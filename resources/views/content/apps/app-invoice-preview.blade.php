@@ -159,7 +159,7 @@
             </tr>
             <tr>
               <th>No</th>
-              <th>SERVICE</th>
+              <th>ITEM</th>
               <th class="text-center">Qty</th>
               <th class="text-right">Price</th>
               <th class="text-right">Amount</th>
@@ -194,7 +194,7 @@
             </tr>
             <tr>
               <th style="width: 10%">No</th>
-              <th style="width: 45%">Item</th>
+              <th style="width: 45%">ITEM</th>
               <th class="text-center" style="width: 20%"></th>
               <th class="text-center" style="width: 20%"></th>
               <th class="text-center">Qty</th>

@@ -861,31 +861,33 @@ const first = element -1;
 
     const myElement1 = document.getElementById('package-price-0');
     if (myElement1) {
-        var p_amount1 = myElement1.value;
+        var p_amount1 = myElement1.value.replace(/,/g, '');;
     } else {
         var p_amount1  = 0;
     }
     const myElement2 = document.getElementById('package-price-1');
     if (myElement2) {
-        var p_amount2 = myElement2.value;
+        var p_amount2 = myElement2.value.replace(/,/g, '');;
     } else {
         var p_amount2  = 0;
     }
     const myElement3 = document.getElementById('package-price-2');
     if (myElement3) {
-        var p_amount3 = myElement3.value;
+        var p_amount3 = myElement3.value.replace(/,/g, '');;
     } else {
         var p_amount3  = 0;
     }
     const myElement4 = document.getElementById('package-price-3');
     if (myElement4) {
-        var p_amount4 = myElement4.value;
+        var p_amount4 = myElement4.value.replace(/,/g, '');;
     } else {
         var p_amount4  = 0;
     }
     const package_sub_total = parseFloat(p_amount1)+parseFloat(p_amount2)+parseFloat(p_amount3)+parseFloat(p_amount4);
     document.getElementById('hidden-package-sub-totals').value = package_sub_total;
 
+
+    
       //Labor
     const myElementLabor1 = document.getElementById('labor-amount-1');
     if (myElementLabor1) {
@@ -1144,7 +1146,6 @@ const first = element -1;
     document.getElementById('part-total').value = part_sub_total.toLocaleString(undefined, options);
 
 
-
     const total_sub = parseFloat(package_sub_total) + parseFloat(labor_sub_total) + parseFloat(part_sub_total); 
     const amount_net_vat =  parseFloat(total_sub) / 1.12;
 
@@ -1203,7 +1204,7 @@ const first = element -1;
 
       const total_cost = part_qty * unit_cost;
 
-      document.getElementById('part-total-cost-'+id).value =  total_cost; 
+      document.getElementById('part-total-cost-'+id).value =  truncateToTwoDecimals(total_cost); 
  }
 
   }
@@ -1231,6 +1232,10 @@ const first = element -1;
 
 
   }
+
+  function truncateToTwoDecimals(num) {
+  return Math.trunc(num * 100) / 100;
+}
 
   function changePaymentLabel() {
       $.ajax({
