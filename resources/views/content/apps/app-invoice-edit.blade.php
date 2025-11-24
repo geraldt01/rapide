@@ -231,7 +231,7 @@
                     <span id="labor-counter-1">{{$i}}</span>
                   </div>
                   <div class="col-md-5 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>Item</strong></h6>
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Service</strong></h6>
                     <input type="text" class="form-control invoice-item-text " name="labor-text" id="labor-text-{{$i}}"  onchange="calculateLabor({{$i}})" />
                   </div>
                      <div class="col-md-2 col-12 mb-md-0 mb-3">

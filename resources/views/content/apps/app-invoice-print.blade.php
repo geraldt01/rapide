@@ -145,7 +145,7 @@ table.border-black {
         </tr>
         <tr>
           <th style="width: 4%"><strong>NO</strong></th>
-          <th colspan="3">ITEM</th>
+          <th colspan="3">SERVICE</th>
           <th class="text-right">Qty</th>
           <th class="text-right">Price</th>
           <th  class="text-right">Amount</th>
