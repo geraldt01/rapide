@@ -18,7 +18,7 @@
       };
       var inputValue = event.target.value;
       const finalNum =  parseInt(inputValue).toLocaleString(undefined, options);
-        document.getElementById("ecommerce-mileage").value = finalNum;
+        document.getElementById("ecommerce-mileage").value = finalNum.replace(".00", "");
     });
   });
 

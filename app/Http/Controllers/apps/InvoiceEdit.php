@@ -100,43 +100,41 @@ class InvoiceEdit extends Controller
     $optionTwoHtml = array();
     if(isset($jobOrderLaborSelected[0]->job_order_id)) {
       foreach($jobOrderLaborSelected as $keyl => $selectedLabor) {
+
                 $keyl++;
                 @$sub_amount = $selectedLabor->labor_price * $selectedLabor->labor_qty;
                 $optionTwoHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedLabor->status == 2) ? 'disable-labor-item' : '').'" style="padding-right: 0px !important;" id="item-list-labor-'.$keyl.'"  data-repeater-item>
                  <div class="col-md-1 col-12 mb-md-0 mb-3 color-black"  style="width: 4.333333%;">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
                     <span id="item-counter-font labor-counter-'.$keyl.'" style="font-size: 12px;padding-top: 15px;">'.$keyl.'</span>
                   </div>
                   <div class="col-md-4 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>Service</strong></h6>
                         <input type="hidden" name="labor-id" value="'.$selectedLabor->id.'" />
                     <input type="text" class="form-control invoice-item-text " name="labor-text" id="labor-text-'.$keyl.'"  value="'.$selectedLabor->labor_value.'" onchange="calculateLabor('.$keyl.')" />
                   </div>
                    <div class="col-md-3 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium">Cost</h6>
                     <input type="text" class="form-control invoice-item-cost labor customer-hidden" name="labor-cost" id="labor-cost-'.$keyl.'" value="'.$selectedLabor->cost.'" placeholder="" min="1" max="" onchange="calculateLabor('.$keyl.')"/>
                   </div>
                
 
                      <div class="col-md-1 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium">Qty</h6>
                     <input type="text" class="form-control invoice-item-qty labor" name="labor-qty" id="labor-qty-'.$keyl.'" value="'.$selectedLabor->labor_qty.'" placeholder="1" min="1" max=""  onchange="calculateLabor('.$keyl.')"/>
                   </div>
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium">Price</h6>
                     <input type="text" class="form-control  labor mb-3" name="labor-price" id="labor-price-'.$keyl.'" value="'.number_format($selectedLabor->labor_price, 2, '.', ',').'" placeholder="" min=""  onchange="calculateLabor('.$keyl.');formatNumberWithCommas(this)" />
                     
                   </div>
                
                   <div class="col-md-1 col-12 pe-0">
-                    <h6 class="mb-2 repeater-title fw-medium">Amount</h6>
                     <p class="mb-0 pt-2 color-black amount-labor-sub d-flex" id="amount-labor-sub-'.$keyl.'">₱
                     <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="labor-amount" id="labor-amount-'.$keyl.'" value="'.number_format($selectedLabor->labor_amount, 2, '.', ',').'"  placeholder="" min="12" onchange="formatNumberWithCommas(this)"/>
                     </p>
                   </div>
 
-                <div class="col-md-1 col-12 border-start text-right">
+                <div class="col-md-1 col-12 border-start text-right d-flex">
+                   <input type="text" class="form-control invoice-item-code" name="labor-code" style="width: 40px;height: 35px;" id="labor-code-'.$keyl.'" value="'.$selectedLabor->labor_code.'"  placeholder="" min="12" onchange=""/>
+
                   <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyl.', 1, '.$selectedLabor->id.');calculateLabor('.$keyl.')" ></i>
+
                   <div class="dropdown">
                     
                     </i>
@@ -205,11 +203,9 @@ class InvoiceEdit extends Controller
 
                 $optionThreeHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedPart->status == 2) ? 'disable-part-item' : '').'" style="padding-right: 0px !important;"  id="item-list-part-'.$keyprt.'"  data-repeater-item>
                  <div class="col-md-1 mumber col-12 mb-md-0 mb-3 color-black" style="width: 2.333333%;">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
                      <span id="item-counter-font part-counter-'.$keyprt.'" style="font-size: 13px;margin-top: 25px;">'.$keyprt.'</span>
                   </div>
                   <div class="col-md-2 col-12 mb-md-0 mb-3 " id="refresh-div-'.$keyl.'">
-                    <h6 class="mb-2 ml-2 repeater-title fw-medium"><strong>Item</strong></h6>
                       <div class="row">
                       <div class="col-2">
                       <i class="mdi mdi-content-copy me-1 js-textareacopybtn" id="part-icon" onclick="copyParts('.$keyprt.')"></i><span class="alert-coppied" id="icon-part-'.$keyprt.'">Coppied!</span>
@@ -230,49 +226,44 @@ class InvoiceEdit extends Controller
                      </div>
 
                   <div class="col-md-1 col-12 mb-md-0 mb-3"  style="width: 8.333333%;">
-                    <h6 class="mb-2 repeater-title fw-medium"></h6>
                     <input type="text" class="form-control invoice-item-part-note part" name="part-part-note" id="part-part-note-'.$keyprt.'" value="'.((isset($selectedPart->part_note)) ? $selectedPart->part_note : '').'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')" style="font-size: 12px;"/>
                   </div> 
-                       <div class="col-md-1 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium">Part Number</h6>
+                   <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <input type="text" class="form-control invoice-item-part-number part" name="part-part-number" id="part-part-number-'.$keyprt.'" value="'.$selectedPart->part_number.'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                   </div>            
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
-                      <h6 class="mb-2 repeater-title fw-medium">Supplier</h6>
                     <input type="text" class="form-control invoice-item-supplier part customer-hidden" name="part-supplier" id="supplier-'.$keyprt.'" value="'.$selectedPart->supplier.'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                   </div>
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
-                      <h6 class="mb-2 repeater-title fw-medium">Supplier Inv</h6>
                     <input type="text" class="form-control invoice-item-supplier-inv part customer-hidden" name="part-supplier-inv" id="supplier-inv-'.$keyprt.'" value="'.$selectedPart->supplier_inv.'" placeholder="" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                   </div>
                    <div class="col-md-1 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium">Unit Cost</h6>
                     <input type="text" class="form-control invoice-unit-cost part customer-hidden" name="part-unit-cost" id="part-unit-cost-'.$keyprt.'" value="'.$selectedPart->unit_cost.'" placeholder="1" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                   </div>
                       <div class="col-md-1 col-12 pe-0">
-                      <h6 class="mb-2 repeater-title fw-medium">Total Cost</h6>
                     <input type="text" class="form-control invoice-unit-cost part customer-hidden" name="part-total-cost" id="part-total-cost-'.$keyprt.'" value="'.$selectedPart->total_cost.'" placeholder="1" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                  
                   </div>
 
-                  <div class="col-md-1 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium">Qty</h6>
+                  <div class="col-md-1 col-12 mb-md-0 mb-3 w-6">
                     <input type="text" class="form-control invoice-item-qty part" name="part-qty" id="part-qty-'.$keyprt.'" value="'.$part_qty.'" placeholder="1" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                   </div>
 
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium">Price</h6>
                     <input type="text" class="form-control part mb-3" name="part-price" id="part-price-'.$keyprt.'" value="'.((is_float($part_price)) ? number_format($part_price, 2, '.', ',') : $part_price ).'" placeholder="" min="" onchange="calculatePart('.$keyprt.');formatNumberWithCommas(this)" />
                   </div>
                
              
-                  <div class="col-md-1 number col-12 border-start text-right">
-                   <h6 class="mb-2 repeater-title fw-medium">Amount</h6>
+                  <div class="col-md-1 number col-12 border-start text-right d-flex">
                     <p class="mb-0 pt-2 color-black amount-part-sub d-flex" id="amount-part-sub-'.$keyprt.'">₱
                     <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="part-amount" id="part-amount-'.$keyprt.'" value="'.number_format($selectedPart->part_amount, 2, '.', ',').'" placeholder="" min="12" onchange="formatNumberWithCommas(this)" />
                     </p>
+                    <span style="color: #eaeaec;font-size: 25px;padding-right: 4px;">|</span>
+                   <input type="text" class="form-control invoice-item-code" name="part-code" style="width: 40px;height: 35px;" id="part-code-'.$keyprt.'" value="'.$selectedPart->part_code.'"  placeholder="" min="12" onchange=""/>
 
                   <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keyprt.', 2, '.$selectedPart->id.');calculatePart('.$keyprt.')" ></i>
+                  
+                  
                   <div class="dropdown">
                     </i>
                     <div class="dropdown-menu dropdown-menu-end w-px-300 p-3" aria-labelledby="dropdownMenuButton">
@@ -535,6 +526,9 @@ class InvoiceEdit extends Controller
             "part_number"   =>  ((isset($labor['labor-part-number'])) ? $labor['labor-part-number'] : ""),
             "labor_price"   => ((isset($labor['labor-price'])) ?  str_replace(",", "", $labor['labor-price'] ) : 0),
             "labor_amount"   => ((isset($labor['labor-amount'])) ? str_replace(",", "", $labor['labor-amount'])  : 0),
+            "labor_code"  =>  ((isset($labor['labor-code'])) ? strtoupper($labor['labor-code']) : ""),
+          
+          
             ]
           );
 
@@ -565,6 +559,8 @@ class InvoiceEdit extends Controller
             "total_cost"   => ((isset($part['part-total-cost'])) ? number_format($part['part-total-cost'], 2, '.', '') : ""),
             "part_price"  => ((isset($part['part-price'])) ? intval(str_replace(",", "", $part['part-price'] ))  : 0),
             "part_amount"   => ((isset($part['part-amount'])) ? intval(str_replace(",", "", $part['part-amount'] )) : 0),
+            "part_code"  =>  ((isset($part['part-code'])) ? strtoupper($part['part-code']) : ""),
+
           ] );
 
           } else {

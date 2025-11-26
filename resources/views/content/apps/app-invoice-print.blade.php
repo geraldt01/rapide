@@ -132,10 +132,10 @@ table.border-black {
             <td class="text-nowrap text-heading" colspan="4">{{$package->package_value}}</td>
             <td  colspan="3" class="text-right">₱ {{number_format((float)$package->package_price, 2)}}</td>
         </tr>
-        <tr>
+        <!-- <tr>
             <td class="text-nowrap text-heading" colspan="4">{{$package->package_note2}}</td>
             <td  colspan="3" class="text-right"></td>
-        </tr>
+        </tr> -->
         <tr>
           <td colspan="7"></td>
         </tr>

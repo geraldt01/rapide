@@ -12,6 +12,12 @@
 .sk-primary.sk-plane, .sk-primary .sk-chase-dot:before, .sk-primary .sk-bounce-dot, .sk-primary .sk-wave-rect, .sk-primary.sk-pulse, .sk-primary .sk-swing-dot, .sk-primary .sk-circle-dot:before, .sk-primary .sk-circle-fade-dot:before, .sk-primary .sk-grid-cube, .sk-primary .sk-fold-cube:before {
       background-color: #fce800 !important;
 }
+.pl-0 {
+  padding-left: 0 !important;
+}
+.p-0 {
+  padding: 0 !important;
+}
 .float-right {
   float: right;
 }
@@ -434,8 +440,37 @@ body.invoice-page .container-xxl {
 .disable-part-item {
   display: none;
 }
+.invoice-edit .repeater-title {
+    padding: 6px 5px 10px;
+    position: sticky !important;
+}
+.fixed-section-labor {
+    position: sticky !important;
+    background: #f7f7f7;
+}
+.fixed-section-part, .fixed-section-labor {
+  top: 64px !important;
+    padding: 10px;
+    background: #f7f7f7;
+
+}
+  .invoice-edit .form-control {
+    font-size: 13px !important;
+    border: 2px solid rgb(82 82 93 / 12%);
+  }
+.fixed-section-part .col-md-1, .fixed-section-labor .col-md-1 {
+}
+   .cursor-pointer {
+      cursor: pointer !important;
+      position: absolute;
+      right: -12px;
+  }
+.w-6 {
+  width: 6% !important;
+}
 
 
+  /* ////////////////// */
 @media (min-width: 768px) {
   .invoice-edit .form-control {
     font-size: 13px !important;
@@ -480,6 +515,11 @@ body.invoice-page .container-xxl {
      width: 100% !important;
 
     }
+    .cursor-pointer {
+      cursor: pointer !important;
+      position: absolute;
+      right: -12px;
+  }
 
     .invoice-edit .fixed-section.col-md-12 {
       position: relative !important;
@@ -493,12 +533,13 @@ body.invoice-page .container-xxl {
 
     .invoice-edit .form-control {
     font-size: 13px !important;
+    border: 2px solid rgb(82 82 93 / 12%);
   }
     .invoice-edit .invoice-min-width {
         min-width: auto;
     }
     .invoice-edit .invoice-min-width .col-md-1.number {
-    width: 8% !important
+    width: 12% !important
     }
     .invoice-edit .invoice-min-width .col-md-1 {
         -ms-flex: 0 0 auto;

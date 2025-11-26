@@ -140,10 +140,10 @@
               <td class="text-nowrap text-heading" colspan="4">{{$package->package_value}}</td>
               <td  class="text-right"><b>₱ {{number_format((float)$package->package_price, 2)}}</b></td>
             </tr>
-                <tr>
+            <!-- <tr>
               <td class="text-nowrap text-heading" colspan="4">{{$package->package_note2}}</td>
               <td  class="text-right"></td>
-            </tr>
+            </tr> -->
           @endforeach
           </tbody>
         </table>

@@ -24,10 +24,37 @@ function handleScroll() {
   if (scrollPercent >= 50 && !hasReached75) {
     console.log('User reached 75% scroll depth');
     $(".invoice-actions").removeClass("fixed-section");
+    $(".invoice-table").addClass("fixed-section-part");
   } else {
     console.log('User less 75% scroll depth');
     $(".invoice-actions").addClass("fixed-section");
+    $(".invoice-table").removeClass("fixed-section-part");
   }
+
+    if (scrollPercent >= 56 && !hasReached75) {
+    $(".invoice-table").addClass("fixed-section-part");
+
+  } else {
+    $(".invoice-table").removeClass("fixed-section-part");
+
+  }
+
+    if (scrollPercent >= 32 && !hasReached75) {
+    $(".invoice-table-labor").addClass("fixed-section-labor");
+
+  } else {
+    $(".invoice-table-labor").removeClass("fixed-section-labor");
+
+  }
+
+  //   if (scrollPercent >= 250 && !hasReached75) {
+  //   $(".invoice-table").removeClass("fixed-section-part");
+  //   console.log("remove");
+  // } else {
+  //   $(".invoice-table").addClass("fixed-section-part");
+  //   console.log("add");
+
+  // }
 
 
 }

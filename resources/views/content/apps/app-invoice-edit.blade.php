@@ -28,6 +28,12 @@
 #item-counter-font {
   font-size: 12px !important;
 }
+.fixed-section-part {
+  position: sticky;
+    top: 104px;
+    z-index: 99999999;
+    background: white;
+}
 
   </style>
 @section('vendor-script')
@@ -223,76 +229,39 @@
           <div class="mb-3" data-repeater-list="group-b">
             <div class="repeater-wrapper pt-0 pt-md-4">
               <div class="rounded position-relative pe-0 color-white">
-                @if($optionTwoHtml == false)
-                  @for ($i = 1; $i < 11; $i++)
-                <div class="border row w-100 p-3 pr-0" style="padding-right: 0px !important;"  id="item-list-part-1"  data-repeater-item>
-                 <div class="col-md-1 col-12 mb-md-0 mb-3 color-black">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
-                    <span id="labor-counter-1">{{$i}}</span>
-                  </div>
-                  <div class="col-md-5 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>Service</strong></h6>
-                    <input type="text" class="form-control invoice-item-text " name="labor-text" id="labor-text-{{$i}}"  onchange="calculateLabor({{$i}})" />
-                  </div>
-                     <div class="col-md-2 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium">Qty</h6>
-                    <input type="text" class="form-control invoice-item-qty labor" name="labor-qty" id="labor-qty-{{$i}}" value="1" placeholder="1" min="1" max="" onchange="calculateLabor({{$i}})" />
-                  </div>
-                  <div class="col-md-2 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium">Price</h6>
-                    <input type="text" class="form-control invoice-item-price labor mb-3" name="labor-price" id="labor-price-{{$i}}" value="0" placeholder="0" min="" onchange="calculateLabor({{$i}})" />
-                  </div>
-                  <div class="col-md-1 col-12 pe-0">
-                    <h6 class="mb-2 repeater-title fw-medium">Amount</h6>
-                    <p class="mb-0 pt-2 color-black amount-labor-sub d-flex" id="amount-labor-sub-{{$i}}">₱
-                    <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="labor-amount" id="labor-amount-{{$i}}" value="0" placeholder="" min="12"/>
-                    </p>
-                  </div>
-                <div class="col-md-1 col-12 border-start text-right">
-                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem(1 , {{$i}})" data-repeater-delete></i>
-                  <div class="dropdown">
-                    <i class="mdi mdi-cog-outline cursor-pointer more-options-dropdown color-black" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                    </i>
-                    <div class="dropdown-menu dropdown-menu-end w-px-300 p-3" aria-labelledby="dropdownMenuButton">
+             
 
-                      <div class="row g-3">
-                        <div class="col-12">
-                          <label for="discountInput" class="form-label">Discount(%)</label>
-                          <input type="number" class="form-control" id="discountInput" min="0" max="100" />
-                        </div>
-                        <div class="col-md-6">
-                          <label for="taxInput1" class="form-label">Tax 1</label>
-                          <select name="tax-1-input" id="taxInput1" class="form-select tax-select">
-                            <option value="0%" selected>0%</option>
-                            <option value="1%">1%</option>
-                            <option value="10%">10%</option>
-                            <option value="18%">18%</option>
-                            <option value="40%">40%</option>
-                          </select>
-                        </div>
-                        <div class="col-md-6">
-                          <label for="taxInput2" class="form-label">Tax 2</label>
-                          <select name="tax-2-input" id="taxInput2" class="form-select tax-select">
-                            <option value="0%" selected>0%</option>
-                            <option value="1%">1%</option>
-                            <option value="10%">10%</option>
-                            <option value="18%">18%</option>
-                            <option value="40%">40%</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="dropdown-divider my-3"></div>
-                      <button type="button" class="btn btn-outline-primary btn-apply-changes">Apply</button>
-                    </div>
+
+              <div class="row invoice-table-labor">
+                  <div class="col-md-1 mumber col-12 mb-md-0color-black" style="width: 4.333333%;">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
                   </div>
+
+                  <div class="col-md-4 col-12 mb-md-0 mb-3 " id="refresh-div-'">
+                    <h6 class="mb-2 ml-2 repeater-title fw-medium text-center" style=""><strong>Service</strong></h6>
+                  </div>
+
+             
+                   <div class="col-md-3 col-12 mb-md-0 mb-3">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Cost</strong></h6>
+                  </div>            
+                  <div class="col-md-1 col-12 mb-md-0 pl-0 text-left">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>Qty</strong></h6>
+                  </div>
+                  <div class="col-md-1 col-12 mb-md-0 p-0 text-left">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>Price</strong></h6>
+                  </div>
+                  <div class="col-md-2 col-12 mb-md-0 pl-0 text-left">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Amount</strong></h6>
+                  </div>
+                
                 </div>
-                </div>
-                @endfor
-                @else 
+
+
                  @foreach($optionTwoHtml as $k => $l)
                     {!!$l!!}
                   @endforeach
-                @endif
+        
               </div>
             </div>
           </div>
@@ -340,6 +309,49 @@
             <div class="d-block repeater-wrapper pt-0 pt-md-4">
               <div class="rounded position-relative pe-0 color-white">
            
+                <div class="row invoice-table">
+                  <div class="col-md-1 mumber col-12 mb-md-0 mb-3 color-black" style="width: 3.333333%;">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>No</strong></h6>
+                  </div>
+
+                  <div class="col-md-2 col-12 mb-md-0 mb-3 " id="refresh-div-'">
+                    <h6 class="mb-2 ml-2 repeater-title fw-medium text-center" style=""><strong>Item</strong></h6>
+                  </div>
+
+                  <div class="col-md-1 col-12 mb-md-0 mb-3"  style="width: 7.333333%;">
+                    <h6 class="mb-2 repeater-title fw-medium"></h6>
+                  </div> 
+            
+                   <div class="col-md-1 col-12 mb-md-0 mb-3">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Part Number</strong></h6>
+                  </div>            
+                  <div class="col-md-1 col-12 mb-md-0 mb-3">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>Supplier</strong></h6>
+                  </div>
+                  <div class="col-md-1 col-12 mb-md-0 mb-3">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>Supplier Inv</strong></h6>
+                  </div>
+                   <div class="col-md-1 col-12 mb-md-0 mb-3">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Unit Cost</strong></h6>
+                  </div>
+                      <div class="col-md-1 col-12 pe-0">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>Total Cost</strong></h6>
+                 
+                  </div>
+
+                  <div class="col-md-1 col-12 mb-md-0 mb-3 w-6">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Qty</strong></h6>
+                  </div>
+
+                  <div class="col-md-1 col-12 mb-md-0 mb-3">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Price</strong></h6>
+                  </div>
+                  <div class="col-md-1 number col-12 border-start">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Amount</strong></h6>
+                  </div>
+                </div>
+             
+
                  @foreach($optionThreeHtml as $k => $l)
                     {!!$l!!}
                   @endforeach
