@@ -373,6 +373,7 @@ class InvoiceEdit extends Controller
             "total_cost"   =>  0,
             "part_price"  =>  0,
             "part_amount"   =>  0,
+            "part_code"   =>  NULL,
           ] );
      return response()->json(['success'=> true, 'message' => 'Item deleted!']);
 
@@ -387,6 +388,7 @@ class InvoiceEdit extends Controller
             "part_number"   =>  NULL,
             "labor_price"   => 0,
             "labor_amount"   => 0,
+            "labor_code"   =>  NULL,
           ] );
      return response()->json(['success'=> true, 'message' => 'Item deleted!']);
 

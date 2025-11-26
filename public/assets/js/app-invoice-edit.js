@@ -355,6 +355,7 @@ calculateAll();
       document.getElementById('labor-price-'+id).value = 0;
       document.getElementById('labor-qty-'+id).value = 1;
       document.getElementById('labor-amount-'+id).value = "";
+      document.getElementById('labor-code-'+id).value = "";
       // document.getElementById('labor-part-number-'+id).value = "";
       calculateLabor(id);
        $.ajax({
@@ -388,6 +389,8 @@ calculateAll();
       document.getElementById('supplier-'+id).value = "";
       document.getElementById('supplier-inv-'+id).value = "";
       document.getElementById('part-qty-'+id).value = "";
+      document.getElementById('part-code-'+id).value = "";
+
 
      $.ajax({
       type: "post",
