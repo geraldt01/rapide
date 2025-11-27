@@ -163,6 +163,7 @@
               <th class="text-center">Qty</th>
               <th class="text-right">Price</th>
               <th class="text-right">Amount</th>
+              <th class="text-right"></th>
             </tr>
           </thead>
           <tbody>
@@ -173,11 +174,12 @@
               <td class="text-center">{{(($labor->labor_value) ? $labor->labor_qty : '' )}}</td>
               <td class="text-right">{{(($labor->labor_value) ? number_format((float)$labor->labor_price, 2) : '' )}}</td>
               <td class="text-right">{{(($labor->labor_amount) ?  number_format((float)$labor->labor_amount, 2)  : '' )}}</td>
+              <td class="text-right" style="color: red;">{{(($labor->labor_code) ?   $labor->labor_code : '' )}}</td>
             </tr>
           @endforeach
            <tr>
               <td colspan="3"></td>
-              <td colspan="2" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->labor_total}}</b></td>
+              <td colspan="3" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->labor_total}}</b></td>
             </tr>
           </tbody>
         </table>
@@ -200,6 +202,7 @@
               <th class="text-center">Qty</th>
               <th  class="text-right">Price</th>
               <th  class="text-right">Amount</th>
+              <th  class="text-right"></th>
             </tr>
           </thead>
           <tbody>
@@ -212,11 +215,12 @@
               <td class="text-center">{{(($part->part_value) ? $part->part_qty : '' )}}</td>
               <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_price, 2) : '' ) }}</td>
               <td class="text-right">{{(($part->part_value) ? number_format((float)$part->part_amount, 2)   : '' ) }}</td>
+              <td class="text-right" style="color: red;">{{(($part->part_code) ?  $part->part_code : '' ) }}</td>
             </tr>
           @endforeach
             <tr>
               <td colspan="3"></td>
-              <td colspan="4" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->part_total}}</b></td>
+              <td colspan="5" class="text-right"><b>Total</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>₱ {{$data->part_total}}</b></td>
 
             </tr>
           </tbody>

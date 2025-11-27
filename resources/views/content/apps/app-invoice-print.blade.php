@@ -156,7 +156,7 @@ table.border-black {
           <td colspan="3" style="width: 55%">{{$labor->labor_value}}</td>
           <td class="text-right">{{(($labor->labor_value) ? $labor->labor_qty : '')}}</td>
           <td class="text-right">{{(($labor->labor_value) ? number_format((float)$labor->labor_price, 2) : '' )}}</td>
-          <td class="text-right">{{(($labor->labor_value) ?  number_format((float)$labor->labor_amount, 2) : '' )}}</td>
+          <td class="text-right">{{(($labor->labor_value) ?  number_format((float)$labor->labor_amount, 2) : '' )}} <span style="position: absolute;padding-left: 23px;color: red !important;">{{$labor->labor_code}}</span></td>
         </tr>
       @endforeach
         <tr>
@@ -186,7 +186,7 @@ table.border-black {
               <td class="text-right" style="width: 10%"></td>
               <td class="text-right" style="width: 10%">{{(($part->part_value) ? $part->part_qty : '' )}}</td>
               <td class="text-right" style="width: 10%">{{(($part->part_value) ? number_format((float)$part->part_price, 2) : '' ) }}</td>
-              <td class="text-right" style="width: 10%">{{(($part->part_value) ? number_format((float)$part->part_amount, 2)   : '' ) }}</td>
+              <td class="text-right" style="width: 10%">{{(($part->part_value) ? number_format((float)$part->part_amount, 2)   : '' ) }} <span style="position: absolute;padding-left: 23px;color: red !important;">{{$part->part_code}}</span></td>
             </tr>
           @endforeach
         <tr>

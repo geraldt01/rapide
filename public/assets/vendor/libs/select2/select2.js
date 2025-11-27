@@ -1955,10 +1955,13 @@ S2.define('select2/selection/allowClear',[
       return;
     }
 
+    console.log("awit");
+    console.log(data[0].id);
+
     var removeAll = this.options.get('translations').get('removeAllItems');
 
     var $remove = $(
-      '<span class="select2-selection__clear" title="' + removeAll() +'">' +
+      '<span class="select2-selection__clear clear-this-'+data[0].id+'" title="' + removeAll() +'">' +
         '&times;' +
       '</span>'
     );

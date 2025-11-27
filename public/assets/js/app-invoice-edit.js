@@ -315,32 +315,14 @@ calculateAll();
         data:  $("#form-job-order").serialize(),
         success: function (result) {
               document.getElementById('package-note2-'+id).value = "";
-              document.getElementById('package-note-'+id).value = "";
-              document.getElementById('package-price-'+id).value = 0;
+              // document.getElementById('package-note-'+id).value = "";
+              document.getElementById('package-price-0').value = 0;
             $(".alert-success p").html(result.message);
             $(".alert-success").removeClass("d-none");
             setTimeout(function(){ 
+              window.location.reload();
               $(".alert-success").addClass("d-none");
           }, 3000);
-
-        //   job_order_id = document.getElementById('hidden-job-order-id').value;
-
-        //     $.ajax({
-        //       type: "post",
-        //       url: '/app/job-order/'+ job_order_id,
-        //         data:  $("#form-job-order").serialize(),
-        //         success: function (result) {
-             
-        // //           const myIframe = document.getElementById('myIframe');
-        // // myIframe.contentWindow.location.reload(true); 
-        // //           $(".package-item-section").html(result.optionOneHtml);
-        //         },
-        //         error: function (result, textStatus, errorThrown) {
-                  
-        //         },
-        //       });
-
-
         },
         error: function (result, textStatus, errorThrown) {
           
@@ -392,15 +374,35 @@ calculateAll();
       document.getElementById('part-code-'+id).value = "";
 
 
+      //        $('#part-option-'+id).html("<option>test</option>");
+      // document.getElementById('part-text-'+id).value = "";
+        // const inputElements  =  document.getElementsByName('group-c[0][part-option]');
+        // const inputValue = inputElements[0].value = ;
+
+// document.getElementById('part-option-'+id).selectedIndex = -1;
+
+//           const inputElements  =  document.getElementsByName('group-c[0][part-option]');
+//        const inputValue = inputElements[0].value;
+
+//        $("#select2-part-option-1#select2Basic1-container").html("");
+//         console.log("aguy");
+
+      // Returns the selected value
+ 
+
+
      $.ajax({
       type: "post",
       url: '/app/delete-job-order-item/'+ delete_item_id,
         data:  $("#form-job-order").serialize(),
         success: function (result) {
+            $(".loader").removeClass("d-none");
+
             $(".alert-success p").html(result.message);
             $(".alert-success").removeClass("d-none");
             setTimeout(function(){ 
               $(".alert-success").addClass("d-none");
+              window.location.reload();
           }, 3000);
         },
         error: function (result, textStatus, errorThrown) {
@@ -874,6 +876,15 @@ const first = element -1;
 
   }
 
+  function recalculateAll() {
+    setTimeout(function(){ 
+       calculateAll();
+     }, 1000);
+  }
+
+
+
+
   function addPayment() {
     $(".second-payment").removeClass("d-none");
   }
@@ -888,31 +899,31 @@ const first = element -1;
   };
 
 
-
     const myElement1 = document.getElementById('package-price-0');
     if (myElement1) {
-        var p_amount1 = myElement1.value.replace(/,/g, '');;
+        var p_amount1 = myElement1.value.replace(/,/g, '');
     } else {
         var p_amount1  = 0;
     }
     const myElement2 = document.getElementById('package-price-1');
     if (myElement2) {
-        var p_amount2 = myElement2.value.replace(/,/g, '');;
+        var p_amount2 = myElement2.value.replace(/,/g, '');
     } else {
         var p_amount2  = 0;
     }
     const myElement3 = document.getElementById('package-price-2');
     if (myElement3) {
-        var p_amount3 = myElement3.value.replace(/,/g, '');;
+        var p_amount3 = myElement3.value.replace(/,/g, '');
     } else {
         var p_amount3  = 0;
     }
     const myElement4 = document.getElementById('package-price-3');
     if (myElement4) {
-        var p_amount4 = myElement4.value.replace(/,/g, '');;
+        var p_amount4 = myElement4.value.replace(/,/g, '');
     } else {
         var p_amount4  = 0;
     }
+
     const package_sub_total = parseFloat(p_amount1)+parseFloat(p_amount2)+parseFloat(p_amount3)+parseFloat(p_amount4);
     document.getElementById('hidden-package-sub-totals').value = package_sub_total;
 

@@ -511,10 +511,20 @@ body.invoice-page .container-xxl {
 
  @media (min-width: 950px) and (max-width: 1500px) {
     .invoice-edit .col-md-12 {
-       
+
      width: 100% !important;
 
     }
+    #tblcashbalancehtml td {
+      font-size: 13px;
+    }
+    #tblcashbalancehtml td {
+      padding: 10px 4px 10px 4px !important;
+  }
+   .tbl-bal table {
+    width: 254px;
+    margin: 0 auto;
+   }
     .cursor-pointer {
       cursor: pointer !important;
       position: absolute;

@@ -165,7 +165,7 @@
     </div>
   </div>
   
-  <div class="table-responsive text-nowrap">
+  <div class="table-responsive tbl-bal text-nowrap">
     <table class="table">
       <thead>
         <tr>

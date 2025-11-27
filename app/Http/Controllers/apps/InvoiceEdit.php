@@ -76,7 +76,7 @@ class InvoiceEdit extends Controller
             <div class="col-md-2 col-12 mb-md-0 mb-3 color-black d-flex">
                       <span class="pt-2 pl-2">₱</span>
                     <input type="text" class="form-control package mb-3" name="package-price" id="package-price-'.$keypckg.'" value="' .number_format($selected->package_price, 2, '.', ',').'" placeholder="0" onchange="calculatePackage('.$keypckg.')" />
-                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keypckg.', 0, '.$selected->id.');calculatePackage('.$keypckg.')" ></i>
+                  <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keypckg.', 0, '.$selected->id.');recalculateAll()" ></i>
             </div>
         </div>';
         $keypckg++;
@@ -365,6 +365,7 @@ class InvoiceEdit extends Controller
           [
             "part_qty"     => 1,
             "part_value"   =>  NULL,
+            "part_id"   =>  NULL,
             "part_note"   =>  NULL,
             "part_number"   =>  NULL,
             "supplier"   =>  NULL,
