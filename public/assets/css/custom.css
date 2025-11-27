@@ -466,7 +466,7 @@ body.invoice-page .container-xxl {
       right: -12px;
   }
 .w-6 {
-  width: 6% !important;
+  width: 4% !important;
 }
 
 
@@ -539,7 +539,7 @@ body.invoice-page .container-xxl {
         min-width: auto;
     }
     .invoice-edit .invoice-min-width .col-md-1.number {
-    width: 12% !important
+    width: 14% !important
     }
     .invoice-edit .invoice-min-width .col-md-1 {
         -ms-flex: 0 0 auto;
