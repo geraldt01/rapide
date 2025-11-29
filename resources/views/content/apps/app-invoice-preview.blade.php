@@ -170,7 +170,7 @@
           @foreach($jobOrderLaborSelected as $klabor => $labor)
             <tr>
               <td  style="width: 10%" class="text-nowrap text-heading">{{$klabor + 1}} </td>
-              <td style="width: 55%" class="capital-letter">{{$labor->labor_value}}</td>
+              <td style="width: 55%" class="capital-letter {{(($labor->font_color) ? 'c-red' : '' )}}">{{$labor->labor_value}}</td>
               <td class="text-center">{{(($labor->labor_value) ? $labor->labor_qty : '' )}}</td>
               <td class="text-right">{{(($labor->labor_value) ? number_format((float)$labor->labor_price, 2) : '' )}}</td>
               <td class="text-right">{{(($labor->labor_amount) ?  number_format((float)$labor->labor_amount, 2)  : '' )}}</td>

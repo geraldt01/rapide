@@ -314,6 +314,7 @@ calculateAll();
       url: '/app/delete-package-item/'+ delete_item_id,
         data:  $("#form-job-order").serialize(),
         success: function (result) {
+            $(".loader").removeClass("d-none");
               document.getElementById('package-note2-'+id).value = "";
               // document.getElementById('package-note-'+id).value = "";
               document.getElementById('package-price-0').value = 0;
@@ -884,7 +885,15 @@ const first = element -1;
 
 
 
-
+  function changeColor(item) {
+    var val = document.getElementById('font-color-'+item).checked;
+    if(val == false) {
+        $("#labor-text-"+item).removeClass("c-red");
+    } else {
+      $("#labor-text-"+item).addClass("c-red");
+    }
+    $(".bt-save-changes").removeClass("disabled");
+  }
   function addPayment() {
     $(".second-payment").removeClass("d-none");
   }
@@ -902,6 +911,7 @@ const first = element -1;
     const myElement1 = document.getElementById('package-price-0');
     if (myElement1) {
         var p_amount1 = myElement1.value.replace(/,/g, '');
+        
     } else {
         var p_amount1  = 0;
     }
@@ -924,6 +934,10 @@ const first = element -1;
         var p_amount4  = 0;
     }
 
+
+    if(p_amount1 > 0) {
+      document.getElementById('package-note2-0').value = "PART NO.";
+    }
     const package_sub_total = parseFloat(p_amount1)+parseFloat(p_amount2)+parseFloat(p_amount3)+parseFloat(p_amount4);
     document.getElementById('hidden-package-sub-totals').value = package_sub_total;
 

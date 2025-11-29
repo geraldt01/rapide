@@ -108,9 +108,19 @@ class InvoiceEdit extends Controller
                     <span id="item-counter-font labor-counter-'.$keyl.'" style="font-size: 12px;padding-top: 15px;">'.$keyl.'</span>
                   </div>
                   <div class="col-md-4 col-12 mb-md-0 mb-3">
-                        <input type="hidden" name="labor-id" value="'.$selectedLabor->id.'" />
-                    <input type="text" class="form-control invoice-item-text " name="labor-text" id="labor-text-'.$keyl.'"  value="'.$selectedLabor->labor_value.'" onchange="calculateLabor('.$keyl.')" />
-                  </div>
+                 
+                 <input type="hidden" name="labor-id" value="'.$selectedLabor->id.'" />
+                    <input type="text" class="form-control invoice-item-text '.(($selectedLabor->font_color == "on") ? "c-red" : "").'" name="labor-text" id="labor-text-'.$keyl.'"  value="'.$selectedLabor->labor_value.'" onchange="calculateLabor('.$keyl.')" />
+                   <label class="switch">
+                    <input type="checkbox" name="font-color" id="font-color-'.$keyl.'" class="switch-input is-invalid" onclick="changeColor('.$keyl.')" '.(($selectedLabor->font_color == "on") ? "checked" : "").'/>
+                    <span class="switch-toggle-slider">
+                      <span class="switch-on"></span>
+                      <span class="switch-off"></span>
+                    </span>
+                    <span class="switch-label"></span>
+                  </label>
+                  
+                    </div>
                    <div class="col-md-3 col-12 mb-md-0 mb-3">
                     <input type="text" class="form-control invoice-item-cost labor customer-hidden" name="labor-cost" id="labor-cost-'.$keyl.'" value="'.$selectedLabor->cost.'" placeholder="" min="1" max="" onchange="calculateLabor('.$keyl.')"/>
                   </div>
@@ -525,6 +535,7 @@ class InvoiceEdit extends Controller
             "job_order_id" => $job_order_id,
              "labor_qty"     => ((isset($labor['labor-qty'])) ? $labor['labor-qty'] : 1),
             "labor_value"  =>  ((isset($labor['labor-text'])) ? $labor['labor-text'] : ""),
+            "font_color"  =>  ((isset($labor['font-color'])) ? $labor['font-color'][0] : NULL),
             "cost"  =>  ((isset($labor['labor-cost'])) ? $labor['labor-cost'] : ""),
             "part_number"   =>  ((isset($labor['labor-part-number'])) ? $labor['labor-part-number'] : ""),
             "labor_price"   => ((isset($labor['labor-price'])) ?  str_replace(",", "", $labor['labor-price'] ) : 0),

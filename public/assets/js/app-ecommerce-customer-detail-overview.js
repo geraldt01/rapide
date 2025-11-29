@@ -6,7 +6,31 @@
 
 // Datatable (jquery)
 $(function () {
-  // Variable declaration for table
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const numberInput = document.getElementById('modalMileage'); // Replace with your input's ID
+    numberInput.addEventListener('change', function(event) {
+
+      alert("dfdsfdsfsd")
+      // Get the current value and remove existing commas
+      const options = {
+        minimumFractionDigits: 2, // Ensures at least two decimal places
+        maximumFractionDigits: 2, // Limits to a maximum of two decimal places
+        style: 'decimal'          // Specifies decimal formatting
+      };
+      var inputValue = event.target.value;
+      const finalNum =  parseInt(inputValue).toLocaleString(undefined, options);
+        document.getElementById("modalMileage").value = finalNum.replace(".00", "");
+    });
+  });
+
+
+
+
+
+  // Variable declara
+  // tion for table
   var dt_customer_order = $('.datatables-customer-order'),
     order_details = baseUrl + 'app/ecommerce/order/details',
     statusObj = {

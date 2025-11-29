@@ -468,7 +468,9 @@ body.invoice-page .container-xxl {
 .w-6 {
   width: 4% !important;
 }
-
+input.c-red, .c-red {
+  color: red !important;
+}
 
   /* ////////////////// */
 @media (min-width: 768px) {
