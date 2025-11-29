@@ -34,6 +34,10 @@
     z-index: 99999999;
     background: white;
 }
+input.c-red, .c-red {
+  color: red !important;
+}
+
 
   </style>
 @section('vendor-script')
