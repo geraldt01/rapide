@@ -936,7 +936,7 @@ const first = element -1;
 
 
     if(p_amount1 > 0) {
-      document.getElementById('package-note2-0').value = "PART NO.";
+      // document.getElementById('package-note2-0').value = "";
     }
     const package_sub_total = parseFloat(p_amount1)+parseFloat(p_amount2)+parseFloat(p_amount3)+parseFloat(p_amount4);
     document.getElementById('hidden-package-sub-totals').value = package_sub_total;

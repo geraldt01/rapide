@@ -6,6 +6,8 @@
 
 // Datatable (jquery)
 $(function () {
+$(".layout-navbar-fixed").addClass("layout-menu-collapsed");
+
   let borderColor, bodyBg, headingColor;
  
   const today = new Date();

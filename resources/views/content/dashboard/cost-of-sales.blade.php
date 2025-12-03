@@ -12,6 +12,18 @@
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/flatpickr/flatpickr.css')}}" />
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css')}}" />
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.css')}}" />
+
+ <style type="text/css">
+  td {
+    padding: 4px !important;
+    font-size: 12px;
+  }
+  th {
+    padding: 3px !important;
+    font-size: 12px;
+
+  }
+  </style>
 @endsection
 
 @section('vendor-script')
