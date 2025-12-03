@@ -434,12 +434,29 @@ class SalesReport extends Controller
 
 
     $monthSales = JobOrder::whereBetween('date', [$first_date, $last_date])->where('status', 2)->get();
+    $monthSales2 = JobOrder::whereBetween('date', [$first_date, $last_date])->where('status', 1)->get();
 
+
+    $allCars = array();
+
+    foreach($monthSales as $c1) {
+      if($c1->plate_number > '') {
+        $allCars[] = $c1->plate_number; 
+      }
+    }
+    foreach($monthSales2 as $c2) {
+      if($c2->plate_number > '') {
+        $allCars[] = $c2->plate_number; 
+      }
+    }
+
+    $arrayWithoutDuplicates = array_unique($allCars);
+//////////////////
     $total_month_sales = 0;
     foreach($monthSales as $da){
-       $total_month_sales += str_replace(",", "", (float)$da->total_amount);
+       $total_month_sales += str_replace(",", "", $da->total_amount);
     }
-      return response()->json(['success'=> true, 'total_sales' => $totalSales, 'total_cars' => count($totalSalesData), 'total_monthly_sales' => $total_month_sales, 'total_monthly_cars' => count($monthSales), 'total_cash' => (($totalCash > 0) ? "₱".number_format($totalCash, 2) : ''), 'total_gcash' => (($totalGcash > 0) ? "₱".number_format($totalGcash, 2) : ''), 'total_mobile_check' => (($totalMobileCheck > 0) ? "₱".number_format($totalMobileCheck, 2) : ''), 'total_others' => (($totalOthers > 0) ? "₱".number_format($totalOthers, 2) : ''), 'grand_total' => "₱".number_format($grandTotal, 2) ]);
+      return response()->json(['success'=> true, 'no_of_cars_repair_and_jo' => count($arrayWithoutDuplicates),'total_sales' => $totalSales, 'total_cars' => count($totalSalesData), 'total_monthly_sales' => $total_month_sales, 'total_monthly_cars' => count($monthSales), 'total_cash' => (($totalCash > 0) ? "₱".number_format($totalCash, 2) : ''), 'total_gcash' => (($totalGcash > 0) ? "₱".number_format($totalGcash, 2) : ''), 'total_mobile_check' => (($totalMobileCheck > 0) ? "₱".number_format($totalMobileCheck, 2) : ''), 'total_others' => (($totalOthers > 0) ? "₱".number_format($totalOthers, 2) : ''), 'grand_total' => "₱".number_format($grandTotal, 2) ]);
   }
 
 

@@ -8,8 +8,12 @@
 $(function () {
 
       
+ $(".navbar-nav.flex-row").addClass("no-print");
+ $(".navbar-nav.align-items-center").addClass("no-print");
+ $(".card-header").addClass("no-print");
+ $(".btn-prepared-by").addClass("no-print");
 
-    
+ 
   let borderColor, bodyBg, headingColor;
   $("#total-sales").html("₱ 0.00");
   $("#month-sales").html("₱ 0.00");
@@ -99,6 +103,9 @@ nf.format(123456.789); // ‘$123,456.79’
         console.log(result);
           if(result.success == true) {
           $("#total-sales").html(nf.format(result.total_sales));
+          $("#no_of_cars_repair_and_jo").html(result.no_of_cars_repair_and_jo);
+
+          
           $("#total-cars").html(result.total_cars);
           $("#month-sales").html( nf.format(result.total_monthly_sales));
           $("#total-month-cars").html(result.total_monthly_cars);

@@ -12,6 +12,27 @@
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/flatpickr/flatpickr.css')}}" />
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css')}}" />
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.css')}}" />
+
+<style type="text/css">
+  @media print {
+    /* Hide elements with the class 'no-print' */
+    .no-print, .btn-prepared-by {
+      display: none !important; /* !important ensures it overrides other styles */
+    }
+  }
+.col-md-3 {
+  width: 26% !important;
+}
+.col-md-9 {
+  width: 74% !important;
+}
+.datatables-products td {
+  font-size: 13px !important;
+}
+.table-responsive {
+    overflow-x: hidden !important;
+}
+  </style>
 @endsection
 
 @section('vendor-script')
@@ -50,10 +71,55 @@
   <div class="card-widget-separator-wrapper">
     <div class="card-body card-widget-separator">
       <div class="row gy-4 gy-sm-1">
-        <div class="col-sm-6 col-lg-3">
+         <div class="col-sm-6 col-lg-3">
+          <div class="d-flex justify-content-between align-items-start pb-3 border-end pb-sm-0 card-widget-3">
+            <div>
+              <p class="mb-2">No of Cars Repair Est. & JO</p>
+              <h4 class="mb-2" id="no_of_cars_repair_and_jo"></h4>
+            </div>
+            <div class="avatar me-sm-4">
+              <span class="avatar-initial rounded bg-label-secondary">
+                <i class="mdi mdi-train-car-flatbed-car mdi-24px"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+         <div class="col-sm-6 col-lg-3">
+          <div class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
+            <div>
+              <p class="mb-2">No of Cars Daily Job Order</p>
+              <h4 class="mb-2" id="total-cars"></h4>
+
+              <!-- <p class="mb-0"><span class="me-2">21k orders</span><span class="badge rounded-pill bg-label-success">+12.4%</span></p> -->
+            </div>
+            <div class="avatar me-lg-4">
+              <span class="avatar-initial rounded bg-label-secondary">
+                <i class="mdi mdi-car-cog mdi-24px"></i>
+              </span>
+            </div>
+          </div>
+          <hr class="d-none d-sm-block d-lg-none me-4">
+        </div>
+         <div class="col-sm-6 col-lg-2">
+          <div class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
+            <div>
+              <p class="mb-2">No. of Cars Monthly Job Order</p>
+              <h4 class="mb-2" id="total-month-cars"></h4>
+
+              <!-- <p class="mb-0"><span class="me-2">21k orders</span><span class="badge rounded-pill bg-label-success">+12.4%</span></p> -->
+            </div>
+            <div class="avatar me-lg-4">
+              <span class="avatar-initial rounded bg-label-secondary">
+                <i class="mdi mdi-car-multiple mdi-24px"></i>
+              </span>
+            </div>
+          </div>
+          <hr class="d-none d-sm-block d-lg-none me-4">
+        </div>
+        <div class="col-sm-6 col-lg-2">
           <div class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-3 pb-sm-0">
             <div>
-              <p class="mb-2">Total Sales Today</p>
+              <p class="mb-2">Total Daily Sales</p>
               <h4 class="mb-2"><p id="total-sales"></p></h4>
               <!-- <p class="mb-0"><span class="me-2">5k higher thank yesterday</span><span class="badge rounded-pill bg-label-success">+5.7%</span></p> -->
             </div>
@@ -65,26 +131,11 @@
           </div>
           <hr class="d-none d-sm-block d-lg-none me-4">
         </div>
-        <div class="col-sm-6 col-lg-3">
-          <div class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
+ 
+        <div class="col-sm-6 col-lg-2">
+          <div class="d-flex justify-content-between align-items-start card-widget-2 pb-3 pb-sm-0">
             <div>
-              <p class="mb-2">Total Cars Today</p>
-              <h4 class="mb-2" id="total-cars"></h4>
-
-              <!-- <p class="mb-0"><span class="me-2">21k orders</span><span class="badge rounded-pill bg-label-success">+12.4%</span></p> -->
-            </div>
-            <div class="avatar me-lg-4">
-              <span class="avatar-initial rounded bg-label-secondary">
-                <i class="mdi mdi-car mdi-24px"></i>
-              </span>
-            </div>
-          </div>
-          <hr class="d-none d-sm-block d-lg-none me-4">
-        </div>
-        <div class="col-sm-6 col-lg-3">
-          <div class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
-            <div>
-              <p class="mb-2">Month Sales</p>
+              <p class="mb-2">Total Monthly Sales</p>
               <h4 class="mb-2" id="month-sales">₱ 0.00</h4>
             </div>
             <div class="avatar me-sm-4">
@@ -94,19 +145,7 @@
             </div>
           </div>
         </div>
-          <div class="col-sm-6 col-lg-3">
-          <div class="d-flex justify-content-between align-items-start pb-3 pb-sm-0 card-widget-3">
-            <div>
-              <p class="mb-2">Month Cars</p>
-              <h4 class="mb-2" id="total-month-cars">₱ 0.00</h4>
-            </div>
-            <div class="avatar me-sm-4">
-              <span class="avatar-initial rounded bg-label-secondary">
-                <i class="mdi mdi-train-car-flatbed-car mdi-24px"></i>
-              </span>
-            </div>
-          </div>
-        </div>
+       
         <!-- <div class="col-sm-6 col-lg-3">
           <div class="d-flex justify-content-between align-items-start">
             <div>
