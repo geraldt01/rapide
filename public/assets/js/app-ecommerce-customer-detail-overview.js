@@ -11,8 +11,6 @@ $(function () {
     document.addEventListener('DOMContentLoaded', function() {
     const numberInput = document.getElementById('modalMileage'); // Replace with your input's ID
     numberInput.addEventListener('change', function(event) {
-
-      alert("dfdsfdsfsd")
       // Get the current value and remove existing commas
       const options = {
         minimumFractionDigits: 2, // Ensures at least two decimal places
@@ -23,11 +21,26 @@ $(function () {
       const finalNum =  parseInt(inputValue).toLocaleString(undefined, options);
         document.getElementById("modalMileage").value = finalNum.replace(".00", "");
     });
+
+  //  const numberInputCar = document.getElementById('ecommerce-mileage'); // Replace with your input's ID
+  //   numberInputCar.addEventListener('change', function(event) {
+  //     // Get the current value and remove existing commas
+  //     const options = {
+  //       minimumFractionDigits: 2, // Ensures at least two decimal places
+  //       maximumFractionDigits: 2, // Limits to a maximum of two decimal places
+  //       style: 'decimal'          // Specifies decimal formatting
+  //     };
+  //     var inputValue = event.target.value;
+  //     const finalNum =  parseInt(inputValue).toLocaleString(undefined, options);
+  //       document.getElementById("ecommerce-mileage").value = finalNum.replace(".00", "");
+  //   });
   });
 
 
 
 
+
+  
 
   // Variable declara
   // tion for table
@@ -374,7 +387,6 @@ function saveJobOrder() {
 
 
 function editCustomerInfo() {
-
     $.ajax({
     type: "get",
     url: '/app/edit-customer-info/',
@@ -398,9 +410,30 @@ function editCustomerInfo() {
 
     },
   });
+}
 
 
+function editCarInfo() {
+    $.ajax({
+    type: "get",
+    url: '/app/edit-car-info/',
+   data:  $("#editCarInfoForm").serialize(),
+    success: function (result) {
+        $(".alert-success p").html(result.message);
+        $(".alert-success").removeClass("d-none");
+        $('#editCarInfo').modal('hide');
 
+      setTimeout(function(){ 
+        $(".alert-success").addClass("d-none"); 
+        location.reload();
+    }, 3000);
+
+    },
+    error: function (data, textStatus, errorThrown) {
+        console.log(data.success);
+
+    },
+  });
 }
 
 

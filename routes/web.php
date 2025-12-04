@@ -225,6 +225,7 @@ Route::get('/app/add-new-car/', [EcommerceCustomerDetailsOverview::class, 'addNe
 Route::get('/app/get-dropdown-options', [EcommerceCustomerDetailsOverview::class, 'getDroptownOptions']);
 Route::get('/app/get-available-estimate-number', [EcommerceCustomerDetailsOverview::class, 'getEstimateNumber']);
 Route::get('/app/edit-customer-info', [EcommerceCustomerDetailsOverview::class, 'editCustomer']);
+Route::get('/app/edit-car-info', [EcommerceCustomerDetailsOverview::class, 'editCar']);
 
 Route::get('app/cost-of-sales/', [CostOfSales::class, 'index'])->name('cost-of-sales')->middleware('auth');
 Route::get('app/cost-of-sales/{date}', [CostOfSales::class, 'index'])->name('cost-of-sales')->middleware('auth');

@@ -58,13 +58,21 @@ class EcommerceCustomerDetailsOverview extends Controller
 
     
 
+     $carManufacturerOptions = DB::table('car_manufacturer_options')->where('status', '=', 1)
+      ->orderBy('value','asc')
+    ->get();
     
+      $carVehicleTypeOptions = DB::table('car_vehicle_type_options')->where('status', '=', 1)
+
+    ->get();
+
+
 
     $getLatestInvoice = DB::table('invoice_numbers')->where('status', '=', 1)
      ->orderBy('id','desc')
     ->first();
    
-    return view('content.apps.app-ecommerce-customer-details-overview', [ 'selectedCar' => $carInfo, 'otherCars' => $otherCars, 'htmlAddCar' => $htmlAddCar, 'invoice_number' => $getLatestInvoice->value+1]);
+    return view('content.apps.app-ecommerce-customer-details-overview', [ 'carManufacturerOptions' => $carManufacturerOptions, 'carVehicleTypeOptions' => $carVehicleTypeOptions, 'selectedCar' => $carInfo, 'otherCars' => $otherCars, 'htmlAddCar' => $htmlAddCar, 'invoice_number' => $getLatestInvoice->value+1]);
   }
 
   public function getDroptownOptions() {
@@ -344,5 +352,32 @@ class EcommerceCustomerDetailsOverview extends Controller
   }
 
 
+  function editCar() {
+    $car_id = $_GET['hidden-selected-car-id'];
+    $manufacturer = $_GET['manufacturer'];
+    $vehicleModel = $_GET['vehicleModel'];
+    $yearModel = $_GET['yearModel'];
+    $transmission = $_GET['transmission'];
+    $fuelType = $_GET['fuelType'];
+    $plateNumber = $_GET['plateNumber'];
+    $mileage = $_GET['mileage'];
+
+    Car::where("id", $car_id)->update(
+      [
+        "manufacturer" => $manufacturer,
+        "vehicle_model" => $vehicleModel,
+        "transmission" => $transmission,
+        "fuel_type" => $fuelType,
+        "year" => $yearModel,
+        "plate_number" => $plateNumber,
+        "mileage" => $mileage,
+      ]);
+
+     return response()->json(['success'=> true,  'message' => 'Car Information updated!' ]);
+
+  }
+
+  
+  
   
 }

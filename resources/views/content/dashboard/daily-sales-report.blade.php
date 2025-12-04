@@ -74,7 +74,7 @@
          <div class="col-sm-6 col-lg-3">
           <div class="d-flex justify-content-between align-items-start pb-3 border-end pb-sm-0 card-widget-3">
             <div>
-              <p class="mb-2">No of Cars Repair Est. & JO</p>
+              <p class="mb-2">No of Cars<br> Repair Estimate &<br> Job Order</p>
               <h4 class="mb-2" id="no_of_cars_repair_and_jo"></h4>
             </div>
             <div class="avatar me-sm-4">
@@ -87,7 +87,7 @@
          <div class="col-sm-6 col-lg-3">
           <div class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
             <div>
-              <p class="mb-2">No of Cars Daily Job Order</p>
+              <p class="mb-2">No of Cars<br> Daily<br> Job Order</p>
               <h4 class="mb-2" id="total-cars"></h4>
 
               <!-- <p class="mb-0"><span class="me-2">21k orders</span><span class="badge rounded-pill bg-label-success">+12.4%</span></p> -->
@@ -103,7 +103,7 @@
          <div class="col-sm-6 col-lg-2">
           <div class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
             <div>
-              <p class="mb-2">No. of Cars Monthly Job Order</p>
+              <p class="mb-2">No. of Cars<br> Monthly<br> Job Order</p>
               <h4 class="mb-2" id="total-month-cars"></h4>
 
               <!-- <p class="mb-0"><span class="me-2">21k orders</span><span class="badge rounded-pill bg-label-success">+12.4%</span></p> -->

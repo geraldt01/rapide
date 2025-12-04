@@ -73,23 +73,6 @@
               <label for="Manufacturer">Manufacturer</label>
             </div>
           </div>
-          <!-- Vehicle Type -->
-          <!-- <div class="mb-4 col ecommerce-select2-dropdown d-flex justify-content-between">
-            <div class="form-floating form-floating-outline w-100 me-3">
-              <select id="select-vehicle-type" class="select2 form-select" name="vehicleType" data-placeholder="Select Vehicle Type">
-                <option value="">Select Vehicle Type</option>
-              @foreach($carVehicleTypeOptions as $vehicleOption)
-                   <option value="{{$vehicleOption->value}}">{{$vehicleOption->value}}</option>
-                @endforeach
-              </select>
-              <label for="category-org">Vehicle Type</label>
-            </div>
-            <div>
-              <button class="btn btn-outline-primary btn-icon btn-lg h-px-50">
-                <i class="mdi mdi-plus"></i>
-              </button>
-            </div>
-          </div> -->
            <!-- Vehicle Model -->
            <div class="form-floating form-floating-outline mb-4">
             <input type="text" class="form-control" id="ecommerce-vehicle-model" placeholder="Vehicle Model" name="vehicleModel" aria-label="Vehicle Model">

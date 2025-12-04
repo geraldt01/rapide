@@ -185,6 +185,8 @@
         </div>
         <div class="col-md-6 mb-4">
             @foreach($selectedCar as $key => $firstCar)
+            <i class='mdi mdi-grease-pencil mdi-24px float-right m-2 btn-edit-car-details' data-bs-target="#editCarInfo" data-bs-toggle="modal"></i>
+
             <a href="/app/car/view/{{$firstCar->car_id}}">
           <div class="card h-100 cursor-pointer hover-effect selected-highlight" >
             <div class="card-body">
@@ -276,3 +278,7 @@
 @include('_partials/_modals/modal-upgrade-plan')
 <!-- /Modal -->
 @endsection
+
+<script type="text/javascript">
+
+  </script>

@@ -130,6 +130,8 @@
       const finalNum =  parseInt(inputValue).toLocaleString(undefined, options);
         document.getElementById("modalMileage").value = finalNum.replace(".00", "");
     });
+ 
+ 
   });
 
 
