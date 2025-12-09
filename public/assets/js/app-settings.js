@@ -6,6 +6,24 @@
 //Javascript to handle the e-commerce settings page
 
 $(function () {
+
+ 
+
+
+
+      $.ajax({
+    type: "get",
+    url: '/app/package-option/show/',
+      data:  $("").serialize(),
+      success: function (result) {
+          $("#tbl-package-body").html(result.packageHtml);
+        },
+      error: function (result, textStatus, errorThrown) {
+
+      },
+    });
+
+
   // Select2
   var select2 = $('.select2');
   if (select2.length) {
@@ -509,6 +527,158 @@ function savePartsAndServices(parts_and_services_id) {
 
    // Package
 
+function addPackageSubItem(package_id) {
+  document.getElementById('hidden-sub-package-id').value = package_id;
+    if(package_id) {
+  $.ajax({
+    type: "get",
+    url: '/app/package/get/'+ package_id,
+      data:  $("#formPackageOption").serialize(),
+        success: function (result) {
+          $("#package-name").html(result.PackageData.value);
+        //   document.getElementById('modalPrice').value = result.PackageData.package_price;
+        // document.getElementById('btn-save-package').setAttribute('onclick', 'savePackage('+result.PackageData.id+')');
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+  }
+
+}
+ 
+function savePackageSubItem(package_sub_id) {
+
+  if(package_sub_id) {
+    $.ajax({
+    type: "get",
+    url: '/app/package/sub-item/update/'+ package_sub_id,
+      data:  $("#formPackageSubItemOption").serialize(),
+      success: function (result) {
+        $('#addNewPackageSubItemOption').modal('hide');
+          showPackage();
+          $(".alert-success p").html(result.message);
+            $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+              location.reload();
+            }, 3000);
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+            $(".alert-danger p").html("Please check your inputs");
+            $(".alert-danger").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-danger").addClass("d-none");
+          }, 3000);
+
+      },
+    });
+
+  } else {
+
+    var package_id = document.getElementById('hidden-sub-package-id').value;
+    $.ajax({
+    type: "get",
+    url: '/app/package/sub-item/save/'+ package_id,
+      data:  $("#formPackageSubItemOption").serialize(),
+      success: function (result) {
+        $('#addNewPackageSubItemOption').modal('hide');
+          showPackage();
+          $(".alert-success p").html(result.message);
+            $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+              location.reload();
+            }, 3000);
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+            $(".alert-danger p").html("Please check your inputs");
+            $(".alert-danger").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-danger").addClass("d-none");
+          }, 3000);
+
+      },
+    });
+  }
+ 
+}
+
+function editPackageSubItem(package_sub_id) {
+  if(package_sub_id) {
+  $.ajax({
+    type: "get",
+    url: '/app/package/sub-item/get/'+ package_sub_id,
+      data:  $("#formPackageOption").serialize(),
+        success: function (result) {
+          $("#label-action-sub").html("Editing "+ result.PackageSubData.package_details);
+          $("#package-name").addClass("d-none");
+          document.getElementById('hidden-sub-package-id').value =  result.PackageSubData.id;
+          document.getElementById('package_details').value = result.PackageSubData.package_details;
+          document.getElementById('package_qty').value = result.PackageSubData.package_qty;
+          document.getElementById('package_part_number').value = result.PackageSubData.package_part_number;
+          document.getElementById('supplier').value = result.PackageSubData.supplier;
+          document.getElementById('supplier_inv').value = result.PackageSubData.supplier_inv;
+          document.getElementById('package_unit_cost').value = result.PackageSubData.package_unit_cost;
+          document.getElementById('package_total_cost').value = result.PackageSubData.package_total_cost;
+          document.getElementById('package_unit_selling_price_with_labor').value = result.PackageSubData.package_unit_selling_price_with_labor;
+          document.getElementById('package_sell_price').value = result.PackageSubData.package_sell_price;
+
+        document.getElementById('btn-save-package-sub-item').setAttribute('onclick', 'savePackageSubItem('+result.PackageSubData.id+')');
+
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+  } else {
+  }
+}
+
+
+function computeTotalCost() {
+     // Get the current value and remove existing commas
+      const options = {
+        minimumFractionDigits: 2, // Ensures at least two decimal places
+        maximumFractionDigits: 2, // Limits to a maximum of two decimal places
+        style: 'decimal'          // Specifies decimal formatting
+      };
+  
+  var package_qty = document.getElementById('package_qty').value;
+  var package_unit_cost = document.getElementById('package_unit_cost').value;
+
+  package_unit_cost = package_unit_cost.replace(".00", "");
+  package_unit_cost = package_unit_cost.replace(/,/g, "");
+  const numberInputTotal  = package_unit_cost * package_qty;
+  const finalNumTotal =  parseInt(numberInputTotal).toLocaleString(undefined, options);
+  document.getElementById("package_total_cost").value = finalNumTotal.replace(".00", "");
+}
+
+
+
+function computeSellPrice() {
+     // Get the current value and remove existing commas
+      const options = {
+        minimumFractionDigits: 2, // Ensures at least two decimal places
+        maximumFractionDigits: 2, // Limits to a maximum of two decimal places
+        style: 'decimal'          // Specifies decimal formatting
+      };
+  
+  var package_qty = document.getElementById('package_qty').value;
+  var package_unit_selling_price_with_labor = document.getElementById('package_unit_selling_price_with_labor').value;
+
+  package_unit_selling_price_with_labor = package_unit_selling_price_with_labor.replace(".00", "");
+  package_unit_selling_price_with_labor = package_unit_selling_price_with_labor.replace(/,/g, "");
+  const numberInputSellPrice  = package_unit_selling_price_with_labor * package_qty;
+
+  const finalNumSellPrice =  parseInt(numberInputSellPrice).toLocaleString(undefined, options);
+  document.getElementById("package_sell_price").value = finalNumSellPrice.replace(".00", "");
+}
+
+
+
 function editPackage(package_id) {
   if(package_id) {
   $.ajax({
@@ -527,20 +697,31 @@ function editPackage(package_id) {
     });
   } else {
   }
-
 }
 function showPackage() {
- $.ajax({
+//  $.ajax({
+//     type: "get",
+//     url: '/app/package/show/',
+//       data:  $("").serialize(),
+//       success: function (result) {
+//           $('#addNewPackageOption').modal('hide');
+//           $("#tbl-package-body").html(result.packageHtml);
+//           console.log(result.packageHtml);
+//         },
+//       error: function (result, textStatus, errorThrown) {
+//           console.log(result.success);
+//       },
+//     });
+
+  $.ajax({
     type: "get",
-    url: '/app/package/show/',
+    url: '/app/package-option/show/',
       data:  $("").serialize(),
       success: function (result) {
-          $('#addNewPackageOption').modal('hide');
           $("#tbl-package-body").html(result.packageHtml);
-          console.log(result.packageHtml);
         },
       error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
+
       },
     });
 }
@@ -608,6 +789,34 @@ function savePackage(package_id) {
       success: function (result) {
           showPackage();
           $('#deletePackageOption').modal('hide');
+            $(".alert-danger h4").html('<i class="mdi mdi-check-circle-outline mdi-24px me-2"><?i>Deleted!');
+            $(".alert-danger p").html(result.message);
+          $(".alert-danger").removeClass("d-none");
+          setTimeout(function(){ 
+            $(".alert-danger").addClass("d-none");
+          }, 3000);
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+  }
+
+
+    function promptDeletePackageSubItem(package_sub_item_id) {
+          $('#deletePackageSubitemOption').modal('show');
+           document.getElementById('hidden-package-sub-item-id').value = package_sub_item_id;
+  }
+
+   function deletePackageSubItem() {
+     var package_sub_item_id =  document.getElementById('hidden-package-sub-item-id').value;
+    $.ajax({
+      type: "get",
+     url: '/app/package/delete/sub-item/'+package_sub_item_id,
+       data:  $("#formPackageSubItemOption").serialize(),
+      success: function (result) {
+          showPackage();
+          $('#deletePackageSubitemOption').modal('hide');
             $(".alert-danger h4").html('<i class="mdi mdi-check-circle-outline mdi-24px me-2"><?i>Deleted!');
             $(".alert-danger p").html(result.message);
           $(".alert-danger").removeClass("d-none");

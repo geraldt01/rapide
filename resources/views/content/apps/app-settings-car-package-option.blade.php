@@ -98,19 +98,20 @@
                   <thead class="table-light">
                     <tr>
                       <th>#</th>
-                      <th>Package</th>
+                      <th colspan="5">Package</th>
                       <th>Price</th>
                       <th class="text-end">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="tbl-package-body">
-                @foreach($PackageData  as $k => $package)
+                <!-- @foreach($PackageData  as $k => $package)
                     <tr>
                       <td>{{$k +1}}</td>
                       <td>{{$package->value}}</td>
                       <td>{{$package->package_price}}</td>
                       <td class="text-end">
                         <div class="dropdown pe-3">
+                          <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addNewPackageSubItemOption" onclick="addPackageSubItem({{$package->id}})">Add Item</button>
                           <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></button>
                           <div class="dropdown-menu">
                             <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addNewPackageOption" onclick="editPackage({{$package->id}})"><i class="mdi mdi-pencil-outline me-1"></i> Edit</a>
@@ -119,7 +120,7 @@
                         </div>
                       </td>
                     </tr>
-                  @endforeach 
+                  @endforeach  -->
                   </tbody>
                 </table>
               </div>
@@ -132,5 +133,35 @@
     <!-- /Options-->
 </div>
 
+
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+    const numberInput = document.getElementById('package_unit_cost'); // Replace with your input's ID
+     const options = {
+        minimumFractionDigits: 2, // Ensures at least two decimal places
+        maximumFractionDigits: 2, // Limits to a maximum of two decimal places
+        style: 'decimal'          // Specifies decimal formatting
+      };
+
+      
+    numberInput.addEventListener('change', function(event) {
+      // Get the current value and remove existing commas
+     
+      var inputValue = event.target.value;
+      const finalNum =  parseInt(inputValue).toLocaleString(undefined, options);
+        document.getElementById("package_unit_cost").value = finalNum.replace(".00", "");
+    });
+
+
+      const numberInputPrice = document.getElementById('package_unit_selling_price_with_labor'); // Replace with your input's ID
+      numberInputPrice.addEventListener('change', function(event) {
+      var inputValuePrice = event.target.value;
+      const finalNumPrice =  parseInt(inputValuePrice).toLocaleString(undefined, options);
+      document.getElementById("package_unit_selling_price_with_labor").value = finalNumPrice.replace(".00", "");
+    });
+    
+  });
+
+  </script>
 @include('_partials/_modals/modal-add-new-package-option')
 @endsection

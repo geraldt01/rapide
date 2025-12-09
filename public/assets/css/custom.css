@@ -479,7 +479,9 @@ body.invoice-page .container-xxl {
 input.c-red, .c-red {
   color: red !important;
 }
-
+.tbl-sub td {
+  font-size: 12px;
+}
   /* ////////////////// */
 @media (min-width: 768px) {
   .invoice-edit .form-control {

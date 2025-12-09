@@ -77,7 +77,7 @@ foreach($data as $key => $final) {
   ->where('status', 1)
   ->get();
 
-    $partData = DB::table('job_orders_part_services')
+  $partData = DB::table('job_orders_part_services')
   ->where('job_order_id', $final[0]->job_order_id)
   ->where('part_value', '>', '')
   ->where('status', 1)
@@ -105,16 +105,22 @@ foreach($var as $ctr => $d) {
     $total_sell_price = 0;
     $total_inv_amount_package = 0;
 
+
+
+
       foreach($v['part_data'] as $ctr => $pdata) {
 
-        if(isset($v['labor_data'][$ctr]->labor_price)) {
-          $get_labor_price =  $v['labor_data'][$ctr]->labor_price;
-        } else {
-          $get_labor_price = 0;
-        }
+
+
+
+        // if(isset($v['labor_data'][$ctr]->labor_price)) {
+        //   $get_labor_price =  $v['labor_data'][$ctr]->labor_price;
+        // } else {
+        //   $get_labor_price = 0;
+        // }
 
         $unit_cost = intval($pdata->unit_cost);
-        $unit_selling_price_with_labor = $get_labor_price  + $pdata->part_price;
+        $unit_selling_price_with_labor =  $pdata->part_price;
         $total_cost = $pdata->part_qty * $unit_cost;
         $total_sell_price = $pdata->part_qty * $unit_selling_price_with_labor;
 
@@ -122,26 +128,101 @@ foreach($var as $ctr => $d) {
         $overall_total_sell_price  += $total_sell_price;
         $total_inv_amount_package =  $overall_total_sell_price;
        
-         $cosHtml[] ="<tr class='".(($ctr == 0) ? 'tbl-gray-bg' : '')."'>
-         <td>".(($ctr == 0) ? $v['data']->date : '' )."</td>
-         <td>".(($ctr == 0) ? $v['data']->owner_name : '' )."</td>
-         <td>".(($ctr == 0) ? $v['data']->address : '' ) ."</td>
-         <td>". (($ctr == 0) ?  $v['data']->manufacturer." ". $v['data']->vehicle_model." ". $v['data']->year." ". $v['data']->transmission." ". $v['data']->fuel_type : '')."</td>
-         <td>". (($ctr == 0) ? $v['data']->invoice_number : '')."</td>
-         <td>". (($ctr == 0) ? $v['data']->job_order_number : '')."</td>
-         <td>". $pdata->part_qty."</td>
-         <td>". $pdata->part_value."</td>
-         <td>". $pdata->part_number."</td>
-         <td>". $pdata->supplier."</td>
-         <td>". $pdata->supplier_inv."</td>
-         <td>". number_format($unit_cost, 2) ."</td>
-         <td>". number_format($total_cost, 2)."</td>
-         <td>". number_format($unit_selling_price_with_labor, 2)."</td>
-         <td>". number_format($total_sell_price, 2)."</td>
-         <td>".(($check_counter == $ctr) ? number_format($total_inv_amount_package, 2) : '')."</td>
-         <td>".(($check_counter == $ctr) ? "<a href='/app/job-order/".$v['data']->job_order_id."'><button class='btn btn-sm btn-icon'><i class='mdi mdi-pencil-outline'></i></button></a>" : '') ."</td>
-         </tr>
-         ";
+        $number_without_commas = 0;
+
+        $c = 0;
+        // PACKAGE
+        if($ctr == 0) {
+            foreach($v['package_data'] as $ctr => $packdata) {
+              $package_id = $packdata->package_id;
+            }
+
+            $pacakgeSubItemData = DB::table('package_sub_items')
+              ->where('package_id', $package_id)
+              ->where('status', 1)
+              ->get();
+            foreach($pacakgeSubItemData as $c => $psubItemData) {
+             $cosHtml[] ="<tr class='".(($c == 0) ? 'tbl-gray-bg' : '')."'>
+              <td>".(($c == 0) ? $v['data']->date : '' )."</td>
+              <td>".(($c == 0) ? $v['data']->owner_name : '' )."</td>
+              <td>".(($c == 0) ? $v['data']->address : '' ) ."</td>
+              <td>". (($c == 0) ?  $v['data']->manufacturer." ". $v['data']->vehicle_model." ". $v['data']->year." ". $v['data']->transmission." ". $v['data']->fuel_type : '')."</td>
+              <td>". (($c == 0) ? $v['data']->invoice_number : '')."</td>
+              <td>". (($c == 0) ? $v['data']->job_order_number : '')."</td>
+              <td>". $psubItemData->package_qty."</td>
+              <td>". $psubItemData->package_details."</td>
+              <td>". $psubItemData->package_part_number."</td>
+              <td>". $psubItemData->supplier."</td>
+              <td>". $psubItemData->supplier_inv."</td>
+              <td>". $psubItemData->package_unit_cost."</td>
+              <td>". $psubItemData->package_total_cost."</td>
+              <td>". $psubItemData->package_unit_selling_price_with_labor."</td>
+              <td>". $psubItemData->package_sell_price."</td>
+              <td></td>
+              <td></td>
+              </tr>";
+              $c++;
+               $num[] = str_replace(",", "", $psubItemData->package_sell_price);
+
+          }
+        }
+        if(isset($num)) {
+          foreach($num as $add) {
+            $total_inv_amount_package += $add;
+          }
+      
+          $cosHtml[] ="<tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>". $pdata->part_qty."</td>
+          <td>". $pdata->part_value."</td>
+          <td>". $pdata->part_number."</td>
+          <td>". $pdata->supplier."</td>
+          <td>". $pdata->supplier_inv."</td>
+          <td>". number_format($unit_cost, 2) ."</td>
+          <td>". number_format($total_cost, 2)."</td>
+          <td>". number_format($unit_selling_price_with_labor, 2)."</td>
+          <td>". number_format($total_sell_price, 2)."</td>
+          <td>".(($check_counter == $ctr) ? number_format($total_inv_amount_package, 2) : '')."</td>
+          <td>".(($check_counter == $ctr) ? "<a href='/app/job-order/".$v['data']->job_order_id."'><button class='btn btn-sm btn-icon'><i class='mdi mdi-pencil-outline'></i></button></a>" : '') ."</td>
+          </tr>
+          ";
+        } else {
+          $cosHtml[] ="<tr class='".(($ctr == 0) ? 'tbl-gray-bg' : '')."'>
+          <td>".(($ctr == 0) ? $v['data']->date : '' )."</td>
+          <td>".(($ctr == 0) ? $v['data']->owner_name : '' )."</td>
+          <td>".(($ctr == 0) ? $v['data']->address : '' ) ."</td>
+          <td>". (($ctr == 0) ?  $v['data']->manufacturer." ". $v['data']->vehicle_model." ". $v['data']->year." ". $v['data']->transmission." ". $v['data']->fuel_type : '')."</td>
+          <td>". (($ctr == 0) ? $v['data']->invoice_number : '')."</td>
+          <td>". (($ctr == 0) ? $v['data']->job_order_number : '')."</td>
+          <td>". $pdata->part_qty."</td>
+          <td>". $pdata->part_value."</td>
+          <td>". $pdata->part_number."</td>
+          <td>". $pdata->supplier."</td>
+          <td>". $pdata->supplier_inv."</td>
+          <td>". number_format($unit_cost, 2) ."</td>
+          <td>". number_format($total_cost, 2)."</td>
+          <td>". number_format($unit_selling_price_with_labor, 2)."</td>
+          <td>". number_format($total_sell_price, 2)."</td>
+          <td>".(($check_counter == $ctr) ? number_format($total_inv_amount_package, 2) : '')."</td>
+          <td>".(($check_counter == $ctr) ? "<a href='/app/job-order/".$v['data']->job_order_id."'><button class='btn btn-sm btn-icon'><i class='mdi mdi-pencil-outline'></i></button></a>" : '') ."</td>
+          </tr>
+          ";
+        }
+
+
+
+
+
+
+                
+        
+
+
         
 
         $ctr++;

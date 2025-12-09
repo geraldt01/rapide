@@ -289,6 +289,12 @@ Route::get('/app/package/update/{package_id}', [EcommerceSettingsPackage::class,
 Route::get('/app/package/save/', [EcommerceSettingsPackage::class, 'savePackage'])->name('app-settings-details')->middleware('auth');
 Route::get('/app/package/show/', [EcommerceSettingsPackage::class, 'showPackage'])->name('app-settings-details')->middleware('auth');
 Route::get('/app/package/delete/{package_id}', [EcommerceSettingsPackage::class, 'deletePackage'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/package/delete/sub-item/{package_sub_item_id}', [EcommerceSettingsPackage::class, 'deletePackageSubItem'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/package/sub-item/save/{package_id}', [EcommerceSettingsPackage::class, 'savePackageSubItem'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/package/sub-item/update/{package_sub_item_id}', [EcommerceSettingsPackage::class, 'updatePackageSubItem'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/package-option/show', [EcommerceSettingsPackage::class, 'showPackageOption'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/package/sub-item/get/{package_sub_item_id}', [EcommerceSettingsPackage::class, 'getPackageSubItem'])->name('app-settings-details')->middleware('auth');
+
 
 
 Route::get('/app/inventory/dashboard', [InventoryDashboard::class, 'index'])->name('app-inventory-dashboard')->middleware('auth');
