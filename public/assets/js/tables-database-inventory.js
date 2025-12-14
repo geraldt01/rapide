@@ -205,7 +205,7 @@ $(function () {
               '</div>';
             return $row_output;
           }
-        },
+        }, 
         {
           responsivePriority: 1,
           targets: 3,
