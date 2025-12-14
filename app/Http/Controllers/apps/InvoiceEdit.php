@@ -442,6 +442,40 @@ class InvoiceEdit extends Controller
 
     }
 
+
+
+    // check stock
+  foreach($_POST as $key => $value) {
+    if($key== 'group-c') {
+      foreach($value as $part){
+          if(isset($part['part-text']) && $part['part-text'] > "") {
+
+          $getPartServiceOption = DB::table('job_orders_part_service_options')
+          ->where('id', '=', $part['part-option'])
+          ->get();
+          $stock_deduct = $getPartServiceOption[0]->stock - $part['part-qty'];
+          if(!($stock_deduct < 0)) {
+              JobOrdersPartServiceOption::where("id", $part['part-id'])->update(
+                ["stock"   => $stock_deduct]
+            );
+          } else {
+              return response()->json(['success'=> false, 'message' => 'Invalid stock for '.$part['part-text'] .'!']);
+          }
+          }
+        }
+      }
+    }
+
+
+
+    //check inventory stock deduction
+  if($status_display == "job order" && $_POST['balance'] == 0 && $jobOrderInfo[0]->status_inventory_deduction == 0) {
+    $check = 1;
+   } else {
+    $check = 0;
+   }
+
+
     $invoice_date = $_POST['invoice_date']; // Example date in m/d/Y format
     // Create a DateTime object from the original format
     $dateTimeObject = DateTime::createFromFormat('m/d/Y', $invoice_date);
@@ -475,10 +509,13 @@ class InvoiceEdit extends Controller
         "mode_of_payment" => (($_POST['mop']) ?  $_POST['mop'] : ''),
         "mode_of_payment2" => (($_POST['mop2']) ?  $_POST['mop2'] : ''),
         "customer_name" => (($_POST['customer_name']) ?  $_POST['customer_name'] : ''),
+        "status_inventory_deduction" => $check,
         
       ]
     );
   
+
+
 
     // $delPackage=JobOrdersPackage::where('job_order_id',$job_order_id)->delete();
     // $delLabor=JobOrdersLabor::where('job_order_id',$job_order_id)->delete();
@@ -521,15 +558,6 @@ class InvoiceEdit extends Controller
         foreach($value as $labor){
         
          if(isset($labor['labor-text']) && $labor['labor-text'] > "") {
-            // $lbr = new JobOrdersLabor();
-            // $lbr->job_order_id = $job_order_id;
-            // $lbr->labor_qty     = ((isset($labor['labor-qty'])) ? $labor['labor-qty'] : 1);
-            // $lbr->labor_value  =  ((isset($labor['labor-text'])) ? $labor['labor-text'] : "");
-            // $lbr->part_number   =  ((isset($labor['labor-part-number'])) ? $labor['labor-part-number'] : "");
-            // $lbr->labor_price   = ((isset($labor['labor-price'])) ? $labor['labor-price'] : 0);
-            // $lbr->labor_amount   = ((isset($labor['labor-amount'])) ? $labor['labor-amount'] : 0);
-            // $lbr->save();
-
              JobOrdersLabor::where("id", $labor['labor-id'])->update(
             [
             "job_order_id" => $job_order_id,
@@ -547,11 +575,6 @@ class InvoiceEdit extends Controller
           );
 
           } 
-          // else {
-          //   $lbr = new JobOrdersLabor();
-          //   $lbr->job_order_id = $job_order_id;
-          //   $lbr->save();
-          // }
             
         }
       }
@@ -576,6 +599,25 @@ class InvoiceEdit extends Controller
             "part_code"  =>  ((isset($part['part-code'])) ? strtoupper($part['part-code']) : ""),
 
           ] );
+
+
+          if($check == 1) {
+            $getPartServiceOption = DB::table('job_orders_part_service_options')
+            ->where('id', '=', $part['part-option'])
+            ->get();
+            $stock_deduct = $getPartServiceOption[0]->stock - $part['part-qty'];
+            if($stock_deduct >= 0) {
+                JobOrdersPartServiceOption::where("id", $part['part-option'])->update(
+                 ["stock"   => $stock_deduct]
+              );
+            } else {
+               return response()->json(['success'=> false, 'message' => 'Invalid stock!']);
+            }
+          
+          }
+       
+
+
 
           } else {
             // $prt = new JobOrdersPartService();
@@ -858,6 +900,32 @@ class InvoiceEdit extends Controller
     }
 
   }
+
+  
+  public function checkInventory($inventory_id) {
+
+    $getInventory = DB::table('job_orders_part_service_options')
+    ->where('id', '=', $inventory_id)
+    ->get();
+
+    if($getInventory[0]->stock > 0) {
+      $status = true;
+      $message = 'Stock available';
+
+    } else {
+      $status = false;
+      $message = 'Part out of stock!';
+    }
+
+    if($_GET['qty'] > $getInventory[0]->stock) {
+      $message = 'Stock conflict! Please check stocks available.';
+      $status = false;
+    }
+
+     return response()->json(['success'=> $status, 'stock' => $getInventory[0]->stock, 'message' => $message ]);
+
+  }
+
 
   
 }

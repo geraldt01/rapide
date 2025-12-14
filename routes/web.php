@@ -254,6 +254,7 @@ Route::get('/app/job-order/status-upgrade-now/{job_order_id}', [InvoiceEdit::cla
 Route::get('/app/duplicate-parts/{job_order_id}', [InvoiceEdit::class, 'duplicateParts'])->middleware('auth');
 Route::get('/app/change-payment-label', [InvoiceEdit::class, 'changePaymentLabel'])->middleware('auth');
 Route::get('/app/enable-item/{type}', [InvoiceEdit::class, 'enableItem'])->middleware('auth');
+Route::get('/app/check-inventory/{part_service_id}', [InvoiceEdit::class, 'checkInventory'])->middleware('auth');
 
 
 Route::get('/app/job-order/preview/{job_order_id}', [InvoicePreview::class, 'index'])->name('app-invoice-preview')->middleware('auth');

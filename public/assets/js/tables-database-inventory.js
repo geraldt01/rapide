@@ -130,9 +130,12 @@ $(function () {
         { data: '' },
         { data: 'id' },
         { data: 'item_name' },
+        { data: 'cost' },
+        { data: 'part_number' },
         { data: 'stock' },
         { data: 'stock_status' },
-        { data: '' }
+        { data: '' },
+
       ],
       columnDefs: [
         {
@@ -160,15 +163,11 @@ $(function () {
             selectAllRender: '<input type="checkbox" class="form-check-input">'
           }
         },
-        {
-          targets: 2,
-          searchable: false,
-          visible: false
-        },
+     
         
         {
           // Avatar image/badge, Name and post
-          targets: 3,
+          targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $user_img = full['avatar'],
@@ -210,8 +209,54 @@ $(function () {
         },
         {
           responsivePriority: 1,
-          targets: 4
+          targets: 3,
+            render: function (data, type, full, meta) {
+            var $cost = full['cost'];
+           
+            return (
+              '₱' + $cost
+            );
+          }
+
         },
+         {
+          responsivePriority: 2,
+          targets: 4,
+            render: function (data, type, full, meta) {
+            var $part_number = full['part_number'];
+           
+            return (
+              $part_number
+            );
+          }
+
+        },
+         {
+          responsivePriority: 3,
+          targets: 5,
+            render: function (data, type, full, meta) {
+            var $price = full['price'];
+           
+            return (
+               '₱' + $price
+            );
+          }
+
+        },
+        {
+          responsivePriority: 4,
+          targets: 6,
+            render: function (data, type, full, meta) {
+            var $stock = full['stock'];
+           
+            return (
+               $stock
+            );
+          }
+
+        },
+     
+     
         {
           // Label
           targets: -2,
@@ -277,7 +322,7 @@ $(function () {
               text: '<i class="mdi mdi-printer-outline me-1" ></i>Print',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [3, 4, 5, 6, 7],
+                columns: [3, 4, 5, 6, 7, 8],
                 // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -314,7 +359,7 @@ $(function () {
               text: '<i class="mdi mdi-file-document-outline me-1" ></i>Csv',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [3, 4, 5, 6, 7],
+                columns: [3, 4, 5, 6, 7, 8],
                 // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -338,7 +383,7 @@ $(function () {
               text: '<i class="mdi mdi-file-excel-outline me-1"></i>Excel',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [3, 4, 5, 6, 7],
+                columns: [3, 4, 5, 6, 7, 8],
                 // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -362,7 +407,7 @@ $(function () {
               text: '<i class="mdi mdi-file-pdf-box me-1"></i>Pdf',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [3, 4, 5, 6, 7],
+                columns: [3, 4, 5, 6, 7, 8],
                 // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -386,7 +431,7 @@ $(function () {
               text: '<i class="mdi mdi-content-copy me-1" ></i>Copy',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [3, 4, 5, 6, 7],
+                columns: [3, 4, 5, 6, 7, 8],
                 // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -408,7 +453,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="mdi mdi-plus me-sm-1"></i> <span class="d-none d-sm-inline-block" onclick="addNewItem()">Add New Ttem</span>',
+          text: '<i class="mdi mdi-plus me-sm-1"></i> <span class="d-none d-sm-inline-block" onclick="addNewItem()">Add New Item</span>',
           className: ' btn btn-primary waves-effect waves-light'
         }
       ],
@@ -828,7 +873,9 @@ function showDetails(item_id) {
         success: function (result) {
           console.log(result.inventoryData);
             document.getElementById('hidden-item-id').value = result.inventoryData.id;
-            document.getElementById('modalItemName').value = result.inventoryData.name;
+            document.getElementById('modalItemName').value = result.inventoryData.value;
+            document.getElementById('modalCost').value = result.inventoryData.cost;
+            document.getElementById('modalPartNumber').value = result.inventoryData.part_number;
             document.getElementById('modalStock').value = result.inventoryData.stock;
             document.getElementById('modalPrice').value = result.inventoryData.price;
         },

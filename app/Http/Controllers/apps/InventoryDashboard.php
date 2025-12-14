@@ -5,6 +5,7 @@ namespace App\Http\Controllers\apps;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Inventory;
+use App\Models\JobOrdersPartServiceOption;
 
 use DB;
 
@@ -17,14 +18,19 @@ class InventoryDashboard extends Controller
   }
 
   public function jsonInventoryList() {
-    $Inventory = DB::table('inventories')
+    $Inventory = DB::table('job_orders_part_service_options')
     ->where('status', '=', 1)
+    ->where('value', '>', '')
+    ->where('price', '>', '')
     ->get();
     foreach($Inventory as $value) {
       $array[] = array(
         '' => $value->id,
         'id' => $value->id,
-        'item_name' => $value->name,
+        'item_name' => (($value->value) ? $value->value : ""),
+        'part_number' => $value->part_number,
+        'cost' => $value->cost,
+        'price' => $value->price,
         'stock' => $value->stock,
         'stock_status' => (($value->stock > 0) ? 1 : 0),
         'status' => $value->status,
@@ -36,7 +42,7 @@ class InventoryDashboard extends Controller
   }
 
   public function viewInventoryDetails($item_id) {
-    $Inventory = DB::table('inventories')
+    $Inventory = DB::table('job_orders_part_service_options')
     ->where('id', '=', $item_id)
     ->where('status', '=', 1)
     ->get();
@@ -47,16 +53,21 @@ class InventoryDashboard extends Controller
 
     if($item_id !== 'undefined') {
 
-      Inventory::where("id", $item_id)->update(
+      JobOrdersPartServiceOption::where("id", $item_id)->update(
       [
-        "name" => ((isset($_GET['modalItemName'])) ? $_GET['modalItemName'] : ''),
+        "value" => ((isset($_GET['modalItemName'])) ? $_GET['modalItemName'] : ''),
+        "cost" => ((isset($_GET['modalCost'])) ? $_GET['modalCost'] : ''),
+        "part_number" => ((isset($_GET['modalPartNumber'])) ? $_GET['modalPartNumber'] : ''),
+        "price" => ((isset($_GET['modalPrice'])) ? $_GET['modalPrice'] : ''),
         "stock" => ((isset($_GET['modalStock'])) ? $_GET['modalStock'] : 0),
       ]
     );
      $message = 'Inventory edited successfully!';
     } else {
-      $c = new Inventory();
-      $c->name    = $_GET['modalItemName'] ? $_GET['modalItemName'] : "";
+      $c = new JobOrdersPartServiceOption();
+      $c->value    =  ((isset($_GET['modalItemName'])) ? $_GET['modalItemName'] : '');
+      $c->cost    =  ((isset($_GET['modalCost'])) ? $_GET['modalCost'] : '');
+      $c->part_number    =  ((isset($_GET['modalPartNumber'])) ? $_GET['modalPartNumber'] : '');
       $c->stock    = $_GET['modalStock'] ? $_GET['modalStock'] : "";
       $c->price    = $_GET['modalPrice'] ? $_GET['modalPrice'] : "";
       $c->save();

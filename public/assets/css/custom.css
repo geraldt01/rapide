@@ -482,6 +482,9 @@ input.c-red, .c-red {
 .tbl-sub td {
   font-size: 12px;
 }
+#addNewInventory  {
+   z-index: 9999;
+}
   /* ////////////////// */
 @media (min-width: 768px) {
   .invoice-edit .form-control {

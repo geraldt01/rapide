@@ -419,25 +419,34 @@ calculateAll();
       url: '/app/save-job-order-item/'+ job_order_id,
         data:  $("#form-job-order").serialize(),
         success: function (result) {
+          console.log(result.success);
+          if(result.success == true) {
             $(".bt-save-changes").addClass("disabled");
             sessionStorage.setItem("updateTriggered", "false");
             $('#addNewJobOrder').modal('hide');
             $(".alert-success p").html(result.message);
             $(".alert-success").removeClass("d-none");
             setTimeout(function(){ 
-              $(".alert-success").addClass("d-none");
+            $(".alert-success").addClass("d-none");
               const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
-          }, 3000);
-        },
-      error: function (result, textStatus, errorThrown) {
-          console.log(result.success);
-              $(".alert-danger p").html("Please enter valid items!");
+            }, 3000);
+          } else {
+             $(".alert-danger p").html(result.message);
             $(".alert-danger").removeClass("d-none");
             setTimeout(function(){ 
               $(".alert-danger").addClass("d-none");
               const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
-              // form.reset();
-              // location.reload();
+          }, 3000);
+          }
+            
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+              $(".alert-danger p").html(result.message);
+            $(".alert-danger").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-danger").addClass("d-none");
+              const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
           }, 3000);
       },
     });
@@ -472,28 +481,51 @@ calculateAll();
       maximumFractionDigits: 2, // Limits to a maximum of two decimal places
       style: 'decimal'          // Specifies decimal formatting
     };
+    const original_option_id = option_id;
+    option_id -=1;
+    const inputElementsPart  =  document.getElementsByName('group-c['+option_id+'][part-option]');
 
-    if(option_id > 0) {
-      let part_qty = document.getElementById('part-qty-'+option_id).value ;
-      let part_price = document.getElementById('part-price-'+option_id).value ;
+     let get_part_qty = document.getElementById('part-qty-'+original_option_id).value;
 
-      part_price = part_price.replace(/\,/g,'');
-      part_qty = part_qty.replace(/[^0-9]/g, '');
+    var inventory_id = inputElementsPart[0].value;
+    if(inventory_id > '') {
+    $.ajax({
+      type: "get",
+      url: '/app/check-inventory/'+ inventory_id,
+        data:  {qty: get_part_qty},
+        success: function (result) {
+              if(result.success == false) {
+                 document.getElementById('part-qty-'+original_option_id).value = 0;
 
-      console.log(part_price);
-      console.log(part_qty);
-      let amount = part_price * part_qty;
+                $(".alert-danger p").html(result.message);
+                $(".alert-danger").removeClass("d-none");
+                setTimeout(function(){ 
+                  $(".alert-danger").addClass("d-none");
+                }, 3000);
+                return false;
+              } else {
 
-         amount = amount.toLocaleString(undefined, options);
+                  let part_qty = document.getElementById('part-qty-'+original_option_id).value ;
+                  let part_price = document.getElementById('part-price-'+original_option_id).value ;
 
+                  part_price = part_price.replace(/\,/g,'');
+                  part_qty = part_qty.replace(/[^0-9]/g, '');
 
-      document.getElementById('part-amount-'+option_id).value = amount;
-
-
-      calculateAll(option_id);
-
+                  console.log(part_price);
+                  console.log(part_qty);
+                  let amount = part_price * part_qty;
+                  amount = amount.toLocaleString(undefined, options);
+                  document.getElementById('part-amount-'+original_option_id).value = amount;
+                  calculateAll(original_option_id);
+              }
+          },
+          error: function (result, textStatus, errorThrown) {
+            
+          },
+        });
     }
-    // var job_order_id = document.getElementById('part-option-'+option_id).value ;
+
+
 
    
 

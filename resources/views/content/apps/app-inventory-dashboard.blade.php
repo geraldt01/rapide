@@ -622,9 +622,11 @@
         <thead>
           <tr>
             <th></th>
-            <th></th>
             <th>id</th>
             <th>Item Name</th>
+            <th>Cost</th>
+            <th>Part Number</th>
+            <th>SRP</th>
             <th>Stocks remaining</th>
             <th>Stock Status</th>
             <th>Action</th>

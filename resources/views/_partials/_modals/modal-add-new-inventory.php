@@ -16,6 +16,22 @@
               <label for="modaladdPlateNumber">Item Name</label>
             </div>
           </div>
+
+          <div class="col-12 col-md-12  mb-4">
+            <div class="form-floating form-floating-outline">
+              <input type="text" id="modalPartNumber" name="modalPartNumber" class="form-control" placeholder="Part Number" />
+              <label for="modalPartNumber">Part Number</label>
+            </div>
+          </div>
+
+          
+          <div class="input-group input-group-merge mb-4">
+          <span class="input-group-text">₱</span>
+          <div class="form-floating form-floating-outline p-0">
+              <input type="text" id="modalCost" name="modalCost" class="form-control" placeholder="Cost" />
+              <label for="modalCost">Cost</label>
+            </div>
+          </div>
          
           <div class="form-floating form-floating-outline mb-4">
             <input class="form-control" type="number" id="modalStock" name="modalStock" min="0" placeholder="Stocks" id="html5-number-input">
@@ -25,10 +41,9 @@
           <div class="input-group input-group-merge mb-4">
           <span class="input-group-text">₱</span>
           <div class="form-floating form-floating-outline p-0">
-            <input type="number" class="form-control" id="modalPrice" name="modalPrice" placeholder="0" min="0" aria-label="Amount (to the nearest Pesp)">
+            <input type="text" class="form-control" id="modalPrice" name="modalPrice" placeholder="0" min="0" aria-label="Amount (to the nearest Pesp)">
             <label>Price</label>
           </div>
-          <span class="input-group-text">.00</span>
         </div>
 
           <div class="col-12 text-center">
