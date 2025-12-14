@@ -200,7 +200,6 @@ $(function () {
               $name +
               '</span>' +
               '<small class="emp_post text-truncate">' +
-              $post +
               '</small>' +
               '</div>' +
               '</div>';
