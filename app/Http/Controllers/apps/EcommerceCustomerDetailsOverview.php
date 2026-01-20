@@ -9,6 +9,7 @@ use App\Models\Car;
 use App\Models\JobOrdersPartService;
 use App\Models\JobOrdersLabor;
 use App\Models\JobOrdersPackage;
+use App\Models\JobOrdersPackageManualItem;
 use App\Models\InvoiceNumber;
 use App\Models\RepairEstimateNumber;
 use App\Models\JobOrderNumber;
@@ -164,8 +165,6 @@ class EcommerceCustomerDetailsOverview extends Controller
       ]
       );
 
-
-
       for($x=0;$x<=19;$x++) {
         if($x == 0) {
           $pck = new JobOrdersPackage();
@@ -173,6 +172,19 @@ class EcommerceCustomerDetailsOverview extends Controller
           $pck->job_order_id = $c->id;
           $pck->save(); 
         }
+
+        if($x < 7) {
+          $pckm = new JobOrdersPackageManualItem();
+          $pckm->part_number = "";
+          $pckm->price = 0;
+          $pckm->item_number =$x+1;
+          $pckm->job_order_id = $c->id;
+          if($x > 2) {
+            $pckm->status = 2;
+          }
+          $pckm->save(); 
+        }
+
         $prt = new JobOrdersPartService();
         $prt->item_number =$x+1;
         $prt->job_order_id = $c->id;
@@ -181,8 +193,10 @@ class EcommerceCustomerDetailsOverview extends Controller
         if($x > 9) {
         $prt->status = 2;
         }
-
         $prt->save();
+
+
+        
 
         $lbr = new JobOrdersLabor();
         $lbr->job_order_id = $c->id;

@@ -22,7 +22,7 @@
 .tbl-header {
   background-color: #fce800;
 }
-.disable-part-item, .disable-labor-item, .disable-package-item {
+.disable-part-item, .disable-labor-item, .disable-package-item, .disable-packagemanual-item {
   display: none !important; 
 }
 #item-counter-font {
@@ -38,7 +38,13 @@ input.c-red, .c-red {
   color: red !important;
 }
 
+#package-manual-item-section #item-list-packagemanual-0 {
+  display: flex !important;
 
+}
+ #item-list-packagemanual-0 {
+  display: none !important;
+}
   </style>
 @section('vendor-script')
 <script src="{{asset('assets/vendor/libs/flatpickr/flatpickr.js')}}"></script>
@@ -79,6 +85,7 @@ input.c-red, .c-red {
   <input type="hidden" name="hidden-part-sub-totals" id="hidden-part-sub-totals" value="" />
   
   <input type="hidden" name="hidden-package-total-item" id="hidden-package-total-item" value="{{$countEnabledPackage}}" />
+  <input type="hidden" name="hidden-packagemanual-total-item" id="hidden-packagemanual-total-item" value="{{$countEnabledPackageManual}}" />
   <input type="hidden" name="hidden-labor-total-item" id="hidden-labor-total-item" value="{{$countEnabledLabor}}" />
   <input type="hidden" name="hidden-part-total-item" id="hidden-part-total-item" value="{{$countEnabledPart}}" />
   
@@ -193,7 +200,7 @@ input.c-red, .c-red {
       </div>
       <div class="card-body">
         <div class="source-item pt-1">
-          <div class="mb-3" data-repeater-list="group-a">
+              <div class="mb-3" data-repeater-list="group-a">
             <div class="repeater-wrapper pt-0 pt-md-2">
               <div class=" rounded position-relative pe-0 color-white" id="package-item-section">
                 @if($optionOneHtml == false)
@@ -208,13 +215,86 @@ input.c-red, .c-red {
                 
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <!-- <button type="button" class="btn btn-primary btn-sm" onclick="addItem('package')" data-repeater-create><i class="mdi mdi-plus me-1"></i> Add Item</button> -->
+        </div>
+        </div>
+
+              <div class="card-body">
+        <div class="source-item pt-1">
+              <div class="mb-3" data-repeater-list="group-a2">
+            <div class="repeater-wrapper pt-0 pt-md-2">
+              <div class=" rounded position-relative pe-0 color-white" id="package-manual-item-section">
+
+              <div class="row invoice-table-labor" style="background: #f7f7f7;padding-top:10px;">
+                  <div class="col-md-2 mumber col-12 mb-md-0color-black">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong></strong></h6>
+                  </div>
+             
+                   <div class="col-md-2 col-12 mb-md-0 mb-3">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Unit Cost</strong></h6>
+                  </div>   
+                    <div class="col-md-2 col-12 mb-md-0 mb-3">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Total Cost</strong></h6>
+                  </div>                  
+                  <div class="col-md-2 col-12 mb-md-0 pl-0 text-left">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>Qty</strong></h6>
+                  </div>
+                  <div class="col-md-2 col-12 mb-md-0 p-0 text-left">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>Part Number</strong></h6>
+                  </div>
+                  <div class="col-md-2 col-12 mb-md-0 pl-0 text-left">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Amount</strong></h6>
+                  </div>
+                
+                </div>
+
+                @if($optionOneTwoHtml == false)
+                  @for ($pa = 1; $pa < 2; $pa++)
+                  
+                  @endfor
+                @else 
+                  @foreach($optionOneTwoHtml as $ka => $da)
+                    {!!$da!!}
+                  @endforeach
+                @endif
+                
+              </div>
+             
+            </div>
+             
+        </div>
+         <div class="col-12">
+              <button type="button" class="btn btn-primary btn-sm mt-3" onclick="addItem('packagemanual', {{$countEnabledPackageManual}})" data-repeater-create><i class="mdi mdi-plus me-1"></i> Add Part Number</button>
+            </div>
+        </div>
+        
+        <!-- <div class="card-body">
+        <div class="source-item pt-1">  
+          <div class="col-12" data-repeater-list="group-a2">
+            <div class="repeater-wrapper pt-0 pt-md-2" data-repeater-item>
+              <div class=" rounded position-relative pe-0 color-white" id="package-manual-item-section">
+            <div class="border row w-100  p-2 mb-3">
+              <div class="col-md-6 col-12 mb-md-0 mb-3">
+                <input type="hidden" name="package-id" value="" />
+                  </div>
+                <div class="col-md-4 col-12">
+                <input type="text" class="form-control package mb-3" name="package-manual-part-number" id="package-manual-part-number" value="" />
+                </div>
+                  
+                <div class="col-md-2 col-12 mb-md-0 mb-3 color-black d-flex">
+                          <span class="pt-2 pl-2">₱</span>
+                        <input type="text" class="form-control package mb-3" name="package-manual-price" id="package-manual-price" value="" placeholder="0" onchange="calculatePackage()" />
+                      <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem();recalculateAll()" ></i>
+                </div>
+                </div>
+              </div>
+            </div>
             </div>
           </div>
-        </div>
+            <div class="col-12">
+              <button type="button" class="btn btn-primary btn-sm mt-3" onclick="addItem()" data-repeater-create><i class="mdi mdi-plus me-1"></i> Add Part Number</button>
+            </div>
+          </div> -->
+          </div>
       </div>
 
 
@@ -476,8 +556,11 @@ input.c-red, .c-red {
               <div class="d-flex justify-content-between mb-2">
                 <span class="w-px-250 text-right pt-3"><b><span id="display-payment"  style="text-transform: uppercase;">{{$data->payment_label}}</span><i class="mdi mdi-pencil me-1 js-textareacopybtn" id="note-icon" onclick="editPaymentLabel()"></i></b></span>
                 <span class="alert-coppied" id="icon-{{$k}}">Coppied!</span>
+                 @if($data->job_order_status == '2')
                   <i class="mdi mdi-arrow-down-right me-1 js-textareacopybtn" id="note-icon" onclick="copyPayment()"></i><span class="alert-coppied" id="icon-{{$k}}">Coppied!</span>
-
+                @else
+                  <div>&nbsp;&nbsp;</div>
+                @endif
 
                 <h6 class="mb-0 pt-1 width-95px">
                   <input type="text" class="form-control invoice-payment mb-3 text-right" name="payment" id="payment" value="{{$data->payment}}" placeholder="" onchange="calculateAll()" min="12">

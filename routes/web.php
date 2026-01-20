@@ -245,6 +245,7 @@ Route::post('/app/save-job-order-item/{job_order_id}', [InvoiceEdit::class, 'sav
 Route::post('/app/delete-job-order-item/{item_id}', [InvoiceEdit::class, 'deleteJobOrderItem'])->middleware('auth');
 Route::post('/app/delete-labor-item/{item_id}', [InvoiceEdit::class, 'deleteLaborItem'])->middleware('auth');
 Route::post('/app/delete-package-item/{item_id}', [InvoiceEdit::class, 'deletePackageItem'])->middleware('auth');
+Route::post('/app/delete-package-manual-item/{item_id}', [InvoiceEdit::class, 'deletePackageManualItem'])->middleware('auth');
 
 
 Route::get('/app/get-job-order-item-price/{job_order_id}', [InvoiceEdit::class, 'getJobOrderItemprice'])->middleware('auth');
@@ -256,6 +257,7 @@ Route::get('/app/change-payment-label', [InvoiceEdit::class, 'changePaymentLabel
 Route::get('/app/enable-item/{type}', [InvoiceEdit::class, 'enableItem'])->middleware('auth');
 Route::get('/app/check-inventory/{part_service_id}', [InvoiceEdit::class, 'checkInventory'])->middleware('auth');
 
+Route::get('/app/check-inventory-package/{package_id}', [InvoiceEdit::class, 'checkInventoryPackage'])->middleware('auth');
 
 Route::get('/app/job-order/preview/{job_order_id}', [InvoicePreview::class, 'index'])->name('app-invoice-preview')->middleware('auth');
 Route::get('/app/job-order/print/{job_order_id}', [InvoicePrint::class, 'index'])->name('app-invoice-print')->middleware('auth');
@@ -295,6 +297,8 @@ Route::get('/app/package/sub-item/save/{package_id}', [EcommerceSettingsPackage:
 Route::get('/app/package/sub-item/update/{package_sub_item_id}', [EcommerceSettingsPackage::class, 'updatePackageSubItem'])->name('app-settings-details')->middleware('auth');
 Route::get('/app/package-option/show', [EcommerceSettingsPackage::class, 'showPackageOption'])->name('app-settings-details')->middleware('auth');
 Route::get('/app/package/sub-item/get/{package_sub_item_id}', [EcommerceSettingsPackage::class, 'getPackageSubItem'])->name('app-settings-details')->middleware('auth');
+Route::get('/app/package/get/part-details/{part_id}', [EcommerceSettingsPackage::class, 'getPartDetails'])->name('app-settings-details')->middleware('auth');
+
 
 
 

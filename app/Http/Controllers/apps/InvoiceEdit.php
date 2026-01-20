@@ -10,6 +10,7 @@ use App\Models\JobOrdersPackageOption;
 use App\Models\JobOrdersLaborOption;
 use App\Models\JobOrdersLabor;
 use App\Models\JobOrdersPartServiceOption;
+use App\Models\JobOrdersPackageManualItem;
 use App\Models\JobOrdersPartService;
 use App\Models\SpecialNote;
 use App\Models\JobOrdersStatus;
@@ -55,6 +56,14 @@ class InvoiceEdit extends Controller
     ->where('job_order_id', '=', $job_order_id)
     ->get();
 
+
+    $jobOrderPackageManualSelected = DB::table('job_orders_package_manual_items')
+    // ->where('status', '=', 1)
+    ->where('job_order_id', '=', $job_order_id)
+    ->get();
+
+
+
     $optionOneHtml = array();
     $keypckg = 1;
     if(isset($jobOrderPackageSelected[0]->job_order_id)) {
@@ -85,6 +94,44 @@ class InvoiceEdit extends Controller
       $optionOneHtml = false;
     }
    
+
+
+    $optionOneTwoHtml = array();
+    $keypckgm = 1;
+    if(isset($jobOrderPackageManualSelected[0]->job_order_id)) {
+
+      foreach($jobOrderPackageManualSelected as $keypckgm => $selectedm) {
+      
+        $optionOneTwoHtml[] = '<div class="border row w-100  p-2 '.(($selectedm->status == 2) ? 'disable-packagemanual-item' : '').'" id="item-list-packagemanual-'.$keypckgm.'"data-repeater-item><div class="col-md-2 col-12 mb-md-0 mb-3">
+      
+        </div>
+            <div class="col-md-2 col-12">
+                <input type="text" class="form-control package-manual mb-3" name="package-manual-cost" id="package-manual-cost'.$keypckgm.'" value="'.$selectedm->unit_cost.'" placeholder="Unit Cost"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
+            </div>
+              <div class="col-md-2 col-12">
+                <input type="text" class="form-control package-manual mb-3" name="package-manual-total-cost" id="package-manual-total-cost'.$keypckgm.'" value="'.$selectedm->total_cost.'" placeholder="Total Cost"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
+            </div>
+            <div class="col-md-2 col-12">
+                 <input type="hidden" name="package-manual-id" value="'.$selectedm->id.'" />
+                <input type="text" class="form-control package-manual-qty mb-3" name="package-qty" id="package-qty'.$keypckgm.'" value="'.$selectedm->qty.'" placeholder="Quantity"  onchange="calculatePackageManual('.$keypckgm.')"/>
+            </div>
+                 <div class="col-md-2 col-12">
+                <input type="text" class="form-control packapackage-manualge mb-3" name="package-manual-part-number" id="package-manual-part-number'.$keypckgm.'" value="'.$selectedm->part_number.'" placeholder="Part Number" />
+            </div>
+            <div class="col-md-2 col-12 mb-md-0 mb-3 color-black d-flex">
+               <span class="pt-2 pl-2">₱</span>
+                <input type="text" class="form-control package-manual-price mb-3" name="package-manual-price" id="package-manual-price'.$keypckgm.'" value="'.$selectedm->price.'" placeholder="Price"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')"/>
+            
+            <i class="mdi mdi-close cursor-pointer color-black" onclick="deleteItem('.$keypckgm.', 0.1, '.$selectedm->id.');recalculateAll()" ></i> 
+            </div>
+        </div>';
+        $keypckgm++;
+      }
+    } else {
+      $optionOneTwoHtml = false;
+    }
+
+
     $jobOrderLaborOption = DB::table('job_orders_labor_options')
     ->where('status', '=', 1)
     ->orderBy('value','asc')
@@ -256,7 +303,7 @@ class InvoiceEdit extends Controller
                   </div>
 
                   <div class="col-md-1 col-12 mb-md-0 mb-3 w-6">
-                    <input type="text" class="form-control invoice-item-qty part" name="part-qty" id="part-qty-'.$keyprt.'" value="'.$part_qty.'" placeholder="1" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
+                    <input type="text" class="form-control form-control invoice-item-price part" name="part-qty" id="part-qty-'.$keyprt.'" value="'.$part_qty.'" placeholder="1" min="1" max="" onchange="calculatePart('.$keyprt.')"/>
                   </div>
 
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
@@ -337,6 +384,10 @@ class InvoiceEdit extends Controller
     ->where('job_order_id', '=', $job_order_id)
     ->get();
 
+   $countEnabledPackageManualData = DB::table('job_orders_package_manual_items')
+    ->where('status', '=', 1)
+    ->where('job_order_id', '=', $job_order_id)
+    ->get();
 
     $countEnabledLaborData = DB::table('job_orders_labors')
     ->where('status', '=', 1)
@@ -348,14 +399,17 @@ class InvoiceEdit extends Controller
     ->where('job_order_id', '=', $job_order_id)
     ->get();
 
+
+ 
     $countEnabledPackage = count($countEnabledPackageData);
+    $countEnabledPackageManual = count($countEnabledPackageManualData);
     $countEnabledLabor = count($countEnabledLaborData);
     $countEnabledPart = count($countEnabledPartData);
 
     if(!empty($_POST)) {
     return response()->json(['success'=> true, 'optionOneHtml' => $optionOneHtml]);
     } else {
-     return view('content.apps.app-invoice-edit', ['invoice_date' => $newInvoiceDate, 'expire_date' => $jobOrderInfo[0]->expire_date, 'modeOfPayment' => $modeOfPayment, 'specialNotes' => $specialNotes, 'optionStatus' => $optionStatus, 'packageTotalItem' => $keypckg, 'partTotalItem' => $keyprt, 'laborTotalItem' => $keyl, 'optionThreeHtml' => $optionThreeHtml, 'optionTwoHtml' => $optionTwoHtml, 'optionOneHtml' => $optionOneHtml, 'job_order_id' => $job_order_id, 'jobOrderInfo' => $jobOrderInfo, 'jobOrderPartServiceOption' => $jobOrderPartServiceOption, 'jobOrderLaborOption' => $jobOrderLaborOption, 'jobOrderPackageOption' => $jobOrderPackageOption, 'countEnabledPart' => $countEnabledPart, 'countEnabledPackage' => $countEnabledPackage, 'countEnabledLabor' => $countEnabledLabor ]);
+     return view('content.apps.app-invoice-edit', ['invoice_date' => $newInvoiceDate, 'expire_date' => $jobOrderInfo[0]->expire_date, 'modeOfPayment' => $modeOfPayment, 'specialNotes' => $specialNotes, 'optionStatus' => $optionStatus, 'packageTotalItem' => $keypckg, 'partTotalItem' => $keyprt, 'laborTotalItem' => $keyl, 'optionThreeHtml' => $optionThreeHtml, 'optionTwoHtml' => $optionTwoHtml, 'optionOneHtml' => $optionOneHtml, 'optionOneTwoHtml' => $optionOneTwoHtml, 'job_order_id' => $job_order_id, 'jobOrderInfo' => $jobOrderInfo, 'jobOrderPartServiceOption' => $jobOrderPartServiceOption, 'jobOrderLaborOption' => $jobOrderLaborOption, 'jobOrderPackageOption' => $jobOrderPackageOption, 'countEnabledPart' => $countEnabledPart, 'countEnabledPackage' => $countEnabledPackage,  'countEnabledPackageManual' => $countEnabledPackageManual, 'countEnabledLabor' => $countEnabledLabor ]);
     }
   }
 
@@ -421,9 +475,23 @@ class InvoiceEdit extends Controller
   }
 
 
+      public function deletePackageManualItem($item_id){
+    JobOrdersPackageManualItem::where("id", $item_id)->update(
+          [
+            "qty"     => 0,
+            "part_number"  =>  "",
+            "total_cost"  =>  0,
+            "unit_cost"  =>  0,
+            "price"  =>  0,
+            "status"  =>  2,
+         
+          ] );
+     return response()->json(['success'=> true, 'message' => 'Item deleted!']);
+
+  }
+
   
   public function saveJobOrderItem($job_order_id){
-
     
     $jobOrderInfo = DB::table('job_orders')
     ->join('cars', 'cars.id', '=', 'job_orders.car_id')
@@ -431,6 +499,7 @@ class InvoiceEdit extends Controller
     ->where('job_orders.id', '=', $job_order_id)
     ->get();
    
+    // print_r($_POST);
     if($_POST['status'] == 1) {
       $status_display = "estimate";
     } else if ($_POST['status'] == 2) {
@@ -439,13 +508,84 @@ class InvoiceEdit extends Controller
       $status_display = "receipt";
     } else {
       $status_display = $_POST['status-text'];
+    }
 
+    // check stock
+    foreach($_POST as $key => $value) {
+    $arrayPart = array();
+
+    if($key== 'group-a') {
+
+      $stock_status = true;
+      $status_pak = array();
+      $getPackageOption = DB::table('job_orders_packages')
+        ->where('job_order_id', '=', $value[0]['package-option'])
+        ->get();
+
+      foreach($getPackageOption as $pa) {
+            $getpackagesSub = DB::table('package_sub_items')
+          ->where('package_id', '=', $pa->package_id)
+          ->where('status', '=', 1)
+          ->get();
+
+
+      foreach($getpackagesSub as $subp) {
+        $arrayPart[] = array(
+          'id' => $subp->part_id,
+          'qty' => $subp->package_qty,
+        );
+      }
+
+      foreach($arrayPart as $var) {
+          $getInventory = DB::table('job_orders_part_service_options')
+        ->where('id', '=', $var['id'])
+        ->get();
+
+        if($getInventory[0]->stock > $var['qty'] || $getInventory[0]->stock == $var['qty']) {
+          $stock_status = true;
+          $message = 'Stock available';
+        } 
+
+        if($var['qty'] > $getInventory[0]->stock) {
+          $message = 'Stock conflict on package! Please check stocks available.';
+          $stock_status = false;
+          return response()->json(['success'=> $stock_status, 'message' => $message, 'qty' => $var['qty'], 'package_value' => $getInventory[0]->stock, 'stock' => $getInventory[0]->stock ]);
+
+        }
+      }
+
+      }
+      // print_r($arrayPart);
     }
 
 
+ 
+    if($key== 'group-a2') {
 
-    // check stock
-  foreach($_POST as $key => $value) {
+    foreach($value as $packageManual){
+    
+          //  $pm = new JobOrdersPackageManualItem();
+          //  $pm->part_number = $packageManual['package-manual-part-number'];
+          //  $pm->price = $packageManual['package-manual-price'];
+          //  $pm->job_order_id = $packageManual['hidden-job-order-id'];
+          //  $pm->save();
+               JobOrdersPackageManualItem::where("id", $packageManual['package-manual-id'])->update(
+                [
+
+                  "qty"   => $packageManual['package-qty'],
+                  "total_cost"   => $packageManual['package-manual-total-cost'],
+                  "unit_cost"   => $packageManual['package-manual-cost'],
+                  "part_number"   => $packageManual['package-manual-part-number'],
+                  "price"   => $packageManual['package-manual-price'],
+                  // "price"   => $packageManual['package-manual-price'],
+                ]
+            );
+
+
+      }
+    }
+
+
     if($key== 'group-c') {
       foreach($value as $part){
           if(isset($part['part-text']) && $part['part-text'] > "") {
@@ -578,6 +718,8 @@ class InvoiceEdit extends Controller
             
         }
       }
+
+
       if($key== 'group-c') {
         foreach($value as $part){
            if(isset($part['part-text']) && $part['part-text'] > "") {
@@ -602,6 +744,58 @@ class InvoiceEdit extends Controller
 
 
           if($check == 1) {
+
+            // sub package deduct quantity
+             $stock_status = true;
+            $status_pak = array();
+            $getPackageOption = DB::table('job_orders_packages')
+              ->where('job_order_id', '=', $job_order_id)
+              ->get();
+
+            foreach($getPackageOption as $pa) {
+                  $getpackagesSub = DB::table('package_sub_items')
+                ->where('package_id', '=', $pa->package_id)
+                ->where('status', '=', 1)
+                ->get();
+
+
+            foreach($getpackagesSub as $subp) {
+              $arrayPart[] = array(
+                'id' => $subp->part_id,
+                'qty' => $subp->package_qty,
+              );
+            }
+
+          
+            foreach($arrayPart as $var) {
+              $getInventory = DB::table('job_orders_part_service_options')
+              ->where('id', '=', $var['id'])
+              ->get();
+
+
+              if($var['qty'] > $getInventory[0]->stock) {
+                $message = 'Stock conflict on package! Please check stocks available.';
+                $stock_status = false;
+                return response()->json(['success'=> false, 'message' => $message, 'qty' => $var['qty'], 'package_value' => $getInventory[0]->stock, 'stock' => $getInventory[0]->stock ]);
+
+              }
+
+                if($getInventory[0]->stock > $var['qty'] || $getInventory[0]->stock == $var['qty']) {
+                $stock_status = true;
+                $message = 'Stock available';
+
+               $stock_deductPackage = $getInventory[0]->stock - $var['qty'];
+                  JobOrdersPartServiceOption::where("id", $var['id'])->update(
+                  ["stock"   => $stock_deductPackage]
+                  );
+              } 
+            }
+          }
+
+
+
+            ////////////////////////////
+
             $getPartServiceOption = DB::table('job_orders_part_service_options')
             ->where('id', '=', $part['part-option'])
             ->get();
@@ -613,7 +807,7 @@ class InvoiceEdit extends Controller
             } else {
                return response()->json(['success'=> false, 'message' => 'Invalid stock!']);
             }
-          
+
           }
        
 
@@ -800,6 +994,28 @@ class InvoiceEdit extends Controller
       
     }
 
+     $jobOrderPackageManualInfo = DB::table('job_orders_package_manual_items')
+    ->where('job_order_id', '=', $job_order_id)
+    ->get();
+
+     foreach($jobOrderPackageManualInfo as $packageMa) {
+        $pam = new JobOrdersPackageManualItem();
+        $pam->job_order_id = $new_job_order_id;
+        $pam->item_number = $packageMa->item_number;
+        $pam->part_number = $packageMa->part_number;
+        $pam->total_cost = $packageMa->total_cost;
+        $pam->unit_cost = $packageMa->unit_cost;
+        $pam->qty = $packageMa->qty;
+        $pam->price = $packageMa->price;
+          if($packageMa->status == 1) {
+            $pam->status = 1;
+          } else {
+            $pam->status = 2;
+          }
+        $pam->save();
+      
+    }
+
     $jobOrderLaborInfo = DB::table('job_orders_labors')
     ->where('job_order_id', '=', $job_order_id)
     ->get();
@@ -890,13 +1106,16 @@ class InvoiceEdit extends Controller
       JobOrdersLabor::where("job_order_id", $job_order_id)->where("item_number", $itemNum)->update([
         "status" => 1,
       ]);
-    } else {
-    
+     } else if ($type == 'part') {
+     
       JobOrdersPartService::where("job_order_id", $job_order_id)->where("item_number", $itemNum)->update([
         "status" => 1,
       ]);
-           echo $itemNum;
-      echo $job_order_id;
+  
+    } else {
+       JobOrdersPackageManualItem::where("job_order_id", $job_order_id)->where("item_number", $itemNum)->update([
+        "status" => 1,
+      ]);
     }
 
   }
@@ -928,4 +1147,51 @@ class InvoiceEdit extends Controller
 
 
   
+  public function checkInventoryPackage($package_id) {
+ 
+    $getSubPackage = DB::table('package_sub_items')
+    ->where('package_id', '=', $package_id)
+    ->where('status', '=', 1)
+    ->get();
+
+    $stock_status = true;
+    $status = array();
+    foreach($getSubPackage as $sub) {
+      
+      $getInventory = DB::table('job_orders_part_service_options')
+        ->where('id', '=', $sub->part_id)
+        ->get();
+
+
+        if($getInventory[0]->stock > $sub->package_qty) {
+          $status[] = true;
+          $message = 'Stock available';
+
+        } 
+
+        if($sub->package_qty > $getInventory[0]->stock) {
+
+          $message = 'Stock conflict! Please check stocks available.';
+          $status[] = false;
+          $stock_status = false;
+        }
+
+    }
+
+
+
+    if($stock_status == false) {
+     $message = 'Stock conflict! Please check stocks available.';
+      $final_status = false;
+    } else {
+      $final_status = true;
+      $message = 'Stock available';
+    }
+
+//////////////////////////////////////////////////
+
+     return response()->json(['success'=> $final_status, 'message' => $message ]);
+
+
+  }
 }

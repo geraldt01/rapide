@@ -47,10 +47,13 @@
         </div>
         <form id="formPackageSubItemOption" class="row g-4" onsubmit="return false">
           <input type="hidden" name="hidden_package_id" id="hidden-sub-package-id" />
+          <input type="hidden" name="hidden_package_part_id" id="hidden-package-part-id" />
+          
+           <input type="hidden" id="package_details" name="package_details" class="form-control" placeholder="Item Details" />
           <div class="col-12 col-md-12">
-            <div class="form-floating form-floating-outline">
-              <input type="text" id="package_details" name="package_details" class="form-control" placeholder="Item Details" />
-              <label for="modaladdPlateNumber">Item Details</label>
+            <div class=" row w-100  p-2" id="item-list-package-"   data-repeater-item>
+              <select id="display-package-option-3" name="package-option" class="select2" data-allow-clear="true"  style="width: 0px;" onchange="populatePartDetails()">
+              </select>
             </div>
           </div>
            

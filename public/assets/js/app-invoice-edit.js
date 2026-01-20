@@ -21,6 +21,10 @@ function handleScroll() {
   const scrollPercent = ((scrollTop + viewportHeight) / totalHeight) * 100;
 
 
+ $(".btn-floating-undo").removeClass("d-none"); 
+ $(".btn-floating-redo").removeClass("d-none"); 
+
+
   if (scrollPercent >= 50 && !hasReached75) {
     console.log('User reached 75% scroll depth');
     $(".invoice-actions").removeClass("fixed-section");
@@ -224,55 +228,27 @@ calculateAll();
   preview.href = "/app/job-order/preview/"+job_order_id;
 
 
-  function addItem(type, itemNum) {
+  function addItem(type, itemNum) { 
     setTimeout(function(){ 
-      let total_item = document.getElementById('hidden-'+type+'-total-item').value;
-      let plus = 1;
-      let total = parseFloat(10)+plus;
-      var job_order_id = document.getElementById("hidden-job-order-id").value;
+        let total_item = document.getElementById('hidden-'+type+'-total-item').value;
+        let plus = 1;
+        let total = parseFloat(10)+plus;
+        var job_order_id = document.getElementById("hidden-job-order-id").value;
+        let itemNum = document.getElementById('hidden-'+type+'-total-item').value;
 
-      
-      let itemNum = document.getElementById('hidden-'+type+'-total-item').value;
       let numPart = parseFloat(itemNum) + 1;
 
-
-
       if(type == 'package') {
-          // document.getElementsByName('group-a['+total_item+']['+type+']')[0].id =  type+'-'+total;
-          // document.getElementsByName('group-a['+total_item+']['+type+'-price]')[0].id =  type+'-price-'+total;
-          // document.getElementsByName('group-a['+total_item+']['+type+']')[0].setAttribute("onchange", "calculatePackage("+total+")");
-          // document.getElementsByName('group-a['+total_item+']['+type+'-price]')[0].setAttribute("onchange", "calculatePackage("+total+")");
+     
       } else if (type == 'labor') {
-          // document.getElementsByName('group-b['+total_item+']['+type+']')[0].id =  type+'-option-'+total;
-          // document.getElementsByName('group-b['+total_item+']['+type+'-qty]')[0].id =  type+'-qty-'+total;
-          // document.getElementsByName('group-b['+total_item+']['+type+'-price]')[0].id =  type+'-price-'+total;
-          // // document.getElementsByName('group-b['+total_item+']['+type+'-number]')[0].id =  type+'-number-'+total;
-          // document.getElementsByName('group-b['+total_item+']['+type+']')[0].setAttribute("onchange", "calculateLabor("+total+")");
-          // document.getElementsByName('group-b['+total_item+']['+type+'-qty]')[0].setAttribute("onchange", "calculateLabor("+total+")");
-          // document.getElementsByName('group-b['+total_item+']['+type+'-price]')[0].setAttribute("onchange", "calculateLabor("+total+")");
-          // document.getElementsByName('group-b['+total_item+']['+type+'-amount]')[0].id =  'labor-amount-'+total;
-
-          // document.getElementsByName('group-b['+total_item+']['+type+'-number]')[0].value =  total;
-
           setTimeout(function(){ 
             document.getElementById('labor-qty-'+total).value = 1;
           }, 800);
 
-
       } else {
-          // document.getElementsByName('group-c['+total_item+']['+type+']')[0].id =  type+'-option-11';
-          // document.getElementsByName('group-c['+total_item+']['+type+'-qty]')[0].id =  type+'-qty-'+total;
-          // document.getElementsByName('group-c['+total_item+']['+type+'-price]')[0].id =  type+'-price-'+total;
-          // document.getElementsByName('group-c['+total_item+']['+type+']')[0].setAttribute("onchange", "calculatePart("+total+")");
-          // document.getElementsByName('group-c['+total_item+']['+type+'-qty]')[0].setAttribute("onchange", "calculatePart("+total+")");
-          // document.getElementsByName('group-c['+total_item+']['+type+'-price]')[0].setAttribute("onchange", "calculatePart("+total+")");
-          // document.getElementsByName('group-c['+total_item+']['+type+'-amount]')[0].id =  'part-amount-'+total;
-
           setTimeout(function(){ 
             document.getElementById('part-qty-'+total).value = 1;
           }, 800);
-
-
       }
       $.ajax({
       type: "get",
@@ -288,10 +264,13 @@ calculateAll();
         },
       });
 
+      // if(type !== 'packagemanual') {
+      //   $('#item-list-'+type+'-'+numPart).removeClass("disable-"+type+"-item");
+      // }
+  
+        $('#item-list-'+type+'-'+numPart).removeClass("disable-"+type+"-item");
 
-      $('#item-list-'+type+'-'+numPart).removeClass("disable-"+type+"-item");
-
-      document.getElementById('hidden-'+type+'-total-item').value = numPart;
+        document.getElementById('hidden-'+type+'-total-item').value = numPart;
     }, 1000);
   }
 
@@ -299,6 +278,8 @@ calculateAll();
     var item_id = id;
     if(type == 0) {
       deleteItemNow(id, 0, delete_item_id);
+    }else if(type == 0.1) {
+      deleteItemNow(id, 0.1, delete_item_id);
     }else if(type == 1) {
       deleteItemNow(id, 1, delete_item_id);
     } else {
@@ -332,7 +313,34 @@ calculateAll();
 
       calculateAll();
 
-    }else if(type == 1) {
+    }else if(type == 0.1) {
+      $.ajax({
+      type: "post",
+      url: '/app/delete-package-manual-item/'+ delete_item_id,
+        data:  $("#form-job-order").serialize(),
+        success: function (result) {
+            $(".loader").removeClass("d-none");
+              document.getElementById('package-manual-cost'+id).value = "";
+              document.getElementById('package-qty'+id).value = "";
+              document.getElementById('package-manual-part-number'+id).value = "";
+              document.getElementById('package-manual-price'+id).value = 0;
+            $(".alert-success p").html(result.message);
+            $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              window.location.reload();
+              $(".alert-success").addClass("d-none");
+          }, 3000);
+        },
+        error: function (result, textStatus, errorThrown) {
+          
+        },
+      });
+
+      calculateAll();
+
+    }
+    
+    else if(type == 1) {
       document.getElementById('labor-text-'+id).value = "";
       document.getElementById('labor-cost-'+id).value = 0;
       document.getElementById('labor-price-'+id).value = 0;
@@ -453,25 +461,66 @@ calculateAll();
   }
 
   function calculatePackage(option_id) {
-    // var package_id = document.getElementById('package-'+option_id).value ;
-
   const inputElements  =  document.getElementsByName('group-a['+option_id+'][package-option]');
   var package_id = inputElements[0].value;
+    $.ajax({
+      type: "get",
+      url: '/app/check-inventory-package/'+ package_id,
+        data:  {qty: 1},
+        success: function (result) {
+              if(result.success == false) {
 
-     $.ajax({
-        type: "get",
-        url: '/app/get-job-order-item-package-price/'+ package_id,
-          data:  $("").serialize(),
-          success: function (result) {
-                  const amount = result.price * 1;
-                    document.getElementById('package-price-'+option_id).value = amount;
-                  calculateAll();
+                $(".alert-danger p").html(result.message);
+                $(".alert-danger").removeClass("d-none");
+                setTimeout(function(){ 
+                  $(".alert-danger").addClass("d-none");
+                }, 3000);
+                return false;
+              } else {
+                $.ajax({
+                    type: "get",
+                    url: '/app/get-job-order-item-package-price/'+ package_id,
+                      data:  $("").serialize(),
+                      success: function (result) {
+                              const amount = result.price * 1;
+                                document.getElementById('package-price-'+option_id).value = amount;
+                              calculateAll();
+                      },
+                    error: function (result, textStatus, errorThrown) {
+                        console.log(result.success);
+                    },
+                  });
+                 
+              }
           },
-        error: function (result, textStatus, errorThrown) {
-            console.log(result.success);
-        },
-      });
+          error: function (result, textStatus, errorThrown) {
+          },
+        });
+
   }
+
+
+
+   function calculatePackageManual(option_id) {
+
+    const options = {
+      minimumFractionDigits: 2, // Ensures at least two decimal places
+      maximumFractionDigits: 2, // Limits to a maximum of two decimal places
+      style: 'decimal'          // Specifies decimal formatting
+    };
+    const original_option_id = option_id;
+
+       let package_manual_qty = document.getElementById('package-qty'+original_option_id).value ;
+      let package_manual_cost = document.getElementById('package-manual-cost'+original_option_id).value ;
+
+      package_manual_cost = package_manual_cost.replace(/[^0-9]/g, '');
+      package_manual_qty = package_manual_qty.replace(/[^0-9]/g, '');
+  
+      let amount = package_manual_qty * package_manual_cost;
+      amount = amount.toLocaleString(undefined, options);
+      document.getElementById('package-manual-total-cost'+original_option_id).value = amount;
+  }
+
 
 
   function calculatePart(option_id) {
@@ -524,14 +573,8 @@ calculateAll();
           },
         });
     }
-
-
-
-   
-
-   
-
   }
+
   function calculateLabor(option_id) {
 
   const options = {
@@ -812,7 +855,7 @@ const first = element -1;
   }
  $("select").change(function() {
     $(".bt-save-changes").removeClass("disabled");
-    sessionStorage.setItem("updateTriggered", "true");
+    sessionStorage.setItem("updateTriggered", "true"); 
  });
 
   $("textarea").keyup(function() {
@@ -837,6 +880,11 @@ const first = element -1;
       calculateLabor(option_id);
     }
     
+     if (typeof (this.className === 'form-control package-manual-qty' || this.className === 'form-control package-manual-price')) {
+      calculatePackageManual(option_id);
+
+    }
+
     if (typeof (this.className === 'form-control invoice-item-qty part' || this.className === 'form-control invoice-item-price part')) {
       calculatePart(option_id);
     }else {
@@ -930,6 +978,7 @@ const first = element -1;
     $(".second-payment").removeClass("d-none");
   }
   function calculateAll(id) {
+    $(".bt-save-changes").removeClass("disabled");
     
     // $(".invoice-actions").addClass("fixed-section");
 
@@ -974,6 +1023,17 @@ const first = element -1;
     document.getElementById('hidden-package-sub-totals').value = package_sub_total;
 
 
+    // Package Manual
+
+  //  if(id) {
+  //      const package_manual_qty = document.getElementById('package-qty'+id).value ;
+  //     const package_manual_cost = document.getElementById('package-manual-cost'+id).value ;
+  //     const package_manual_total_cost = package_manual_qty * package_manual_cost;
+  //     document.getElementById('package-manual-total-cost'+id).value =  truncateToTwoDecimals(package_manual_total_cost); 
+  // }
+
+
+ 
     
       //Labor
     const myElementLabor1 = document.getElementById('labor-amount-1');
@@ -1348,3 +1408,17 @@ const first = element -1;
       },
     });
   }
+
+
+
+  const undoBtn = document.getElementById("undoBtn");
+const redoBtn = document.getElementById("redoBtn");
+
+undoBtn.addEventListener("click", () => {
+    // Note: document.execCommand is deprecated, but widely used for this purpose
+    document.execCommand('undo', false, null);
+});
+
+redoBtn.addEventListener("click", () => {
+    document.execCommand('redo', false, null);
+});

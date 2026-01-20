@@ -22,9 +22,18 @@ class EcommerceSettingsPackage extends Controller
         ->orderBy('value','asc')
         ->get(); 
 
+        $jobOrderPackageOption = DB::table('job_orders_package_options')
+      ->where('status', '=', 1)
+      ->get();
+          
+    $optionOneHtml = array();
+
+    foreach($jobOrderPackageOption as $options) {
+      $optionOneHtml[] = '<option value="'.$options->id.'" >'.$options->value.'</option>';
+    }
 
         
-    return view('content.apps.app-settings-car-package-option', ['PackageData' => $PackageData]);
+    return view('content.apps.app-settings-car-package-option', ['PackageData' => $PackageData, 'optionOneHtml' => $optionOneHtml]);
   }
 
   public function getPackage($package_id)
@@ -35,9 +44,40 @@ class EcommerceSettingsPackage extends Controller
         ->where('id', '=', $package_id)
         ->get(); 
 
-      return response()->json(['success'=> true, 'PackageData' => $PackageData[0]]);
+
+        
+      $jobOrderPackageOption = DB::table('job_orders_part_service_options')
+      ->where('status', '=', 1)
+      ->get();
+          
+    $optionOneHtml = array();
+
+    $optionOneHtml[] = '<option value="">Select Parts</option>';
+    foreach($jobOrderPackageOption as $options) {
+      $optionOneHtml[] = '<option value="'.$options->id.'" >'.$options->value.'</option>';
+    }
+
+
+      return response()->json(['success'=> true, 'PackageData' => $PackageData[0], 'optionOneHtml' => $optionOneHtml]);
 
   }
+
+
+  
+   public function getPartDetails($part_id) {
+
+
+       $PartData = DB::table('job_orders_part_service_options')
+        ->where('status', '=', 1)
+        ->where('id', '=', $part_id)
+        ->get(); 
+
+      return response()->json(['success'=> true, 'id' => $PartData[0]->id, 'part_number' => $PartData[0]->part_number, 'package_unit_cost' => $PartData[0]->cost, 'package_details' => $PartData[0]->value, 
+      'package_unit_selling_price_with_labor' => $PartData[0]->price,
+    ]);
+
+   }
+
 
    public function getPackageSubItem($package_sub_item_id)
   {
@@ -47,7 +87,24 @@ class EcommerceSettingsPackage extends Controller
         ->where('id', '=', $package_sub_item_id)
         ->get(); 
 
-      return response()->json(['success'=> true, 'PackageSubData' => $PackageSubData[0]]);
+
+        $selected = $PackageSubData[0]->part_id;
+
+
+        $jobOrderPackageOption = DB::table('job_orders_part_service_options')
+      ->where('status', '=', 1)
+      ->get();
+                
+
+      $optionOneHtml = array();
+
+      foreach($jobOrderPackageOption as $options) {
+        $optionOneHtml[] = '<option value="'.$options->id.'" '.(($selected == $options->id) ? "selected" : "").'>'.$options->value.'</option>';
+      }
+
+
+
+      return response()->json(['success'=> true, 'PackageSubData' => $PackageSubData[0], 'optionOneHtml' => $optionOneHtml]);
 
   }
 
@@ -197,12 +254,17 @@ class EcommerceSettingsPackage extends Controller
         }
       }
 
+
+
+
+
       return response()->json( ['packageHtml' => $packageHtml]);
     }
 
 
 
      public function savePackageSubItem($package_id) {
+
         $c = new PackageSubItem();
         $c->package_id = ((isset($_GET['hidden_package_id'])) ? $_GET['hidden_package_id'] : "");
         $c->package_qty = ((isset($_GET['package_qty'])) ? $_GET['package_qty'] : "");
@@ -214,6 +276,7 @@ class EcommerceSettingsPackage extends Controller
         $c->package_total_cost = ((isset($_GET['package_total_cost'])) ? $_GET['package_total_cost'] : "");
         $c->package_unit_selling_price_with_labor = ((isset($_GET['package_unit_selling_price_with_labor'])) ? $_GET['package_unit_selling_price_with_labor'] : "");
         $c->package_sell_price = ((isset($_GET['package_sell_price'])) ? $_GET['package_sell_price'] : "");
+        $c->part_id = ((isset($_GET['hidden_package_part_id'])) ? $_GET['hidden_package_part_id'] : "");
         $c->save();
     }
 
@@ -222,6 +285,7 @@ class EcommerceSettingsPackage extends Controller
        PackageSubItem::where("id", $package_sub_item_id)->update(
           [
             "package_qty" => ((isset($_GET['package_qty'])) ? $_GET['package_qty'] : "1"),
+            "part_id" => ((isset($_GET['hidden_package_part_id'])) ? $_GET['hidden_package_part_id'] : ""),
             "package_details" => ((isset($_GET['package_details'])) ? $_GET['package_details'] : NULL),
             "package_part_number" => ((isset($_GET['package_part_number'])) ? $_GET['package_part_number'] : NULL),
             "supplier" => ((isset($_GET['supplier'])) ? $_GET['supplier'] : ""),

@@ -63,9 +63,18 @@ $navbarDetached = ($navbarDetached ?? '');
         @endif
         <!-- Language -->
         <li class="nav-item dropdown-language dropdown me-1 me-xl-0">
-          <a class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-            <i class='mdi mdi-translate mdi-24px'></i>
+          <a class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" >
+            <i id="undoBtn" class='btn-floating-undo mdi mdi-undo mdi-24px d-none'></i>
+              <!-- <button id="undoBtn" class="btn-floating-undo">Undo</button> -->
           </a>
+
+           <a class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" >
+            <i id="redoBtn" class='btn-floating-redo mdi mdi-redo mdi-24px d-none'></i>
+              <!-- <button id="undoBtn" class="btn-floating-undo">Undo</button> -->
+               
+          </a>
+
+
           <ul class="dropdown-menu dropdown-menu-end">
             <li>
               <a class="dropdown-item {{ app()->getLocale() === 'en' ? 'active' : '' }}" href="{{url('lang/en')}}" data-language="en" data-text-direction="ltr">
@@ -219,7 +228,7 @@ $navbarDetached = ($navbarDetached ?? '');
                   <div class="d-flex gap-2">
                     <div class="flex-shrink-0">
                       <div class="avatar me-1">
-                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
+                        <img src="{{ asset('assets/img/avatars/12.png') }}" alt class="w-px-40 h-auto rounded-circle">
                       </div>
                     </div>
                     <div class="d-flex flex-column flex-grow-1 overflow-hidden w-px-200">
@@ -374,7 +383,8 @@ $navbarDetached = ($navbarDetached ?? '');
         <li class="nav-item navbar-dropdown dropdown-user dropdown">
           <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
             <div class="avatar avatar-online">
-              <img src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
+                <img src="{{ asset('assets/img/avatars/12.png') }}" alt class="w-px-40 h-auto rounded-circle">
+
             </div>
           </a>
           <ul class="dropdown-menu dropdown-menu-end">

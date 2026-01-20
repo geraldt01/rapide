@@ -17,6 +17,7 @@ $(function () {
       data:  $("").serialize(),
       success: function (result) {
           $("#tbl-package-body").html(result.packageHtml);
+          
         },
       error: function (result, textStatus, errorThrown) {
 
@@ -526,9 +527,33 @@ function savePartsAndServices(parts_and_services_id) {
 
 
    // Package
+function populatePartDetails() {
+   var part_id = document.getElementById('display-package-option-3').value;
+
+    $.ajax({
+    type: "get",
+    url: '/app/package/get/part-details/'+ part_id,
+      data:  $("").serialize(),
+        success: function (result) {
+
+          document.getElementById('package_part_number').value =  result.part_number;
+          document.getElementById('hidden-package-part-id').value =  result.id;
+          document.getElementById('package_details').value =  result.package_details;
+          document.getElementById('package_unit_cost').value =  result.package_unit_cost;
+          document.getElementById('package_unit_selling_price_with_labor').value =  result.package_unit_selling_price_with_labor;
+
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+
+}
 
 function addPackageSubItem(package_id) {
-  document.getElementById('hidden-sub-package-id').value = package_id;
+      document.getElementById('hidden-sub-package-id').value = package_id;
+      $("#display-package-option-3").value = 0;
+
     if(package_id) {
   $.ajax({
     type: "get",
@@ -536,8 +561,9 @@ function addPackageSubItem(package_id) {
       data:  $("#formPackageOption").serialize(),
         success: function (result) {
           $("#package-name").html(result.PackageData.value);
-        //   document.getElementById('modalPrice').value = result.PackageData.package_price;
-        // document.getElementById('btn-save-package').setAttribute('onclick', 'savePackage('+result.PackageData.id+')');
+          $("#display-package-option-3").html(result.optionOneHtml);
+          
+          console.log(result.optionOneHtml);
         },
       error: function (result, textStatus, errorThrown) {
           console.log(result.success);
@@ -606,13 +632,15 @@ function savePackageSubItem(package_sub_id) {
  
 }
 
-function editPackageSubItem(package_sub_id) {
+function editPackageSubItem(package_sub_id) { 
   if(package_sub_id) {
   $.ajax({
     type: "get",
     url: '/app/package/sub-item/get/'+ package_sub_id,
       data:  $("#formPackageOption").serialize(),
         success: function (result) {
+         $("#display-package-option-3").html(result.optionOneHtml);
+         console.log(result.optionOneHtml);
           $("#label-action-sub").html("Editing "+ result.PackageSubData.package_details);
           $("#package-name").addClass("d-none");
           document.getElementById('hidden-sub-package-id').value =  result.PackageSubData.id;

@@ -588,3 +588,24 @@ input.c-red, .c-red {
         width: 100% !important;
     }
 }
+.invoice-edit .invoice-preview-card .repeater-wrapper:not(:last-child) {
+      margin-bottom: 0 !important;
+}
+.btn-floating-redo {
+    /* background: #fce800;
+    height: 40px;
+    width: 60px;
+    padding: 10px;
+    position: fixed;
+    top: 78px; */
+
+}
+.btn-floating-undo {
+    /* background: #fce800;
+    height: 40px;
+    width: 60px;
+    padding: 10px;
+    position: fixed;
+    top: 198px; */
+
+}

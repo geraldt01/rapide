@@ -16,6 +16,9 @@ $containerFooter = ($configData['contentLayout'] === 'compact') ? 'container-xxl
           </a>
        </div>  
 
+
+
+
       <div class="d-none d-lg-inline-block">
         <a href="{{ config('variables.licenseUrl') ? config('variables.licenseUrl') : '#' }}" class="footer-link me-4" target="_blank">License TEST</a>
         <a href="{{ config('variables.moreThemes') ? config('variables.moreThemes') : '#' }}" target="_blank" class="footer-link me-4">More Themes</a>
