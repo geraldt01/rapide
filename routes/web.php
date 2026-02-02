@@ -247,6 +247,9 @@ Route::post('/app/delete-labor-item/{item_id}', [InvoiceEdit::class, 'deleteLabo
 Route::post('/app/delete-package-item/{item_id}', [InvoiceEdit::class, 'deletePackageItem'])->middleware('auth');
 Route::post('/app/delete-package-manual-item/{item_id}', [InvoiceEdit::class, 'deletePackageManualItem'])->middleware('auth');
 
+// Route::get('/app/select-package-sub/{package_id}', [InvoiceEdit::class, 'selectPackageSub'])->middleware('auth');
+
+
 
 Route::get('/app/get-job-order-item-price/{job_order_id}', [InvoiceEdit::class, 'getJobOrderItemprice'])->middleware('auth');
 Route::get('/app/get-job-order-item-package-price/{job_order_id}', [InvoiceEdit::class, 'getJobOrderItemPackagePrice'])->middleware('auth');

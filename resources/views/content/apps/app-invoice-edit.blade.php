@@ -225,37 +225,44 @@ input.c-red, .c-red {
               <div class=" rounded position-relative pe-0 color-white" id="package-manual-item-section">
 
               <div class="row invoice-table-labor" style="background: #f7f7f7;padding-top:10px;">
-                  <div class="col-md-2 mumber col-12 mb-md-0color-black">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong></strong></h6>
+                  <div class="col-md-3 mumber col-12 mb-md-0color-black">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Item</strong></h6>
                   </div>
              
                    <div class="col-md-2 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>Unit Cost</strong></h6>
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Part Number</strong></h6>
                   </div>   
-                    <div class="col-md-2 col-12 mb-md-0 mb-3">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>Total Cost</strong></h6>
+                    <div class="col-md-1 col-12 mb-md-0 mb-3">
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Qty</strong></h6>
                   </div>                  
-                  <div class="col-md-2 col-12 mb-md-0 pl-0 text-left">
-                      <h6 class="mb-2 repeater-title fw-medium"><strong>Qty</strong></h6>
+                  <div class="col-md-1 col-12 mb-md-0 pl-0 text-left">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>Unit Cost</strong></h6>
                   </div>
-                  <div class="col-md-2 col-12 mb-md-0 p-0 text-left">
-                      <h6 class="mb-2 repeater-title fw-medium"><strong>Part Number</strong></h6>
+                  <div class="col-md-1 col-12 mb-md-0 p-0 text-left">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>Total Cost</strong></h6>
+                  </div>
+                    <div class="col-md-1 col-12 mb-md-0 p-0 text-left">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>SRP & Labor</strong></h6>
+                  </div>
+                    <div class="col-md-1 col-12 mb-md-0 p-0 text-left">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>Total SRP </strong></h6>
                   </div>
                   <div class="col-md-2 col-12 mb-md-0 pl-0 text-left">
-                    <h6 class="mb-2 repeater-title fw-medium"><strong>Amount</strong></h6>
+                    <h6 class="mb-2 repeater-title fw-medium"><strong>Total Invoice<br> Amount Package</strong></h6>
                   </div>
                 
                 </div>
-
-                @if($optionOneTwoHtml == false)
-                  @for ($pa = 1; $pa < 2; $pa++)
-                  
-                  @endfor
-                @else 
-                  @foreach($optionOneTwoHtml as $ka => $da)
-                    {!!$da!!}
-                  @endforeach
-                @endif
+                <div class="row" id="optionOneTwoHtml">
+                    @if($optionOneTwoHtml == false)
+                      @for ($pa = 1; $pa < 2; $pa++)
+                      
+                      @endfor
+                    @else 
+                      @foreach($optionOneTwoHtml as $ka => $da)
+                        {!!$da!!}
+                      @endforeach
+                    @endif
+                </div>
                 
               </div>
              

@@ -460,13 +460,38 @@ calculateAll();
     });
   }
 
+
+  
+  // function selectSub() {
+  //   const inputElementsPackage  =  document.getElementsByName('group-a[0][package-option]');
+  //   var package_id = inputElementsPackage[0].value;
+
+  //      $.ajax({
+  //       type: "get",
+  //       url: '/app/select-package-sub/'+ package_id,
+  //         data:  $("").serialize(),
+  //         success: function (result) {
+  //                 const amount = result.price * 1;
+  //                   document.getElementById('package-price-'+option_id).value = amount;
+  //                 calculateAll();
+  //         },
+  //       error: function (result, textStatus, errorThrown) {
+  //           console.log(result.success);
+  //       },
+  //     });
+              
+  // }
+  
   function calculatePackage(option_id) {
   const inputElements  =  document.getElementsByName('group-a['+option_id+'][package-option]');
   var package_id = inputElements[0].value;
+
+  var job_order_id = document.getElementById('hidden-job-order-id').value;
+  
     $.ajax({
       type: "get",
       url: '/app/check-inventory-package/'+ package_id,
-        data:  {qty: 1},
+        data:  {qty: 1, job_order_id: job_order_id},
         success: function (result) {
               if(result.success == false) {
 
@@ -477,19 +502,27 @@ calculateAll();
                 }, 3000);
                 return false;
               } else {
-                $.ajax({
-                    type: "get",
-                    url: '/app/get-job-order-item-package-price/'+ package_id,
-                      data:  $("").serialize(),
-                      success: function (result) {
-                              const amount = result.price * 1;
-                                document.getElementById('package-price-'+option_id).value = amount;
-                              calculateAll();
-                      },
-                    error: function (result, textStatus, errorThrown) {
-                        console.log(result.success);
-                    },
-                  });
+                $("#optionOneTwoHtml").html(result.optionOneTwoHtml);
+
+                
+                $(".loader").removeClass("d-none");
+                setTimeout(function(){ 
+                window.location.replace("/app/job-order/"+job_order_id);
+                }, 1000);
+
+                // $.ajax({
+                //     type: "get",
+                //     url: '/app/get-job-order-item-package-price/'+ package_id,
+                //       data:  $("").serialize(),
+                //       success: function (result) {
+                //               const amount = result.price * 1;
+                //                 document.getElementById('package-price-'+option_id).value = amount;
+                //               calculateAll();
+                //       },
+                //     error: function (result, textStatus, errorThrown) {
+                //         console.log(result.success);
+                //     },
+                //   });
                  
               }
           },
@@ -991,8 +1024,7 @@ const first = element -1;
 
     const myElement1 = document.getElementById('package-price-0');
     if (myElement1) {
-        var p_amount1 = myElement1.value.replace(/,/g, '');
-        
+        var p_amount1 = 0;
     } else {
         var p_amount1  = 0;
     }
@@ -1019,9 +1051,57 @@ const first = element -1;
     if(p_amount1 > 0) {
       // document.getElementById('package-note2-0').value = "";
     }
-    const package_sub_total = parseFloat(p_amount1)+parseFloat(p_amount2)+parseFloat(p_amount3)+parseFloat(p_amount4);
-    document.getElementById('hidden-package-sub-totals').value = package_sub_total;
 
+    var p_myElementPackageManual1 = 0;
+    var p_myElementPackageManual2 = 0;
+    var p_myElementPackageManual3 = 0;
+    var p_myElementPackageManual4 = 0;
+    var p_myElementPackageManual5 = 0;
+    var p_myElementPackageManual6 = 0;
+    var p_myElementPackageManual7 = 0;
+
+    const myElementPackageManual1 = document.getElementById('package-manual-price0');
+    if (myElementPackageManual1) {
+        var p_myElementPackageManual1 = myElementPackageManual1.value.replace(/,/g, '');
+    }
+
+    const myElementPackageManual2 = document.getElementById('package-manual-price1');
+    if (myElementPackageManual2) {
+        var p_myElementPackageManual2 = myElementPackageManual2.value.replace(/,/g, '');
+    } 
+
+    const myElementPackageManual3 = document.getElementById('package-manual-price2');
+    if (myElementPackageManual3) {
+        var p_myElementPackageManual3 = myElementPackageManual3.value.replace(/,/g, '');
+    } 
+    const myElementPackageManual4 = document.getElementById('package-manual-price3');
+    if (myElementPackageManual4) {
+        var p_myElementPackageManual4 = myElementPackageManual4.value.replace(/,/g, '');
+    } 
+
+    const myElementPackageManual5 = document.getElementById('package-manual-price4');
+    if (myElementPackageManual5) {
+        var p_myElementPackageManual5 = myElementPackageManual5.value.replace(/,/g, '');
+    }
+
+    const myElementPackageManual6 = document.getElementById('package-manual-price5');
+    if (myElementPackageManual6) {
+        var p_myElementPackageManual6 = myElementPackageManual6.value.replace(/,/g, '');
+    }
+
+    const myElementPackageManual7 = document.getElementById('package-manual-price6');
+    if (myElementPackageManual7) {
+        var p_myElementPackageManual7 = myElementPackageManual7.value.replace(/,/g, '');
+    } 
+
+
+
+   
+
+    // const package_sub_total = parseFloat(p_amount1)+parseFloat(p_amount2)+parseFloat(p_amount3)+parseFloat(p_amount4);
+
+    const package_sub_total = parseFloat(p_myElementPackageManual1)+parseFloat(p_myElementPackageManual2)+parseFloat(p_myElementPackageManual3)+parseFloat(p_myElementPackageManual4)+parseFloat(p_myElementPackageManual5)+parseFloat(p_myElementPackageManual6)+parseFloat(p_myElementPackageManual7);
+    document.getElementById('hidden-package-sub-totals').value = package_sub_total;
 
     // Package Manual
 
