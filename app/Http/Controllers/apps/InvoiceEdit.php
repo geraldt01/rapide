@@ -574,6 +574,7 @@ class InvoiceEdit extends Controller
 
 
  
+   
     if($key== 'group-a2') {
 
     foreach($value as $packageManual){
@@ -585,10 +586,13 @@ class InvoiceEdit extends Controller
           //  $pm->save();
       
           if(isset($packageManual['package-sub-option'])) {
+
+            $details = @JobOrdersPartServiceOption::find($packageManual['package-sub-option'])["value"];
                JobOrdersPackageManualItem::where("id", $packageManual['package-manual-id'])->update(
                 [
                   "part_id"   => (($packageManual['package-sub-option'] > 0) ? $packageManual['package-sub-option'] : NULL),
                   "qty"   => $packageManual['package-qty'],
+                   "details" => ((isset($details)) ? $details : NULL), 
                   "total_cost"   => $packageManual['package-manual-total-cost'],
                   "unit_cost"   => $packageManual['package-manual-cost'],
                   "part_number"   => $packageManual['package-manual-part-number'],
@@ -1024,6 +1028,7 @@ class InvoiceEdit extends Controller
         $pam->job_order_id = $new_job_order_id;
         $pam->part_id = $packageMa->part_id;
         $pam->item_number = $packageMa->item_number;
+        $pam->details = $packageMa->details;
         $pam->part_number = $packageMa->part_number;
         $pam->total_cost = $packageMa->total_cost;
         $pam->unit_cost = $packageMa->unit_cost;
@@ -1218,6 +1223,7 @@ class InvoiceEdit extends Controller
     }
       $optionOneTwoHtml = array();
 
+      $getSubPackageArray = array();
 
 
     if($stock_status == false) {
@@ -1227,7 +1233,6 @@ class InvoiceEdit extends Controller
       $final_status = true;
       $message = 'Stock available';
 
-      $getSubPackageArray = array();
     $keypckgm = 0;
 
     if($final_status == true) {
@@ -1253,6 +1258,7 @@ class InvoiceEdit extends Controller
         JobOrdersPackageManualItem::where("job_order_id", $job_order_id)->where("item_number", $keypckgm)->update([
           "status" => 1,
             "part_id"=> $selectedm->part_id,
+            "details"=> $selectedm->package_details,
             "qty"=> $selectedm->package_qty,
             "part_number"=> $selectedm->package_part_number,
             "unit_cost" => $selectedm->package_unit_cost,

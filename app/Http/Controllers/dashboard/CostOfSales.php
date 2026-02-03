@@ -75,7 +75,6 @@ foreach($data as $key => $final) {
   $pacakgeManualData = DB::table('job_orders_package_manual_items')
   ->where('job_order_id', $final[0]->job_order_id)
   ->where('status', 1)
-  ->where('qty','>', 1)
   ->get();
 
 
@@ -91,7 +90,7 @@ foreach($data as $key => $final) {
   ->where('status', 1)
   ->get();
 
-  
+ 
 
   $var[$key][] = array(
   'data' => $final[0],
@@ -135,18 +134,19 @@ foreach($var as $ctr => $d) {
 
 
         // PACKAGE
+     
 
        if(isset($pmdata)) {
   
           $cosHtml[] ="<tr class='".(($ctr == 0) ? 'tbl-gray-bg' : '')."'>
-          <td>".$ctr.(($ctr == 0) ? $v['data']->date : '' )."</td>
+          <td>".(($ctr == 0) ? $v['data']->date : '' )."</td>
           <td>".(($ctr == 0) ? $v['data']->owner_name : '' )."</td>
           <td>".(($ctr == 0) ? $v['data']->address : '' ) ."</td>
           <td>". (($ctr == 0) ?  $v['data']->manufacturer." ". $v['data']->vehicle_model." ". $v['data']->year." ". $v['data']->transmission." ". $v['data']->fuel_type : '')."</td>
           <td>". (($ctr == 0) ? $v['data']->invoice_number : '')."</td>
           <td>". (($ctr == 0) ? $v['data']->job_order_number : '')."</td>
           <td>". $pmdata->qty."</td>
-          <td> </td>
+          <td>". $pmdata->details."</td>
           <td>". $pmdata->part_number."</td>
           <td></td>
           <td></td>
@@ -203,7 +203,7 @@ foreach($var as $ctr => $d) {
         }
  
           $cosHtml[] ="<tr class='".(($ctr == 0) ? 'tbl-gray-bg' : '')."'>
-          <td>".$ctr.(($ctr == 0) ? $v['data']->date : '' )."</td>
+          <td>".(($ctr == 0) ? $v['data']->date : '' )."</td>
           <td>".(($ctr == 0) ? $v['data']->owner_name : '' )."</td>
           <td>".(($ctr == 0) ? $v['data']->address : '' ) ."</td>
           <td>". (($ctr == 0) ?  $v['data']->manufacturer." ". $v['data']->vehicle_model." ". $v['data']->year." ". $v['data']->transmission." ". $v['data']->fuel_type : '')."</td>
@@ -222,19 +222,7 @@ foreach($var as $ctr => $d) {
           <td>".(($check_counter == $ctr) ? "<a href='/app/job-order/".$v['data']->job_order_id."'><button class='btn btn-sm btn-icon'><i class='mdi mdi-pencil-outline'></i></button></a>" : '') ."</td>
           </tr>
           ";
-
-
-
-
-
-
-                
-        
-
-
-        
         $ctr++;
-
 
       }
 
