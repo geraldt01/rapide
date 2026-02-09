@@ -572,6 +572,8 @@ calculateAll();
 
                 document.getElementById('package-manual-cost'+option_id).value = result.getInventory.cost;
                 document.getElementById('package-qty'+option_id).value = 1;
+                let total_cost = 1 * result.getInventory.cost;
+                document.getElementById('package-manual-total-cost'+option_id).value = total_cost;
                 document.getElementById('package-manual-part-number'+option_id).value = result.getInventory.part_number;
                 document.getElementById('package-manual-srp-labor'+option_id).value = result.getInventory.price;
                 calculateAll();
@@ -599,9 +601,10 @@ calculateAll();
        let package_manual_qty = document.getElementById('package-qty'+original_option_id).value ;
       let package_manual_cost = document.getElementById('package-manual-cost'+original_option_id).value ;
 
-      package_manual_cost = package_manual_cost.replace(/[^0-9]/g, '');
-      package_manual_qty = package_manual_qty.replace(/[^0-9]/g, '');
+      package_manual_cost = package_manual_cost.replace(/,/g, '');
+      package_manual_qty = package_manual_qty.replace(/,/g, '');
   
+    
       let amount = package_manual_qty * package_manual_cost;
 
       amount = amount.toLocaleString(undefined, options);
@@ -644,7 +647,7 @@ calculateAll();
                   let part_qty = document.getElementById('part-qty-'+original_option_id).value ;
                   let part_price = document.getElementById('part-price-'+original_option_id).value ;
 
-                  part_price = part_price.replace(/\,/g,'');
+                  part_price = part_price.replace(/,/g,'');
                   part_qty = part_qty.replace(/[^0-9]/g, '');
 
                   console.log(part_price);
@@ -677,7 +680,7 @@ calculateAll();
       let labor_price = document.getElementById('labor-price-'+option_id).value ;
 
 
-      labor_price = labor_price.replace(/\,/g,'');
+      labor_price = labor_price.replace(/,/g,'');
       labor_qty = labor_qty.replace(/[^0-9]/g, '').toLocaleString(undefined, options);
 
 
