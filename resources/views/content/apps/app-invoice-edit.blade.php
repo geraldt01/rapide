@@ -270,7 +270,7 @@ input.c-red, .c-red {
              
         </div>
          <div class="col-12">
-              <!-- <button type="button" class="btn btn-primary btn-sm mt-3" onclick="addItem('packagemanual', {{$countEnabledPackageManual}})" data-repeater-create><i class="mdi mdi-plus me-1"></i> Add Part Number</button> -->
+              <button type="button" class="btn btn-primary btn-sm mt-3" onclick="addItem('packagemanual', {{$countEnabledPackageManual}})" data-repeater-create><i class="mdi mdi-plus me-1"></i> Add Part Number</button>
             </div>
         </div>
         

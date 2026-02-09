@@ -108,7 +108,7 @@ class InvoiceEdit extends Controller
         $optionOneTwoHtml[] = '<div class="border row w-100  p-2 '.(($selectedm->status == 2) ? 'disable-packagemanual-item' : '').'" id="item-list-packagemanual-'.$keypckgm.'"data-repeater-item>
         <div class="col-md-3 col-12 mb-md-0 mb-3">
           <input type="hidden" name="package-sub-id" value="'.$selectedm->id.'" />
-          <select id="package-sub-option-'.$keypckgm.' select2Basic'.$keypckgm.'" name="package-sub-option" class="select2" data-allow-clear="true"  onchange="">
+          <select id="package-sub-option-'.$keypckgm.' select2Basic'.$keypckgm.'" name="package-sub-option" class="select2" data-allow-clear="true"  onchange="calculatePackageManualItem('.$keypckgm.', this)">
             <option value="" id="package-sub-selected-'.$keypckgm.'">Select Parts</option>';
             foreach($jobOrderPartServiceOption as $optionsPart) {
                   $optionOneTwoHtml[] = '<option value="'.$optionsPart->id.'" '.(($optionsPart->id == $selectedm->part_id) ? "selected" : "").'>'.$optionsPart->value.'</option>';
@@ -130,7 +130,7 @@ class InvoiceEdit extends Controller
                 <input type="text" class="form-control package-manual mb-3" name="package-manual-total-cost" id="package-manual-total-cost'.$keypckgm.'" value="'.$selectedm->total_cost.'" placeholder="Total Cost"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
             </div>
            <div class="col-md-1 col-12">
-                <input type="text" class="form-control package-manual mb-3" name="package-manual-srp-labor" id="package-manual-srp-labor'.$keypckgm.'" value="'.$selectedm->srp_labor.'" placeholder="SRP & Labor"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
+                <input type="text" class="form-control package-manual mb-3" name="package-manual-srp-labor" id="package-manual-srp-labor'.$keypckgm.'" value="'.$selectedm->srp_labor.'" placeholder="SRP & Labor"  min="0" onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
             </div>
             <div class="col-md-1 col-12">
                 <input type="text" class="form-control package-manual mb-3" name="package-manual-total-srp" id="package-manual-total-srp'.$keypckgm.'" value="'.$selectedm->total_srp.'" placeholder="Total SRP"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
@@ -1175,6 +1175,20 @@ class InvoiceEdit extends Controller
   }
 
 
+    public function checkInventoryPackageManualSelect($package_id) {
+      $getInventory = DB::table('job_orders_part_service_options')
+      ->where('id', '=', $package_id)
+      ->get();
+
+      if($getInventory[0]->stock < 1) {
+        $message = $getInventory[0]->value. ' is Out of stock!';
+        $stock_status = false;
+        return response()->json(['success'=> false, 'message' => $message,  'package_value' => $getInventory[0]->value, 'stock' => $getInventory[0]->stock ]);
+
+      } else {
+        return response()->json(['success'=> true, 'message' => 'stock available!', 'getInventory' => $getInventory[0]]);
+      }
+    }
   
   public function checkInventoryPackage($package_id) {
  

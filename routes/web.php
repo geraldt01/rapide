@@ -261,6 +261,8 @@ Route::get('/app/enable-item/{type}', [InvoiceEdit::class, 'enableItem'])->middl
 Route::get('/app/check-inventory/{part_service_id}', [InvoiceEdit::class, 'checkInventory'])->middleware('auth');
 
 Route::get('/app/check-inventory-package/{package_id}', [InvoiceEdit::class, 'checkInventoryPackage'])->middleware('auth');
+Route::get('/app/check-inventory-package-manual-select/{package_id}', [InvoiceEdit::class, 'checkInventoryPackageManualSelect'])->middleware('auth');
+
 
 Route::get('/app/job-order/preview/{job_order_id}', [InvoicePreview::class, 'index'])->name('app-invoice-preview')->middleware('auth');
 Route::get('/app/job-order/print/{job_order_id}', [InvoicePrint::class, 'index'])->name('app-invoice-print')->middleware('auth');

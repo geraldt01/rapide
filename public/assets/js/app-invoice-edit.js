@@ -324,6 +324,8 @@ calculateAll();
               document.getElementById('package-qty'+id).value = "";
               document.getElementById('package-manual-part-number'+id).value = "";
               document.getElementById('package-manual-price'+id).value = 0;
+              document.getElementById('package-manual-srp-labor'+id).value = 0;
+              
             $(".alert-success p").html(result.message);
             $(".alert-success").removeClass("d-none");
             setTimeout(function(){ 
@@ -482,6 +484,12 @@ calculateAll();
               
   // }
   
+  // function calculatePackageManual(option_id) {
+  //   alert(option_id);
+  // const inputManual  =  document.getElementsByName('package-sub-option-'+option_id);
+  //   alert(inputManual);
+
+  // }
   function calculatePackage(option_id) {
   const inputElements  =  document.getElementsByName('group-a['+option_id+'][package-option]');
   var package_id = inputElements[0].value;
@@ -533,6 +541,49 @@ calculateAll();
   }
 
 
+   function calculatePackageManualItem(option_id, element) {
+      // const package_id  =  document.getElementsByName('group-a2['+option_id+'][package-sub-option]');
+       const elementValue = element.value;
+      $.ajax({
+      type: "get",
+      url: '/app/check-inventory-package-manual-select/'+ elementValue,
+        data:  {},
+        success: function (result) {
+              if(result.success == false) {
+                $(".alert-danger p").html(result.message);
+                $(".alert-danger").removeClass("d-none");
+                element.value = "";
+                document.getElementById('package-manual-cost'+option_id).value = "";
+                document.getElementById('package-qty'+option_id).value = "";
+                document.getElementById('package-manual-part-number'+option_id).value = "";
+                document.getElementById('package-manual-price'+option_id).value = 0;
+                var job_order_id = document.getElementById('hidden-job-order-id').value;
+                setTimeout(function(){ 
+                  $(".loader").removeClass("d-none");
+                }, 1500)
+                setTimeout(function(){ 
+                   window.location.replace("/app/job-order/"+job_order_id);
+                }, 2000);
+                
+          
+
+                return false;
+              } else {
+
+                document.getElementById('package-manual-cost'+option_id).value = result.getInventory.cost;
+                document.getElementById('package-qty'+option_id).value = 1;
+                document.getElementById('package-manual-part-number'+option_id).value = result.getInventory.part_number;
+                document.getElementById('package-manual-srp-labor'+option_id).value = result.getInventory.price;
+                calculateAll();
+              }
+          },
+          error: function (result, textStatus, errorThrown) {
+          },
+        });
+
+
+   }
+
 
    function calculatePackageManual(option_id) {
 
@@ -541,6 +592,8 @@ calculateAll();
       maximumFractionDigits: 2, // Limits to a maximum of two decimal places
       style: 'decimal'          // Specifies decimal formatting
     };
+
+
     const original_option_id = option_id;
 
        let package_manual_qty = document.getElementById('package-qty'+original_option_id).value ;
@@ -550,6 +603,7 @@ calculateAll();
       package_manual_qty = package_manual_qty.replace(/[^0-9]/g, '');
   
       let amount = package_manual_qty * package_manual_cost;
+
       amount = amount.toLocaleString(undefined, options);
       document.getElementById('package-manual-total-cost'+original_option_id).value = amount;
   }
@@ -913,7 +967,7 @@ const first = element -1;
       calculateLabor(option_id);
     }
     
-     if (typeof (this.className === 'form-control package-manual-qty' || this.className === 'form-control package-manual-price')) {
+     if (typeof (this.className === 'form-control package-manual-qty' || this.className === 'form-control package-manual-srp-labor')) {
       calculatePackageManual(option_id);
 
     }
@@ -1060,36 +1114,36 @@ const first = element -1;
     var p_myElementPackageManual6 = 0;
     var p_myElementPackageManual7 = 0;
 
-    const myElementPackageManual1 = document.getElementById('package-manual-price0');
+    const myElementPackageManual1 = document.getElementById('package-manual-srp-labor0');
     if (myElementPackageManual1) {
         var p_myElementPackageManual1 = myElementPackageManual1.value.replace(/,/g, '');
     }
 
-    const myElementPackageManual2 = document.getElementById('package-manual-price1');
+    const myElementPackageManual2 = document.getElementById('package-manual-srp-labor1');
     if (myElementPackageManual2) {
         var p_myElementPackageManual2 = myElementPackageManual2.value.replace(/,/g, '');
     } 
 
-    const myElementPackageManual3 = document.getElementById('package-manual-price2');
+    const myElementPackageManual3 = document.getElementById('package-manual-srp-labor2');
     if (myElementPackageManual3) {
         var p_myElementPackageManual3 = myElementPackageManual3.value.replace(/,/g, '');
     } 
-    const myElementPackageManual4 = document.getElementById('package-manual-price3');
+    const myElementPackageManual4 = document.getElementById('package-manual-srp-labor3');
     if (myElementPackageManual4) {
         var p_myElementPackageManual4 = myElementPackageManual4.value.replace(/,/g, '');
     } 
 
-    const myElementPackageManual5 = document.getElementById('package-manual-price4');
+    const myElementPackageManual5 = document.getElementById('package-manual-srp-labor4');
     if (myElementPackageManual5) {
         var p_myElementPackageManual5 = myElementPackageManual5.value.replace(/,/g, '');
     }
 
-    const myElementPackageManual6 = document.getElementById('package-manual-price5');
+    const myElementPackageManual6 = document.getElementById('package-manual-srp-labor5');
     if (myElementPackageManual6) {
         var p_myElementPackageManual6 = myElementPackageManual6.value.replace(/,/g, '');
     }
 
-    const myElementPackageManual7 = document.getElementById('package-manual-price6');
+    const myElementPackageManual7 = document.getElementById('package-manual-srp-labor6');
     if (myElementPackageManual7) {
         var p_myElementPackageManual7 = myElementPackageManual7.value.replace(/,/g, '');
     } 
