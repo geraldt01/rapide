@@ -130,10 +130,10 @@ class InvoiceEdit extends Controller
                 <input type="text" class="form-control package-manual mb-3" name="package-manual-total-cost" id="package-manual-total-cost'.$keypckgm.'" value="'.$selectedm->total_cost.'" placeholder="Total Cost"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
             </div>
            <div class="col-md-1 col-12">
-                <input type="text" class="form-control package-manual mb-3" name="package-manual-srp-labor" id="package-manual-srp-labor'.$keypckgm.'" value="'.$selectedm->srp_labor.'" placeholder="SRP & Labor"  min="0" onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
+                <input type="text" class="form-control package-manual mb-3" name="package-manual-srp-labor" id="package-manual-srp-labor'.$keypckgm.'" value="'.(($selectedm->srp_labor) ? $selectedm->srp_labor : 0).'" placeholder="SRP & Labor"  min="0" onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
             </div>
             <div class="col-md-1 col-12">
-                <input type="text" class="form-control package-manual mb-3" name="package-manual-total-srp" id="package-manual-total-srp'.$keypckgm.'" value="'.$selectedm->total_srp.'" placeholder="Total SRP"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
+                <input type="text" class="form-control package-manual mb-3" name="package-manual-total-srp" id="package-manual-total-srp'.$keypckgm.'" value="'.(($selectedm->total_srp) ? $selectedm->total_srp : 0).'" placeholder="Total SRP"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
             </div>
           
             <div class="col-md-2 col-12 mb-md-0 mb-3 color-black d-flex">

@@ -542,6 +542,13 @@ calculateAll();
 
 
    function calculatePackageManualItem(option_id, element) {
+     const options = {
+      minimumFractionDigits: 2, // Ensures at least two decimal places
+      maximumFractionDigits: 2, // Limits to a maximum of two decimal places
+      style: 'decimal'          // Specifies decimal formatting
+    };
+
+    
       // const package_id  =  document.getElementsByName('group-a2['+option_id+'][package-sub-option]');
        const elementValue = element.value;
       $.ajax({
@@ -557,7 +564,10 @@ calculateAll();
                 document.getElementById('package-qty'+option_id).value = "";
                 document.getElementById('package-manual-part-number'+option_id).value = "";
                 document.getElementById('package-manual-price'+option_id).value = 0;
-                var job_order_id = document.getElementById('hidden-job-order-id').value;
+                var job_order_id = document.getElementById('hidden-job-order-id').value; 
+
+                  document.getElementById('package-manual-total-srp'+option_id).value = 0;
+     
                 setTimeout(function(){ 
                   $(".loader").removeClass("d-none");
                 }, 1500)
@@ -575,7 +585,19 @@ calculateAll();
                 let total_cost = 1 * result.getInventory.cost;
                 document.getElementById('package-manual-total-cost'+option_id).value = total_cost;
                 document.getElementById('package-manual-part-number'+option_id).value = result.getInventory.part_number;
-                document.getElementById('package-manual-srp-labor'+option_id).value = result.getInventory.price;
+                if(result.getInventory.price > '') {
+                  document.getElementById('package-manual-srp-labor'+option_id).value = result.getInventory.price;
+                } else {
+                  document.getElementById('package-manual-srp-labor'+option_id).value =0;
+
+                }
+                  let package_srp_labor = document.getElementById('package-manual-srp-labor'+option_id).value ;
+                  package_srp_labor = package_srp_labor.replace(/,/g, '');
+                  let total_srp_labor = 1 * package_srp_labor;
+                  total_srp_labor = total_srp_labor.toLocaleString(undefined, options);
+                  document.getElementById('package-manual-total-srp'+option_id).value = total_srp_labor;
+
+
                 calculateAll();
               }
           },
@@ -600,15 +622,21 @@ calculateAll();
 
        let package_manual_qty = document.getElementById('package-qty'+original_option_id).value ;
       let package_manual_cost = document.getElementById('package-manual-cost'+original_option_id).value ;
+      let package_srp_labor = document.getElementById('package-manual-srp-labor'+original_option_id).value ;
 
       package_manual_cost = package_manual_cost.replace(/,/g, '');
       package_manual_qty = package_manual_qty.replace(/,/g, '');
+      package_srp_labor = package_srp_labor.replace(/,/g, '');
   
     
       let amount = package_manual_qty * package_manual_cost;
+      let total_srp_labor = package_manual_qty * package_srp_labor;
 
       amount = amount.toLocaleString(undefined, options);
       document.getElementById('package-manual-total-cost'+original_option_id).value = amount;
+
+      total_srp_labor = total_srp_labor.toLocaleString(undefined, options);
+      document.getElementById('package-manual-total-srp'+original_option_id).value = total_srp_labor;
   }
 
 
@@ -965,18 +993,23 @@ const first = element -1;
     var option_id = this.id.replace(/[^0-9]/g, '');
     if (this.className == 'form-control invoice-payment mb-3 text-right' || this.className == 'form-control invoice-item-price package mb-3') {
       calculateAll();
+
     } 
      if (typeof (this.className === 'form-control invoice-item-qty labor' || this.className === 'form-control invoice-item-price labor')) {
-      calculateLabor(option_id);
+      if(this.className !== 'form-control package-manual-qty mb-3') {
+        calculateLabor(option_id);
+      }
     }
     
      if (typeof (this.className === 'form-control package-manual-qty' || this.className === 'form-control package-manual-srp-labor')) {
       calculatePackageManual(option_id);
-
     }
 
     if (typeof (this.className === 'form-control invoice-item-qty part' || this.className === 'form-control invoice-item-price part')) {
-      calculatePart(option_id);
+      if(this.className !== 'form-control package-manual-qty mb-3') {
+        calculatePart(option_id);
+      }
+
     }else {
       calculateAll();
     }
