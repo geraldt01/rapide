@@ -996,17 +996,17 @@ const first = element -1;
 
     } 
      if (typeof (this.className === 'form-control invoice-item-qty labor' || this.className === 'form-control invoice-item-price labor')) {
-      if(this.className !== 'form-control package-manual-qty mb-3') {
+      if(this.className !== 'form-control package-manual-qty mb-3' && this.className !== 'form-control package-manual mb-3') {
         calculateLabor(option_id);
       }
     }
     
-     if (typeof (this.className === 'form-control package-manual-qty' || this.className === 'form-control package-manual-srp-labor')) {
+     if (typeof (this.className === 'form-control package-manual-qty' || this.className === 'form-control package-manual-srp-labor' || this.className === 'form-control package-manual')) {
       calculatePackageManual(option_id);
     }
 
     if (typeof (this.className === 'form-control invoice-item-qty part' || this.className === 'form-control invoice-item-price part')) {
-      if(this.className !== 'form-control package-manual-qty mb-3') {
+      if(this.className !== 'form-control package-manual-qty mb-3' && this.className !== 'form-control package-manual mb-3') {
         calculatePart(option_id);
       }
 
