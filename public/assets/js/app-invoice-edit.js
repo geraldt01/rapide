@@ -1114,7 +1114,7 @@ const first = element -1;
 
     const myElement1 = document.getElementById('package-price-0');
     if (myElement1) {
-        var p_amount1 = 0;
+        var p_amount1 = myElement1.value.replace(/,/g, '');
     } else {
         var p_amount1  = 0;
     }
@@ -1188,9 +1188,9 @@ const first = element -1;
 
    
 
-    // const package_sub_total = parseFloat(p_amount1)+parseFloat(p_amount2)+parseFloat(p_amount3)+parseFloat(p_amount4);
+    const package_sub_total = parseFloat(p_amount1)+parseFloat(p_amount2)+parseFloat(p_amount3)+parseFloat(p_amount4);
 
-    const package_sub_total = parseFloat(p_myElementPackageManual1)+parseFloat(p_myElementPackageManual2)+parseFloat(p_myElementPackageManual3)+parseFloat(p_myElementPackageManual4)+parseFloat(p_myElementPackageManual5)+parseFloat(p_myElementPackageManual6)+parseFloat(p_myElementPackageManual7);
+    // const package_sub_total = parseFloat(p_myElementPackageManual1)+parseFloat(p_myElementPackageManual2)+parseFloat(p_myElementPackageManual3)+parseFloat(p_myElementPackageManual4)+parseFloat(p_myElementPackageManual5)+parseFloat(p_myElementPackageManual6)+parseFloat(p_myElementPackageManual7);
     document.getElementById('hidden-package-sub-totals').value = package_sub_total;
 
     // Package Manual

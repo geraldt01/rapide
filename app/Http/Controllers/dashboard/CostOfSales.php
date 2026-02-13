@@ -152,10 +152,11 @@ foreach($var as $ctr => $d) {
           <td></td>
           <td>". $pmdata->unit_cost ."</td>
           <td>". $pmdata->total_cost."</td>
-          <td>". number_format($unit_selling_price_with_labor, 2)."</td>
-          <td>". number_format($total_sell_price, 2)."</td>
-          <td>".(($check_counter == $ctr) ? number_format($total_inv_amount_package, 2) : '')."</td>
-          <td>".(($check_counter == $ctr) ? "<a href='/app/job-order/".$v['data']->job_order_id."'><button class='btn btn-sm btn-icon'><i class='mdi mdi-pencil-outline'></i></button></a>" : '') ."</td>
+          <td>".$pmdata->srp_labor."</td>
+          <td>".$pmdata->total_srp."</td>
+          <td></td>";
+          // <td>".(($check_counter == $ctr) ? number_format($total_inv_amount_package, 2) : '')."</td>
+        $cosHtml[] ="<td>".(($check_counter == $ctr) ? "<a href='/app/job-order/".$v['data']->job_order_id."'><button class='btn btn-sm btn-icon'><i class='mdi mdi-pencil-outline'></i></button></a>" : '') ."</td>
           </tr>
           ";
         }
@@ -218,8 +219,11 @@ foreach($var as $ctr => $d) {
           <td>". number_format($total_cost, 2)."</td>
           <td>". number_format($unit_selling_price_with_labor, 2)."</td>
           <td>". number_format($total_sell_price, 2)."</td>
-          <td>".(($check_counter == $ctr) ? number_format($total_inv_amount_package, 2) : '')."</td>
-          <td>".(($check_counter == $ctr) ? "<a href='/app/job-order/".$v['data']->job_order_id."'><button class='btn btn-sm btn-icon'><i class='mdi mdi-pencil-outline'></i></button></a>" : '') ."</td>
+          <td></td>";
+
+          // <td>".(($check_counter == $ctr) ? number_format($total_inv_amount_package, 2) : '')."</td>
+
+          $cosHtml[] ="<td>".(($check_counter == $ctr) ? "<a href='/app/job-order/".$v['data']->job_order_id."'><button class='btn btn-sm btn-icon'><i class='mdi mdi-pencil-outline'></i></button></a>" : '') ."</td>
           </tr>
           ";
         $ctr++;

@@ -599,6 +599,7 @@ class InvoiceEdit extends Controller
                   "srp_labor"   => $packageManual['package-manual-srp-labor'],
                   "total_srp"   => $packageManual['package-manual-total-srp'],
                    "price"   => $packageManual['package-manual-price'],
+                   "status"   => (($packageManual['package-sub-option'] > 0) ? 1 : 2),
                 ]
             );
           }
@@ -1146,6 +1147,7 @@ class InvoiceEdit extends Controller
         "status" => 1,
       ]);
     }
+    echo "pasok";
 
   }
 
