@@ -423,7 +423,7 @@ calculateAll();
     }
      
   }
-  function saveInvoice(job_order_id) {
+  function saveInvoice(job_order_id, autosave) {
     $.ajax({
       type: "post",
       url: '/app/save-job-order-item/'+ job_order_id,
@@ -434,19 +434,24 @@ calculateAll();
             $(".bt-save-changes").addClass("disabled");
             sessionStorage.setItem("updateTriggered", "false");
             $('#addNewJobOrder').modal('hide');
+            if(autosave !== 1) {
             $(".alert-success p").html(result.message);
-            $(".alert-success").removeClass("d-none");
-            setTimeout(function(){ 
-            $(".alert-success").addClass("d-none");
-              const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
-            }, 3000);
+              $(".alert-success").removeClass("d-none");
+              setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+                const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
+              }, 3000);
+            }
+        
           } else {
+            if(autosave !== 1) {
              $(".alert-danger p").html(result.message);
-            $(".alert-danger").removeClass("d-none");
-            setTimeout(function(){ 
+              $(".alert-danger").removeClass("d-none");
+              setTimeout(function(){ 
               $(".alert-danger").addClass("d-none");
               const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
-          }, 3000);
+            }, 3000);
+            }
           }
             
         },
@@ -557,9 +562,10 @@ calculateAll();
         data:  {},
         success: function (result) {
               if(result.success == false) {
+                
                 $(".alert-danger p").html(result.message);
                 $(".alert-danger").removeClass("d-none");
-                element.value = "";
+                // element.value = "";
                 document.getElementById('package-manual-cost'+option_id).value = "";
                 document.getElementById('package-qty'+option_id).value = "";
                 document.getElementById('package-manual-part-number'+option_id).value = "";
@@ -568,12 +574,20 @@ calculateAll();
 
                   document.getElementById('package-manual-total-srp'+option_id).value = 0;
      
-                setTimeout(function(){ 
+    
+                if(result.exempted == 0) {
+                 setTimeout(function(){ 
                   $(".loader").removeClass("d-none");
-                }, 1500)
+                  }, 1500)
+                  setTimeout(function(){ 
+                    window.location.replace("/app/job-order/"+job_order_id);
+                  }, 2000);
+                } else {
+                  
+                }
                 setTimeout(function(){ 
-                   window.location.replace("/app/job-order/"+job_order_id);
-                }, 2000);
+                  $(".alert-danger").addClass("d-none");
+                }, 3000);
                 
           
 
@@ -662,10 +676,9 @@ calculateAll();
         data:  {qty: get_part_qty},
         success: function (result) {
               if(result.success == false) {
-                if(result.excempted == 0) {
+                if(result.exempted == 0) {
                   document.getElementById('part-qty-'+original_option_id).value = 0;
                 } else  {
-
                     let part_qty = document.getElementById('part-qty-'+original_option_id).value ;
                   let part_price = document.getElementById('part-price-'+original_option_id).value ;
                   part_price = part_price.replace(/,/g,'');
@@ -1030,11 +1043,11 @@ const first = element -1;
 
   
 
-  // setInterval(function(){
-  // var job_order_id = document.getElementById("hidden-job-order-id").value;
-  // console.log("test");
-  //   saveInvoice(job_order_id)
-  // }, 10000)
+  setInterval(function(){
+  var job_order_id = document.getElementById("hidden-job-order-id").value;
+  console.log("test");
+    saveInvoice(job_order_id, 1)
+  }, 60000)
 
     
   function copyParts(element) {
