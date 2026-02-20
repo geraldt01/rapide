@@ -615,13 +615,18 @@ class InvoiceEdit extends Controller
           ->where('id', '=', $part['part-option'])
           ->get();
           $stock_deduct = $getPartServiceOption[0]->stock - $part['part-qty'];
-          if(!($stock_deduct < 0)) {
-              JobOrdersPartServiceOption::where("id", $part['part-id'])->update(
-                ["stock"   => $stock_deduct]
-            );
-          } else {
-              return response()->json(['success'=> false, 'message' => 'Invalid stock for '.$part['part-text'] .'!']);
+
+          if($getPartServiceOption[0]->exempt == 0) {
+            if(!($stock_deduct < 0)) {
+                JobOrdersPartServiceOption::where("id", $part['part-id'])->update(
+                  ["stock"   => $stock_deduct]
+              );
+            } else {
+
+                return response()->json(['success'=> false, 'message' => 'Invalid stock for '.$part['part-text'] .'!']);
+            }
           }
+        
           }
         }
       }
@@ -1158,6 +1163,8 @@ class InvoiceEdit extends Controller
     ->where('id', '=', $inventory_id)
     ->get();
 
+
+
     if($getInventory[0]->stock > 0) {
       $status = true;
       $message = 'Stock available';
@@ -1172,7 +1179,8 @@ class InvoiceEdit extends Controller
       $status = false;
     }
 
-     return response()->json(['success'=> $status, 'stock' => $getInventory[0]->stock, 'message' => $message ]);
+
+     return response()->json(['success'=> $status, 'stock' => $getInventory[0]->stock, 'message' => $message, 'excempted' => $getInventory[0]->exempt ]);
 
   }
 

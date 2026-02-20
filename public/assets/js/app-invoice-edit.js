@@ -662,7 +662,21 @@ calculateAll();
         data:  {qty: get_part_qty},
         success: function (result) {
               if(result.success == false) {
-                 document.getElementById('part-qty-'+original_option_id).value = 0;
+                if(result.excempted == 0) {
+                  document.getElementById('part-qty-'+original_option_id).value = 0;
+                } else  {
+
+                    let part_qty = document.getElementById('part-qty-'+original_option_id).value ;
+                  let part_price = document.getElementById('part-price-'+original_option_id).value ;
+                  part_price = part_price.replace(/,/g,'');
+                  part_qty = part_qty.replace(/[^0-9]/g, '');
+                  console.log(part_price);
+                  console.log(part_qty);
+                  let amount = part_price * part_qty;
+                  amount = amount.toLocaleString(undefined, options);
+                  document.getElementById('part-amount-'+original_option_id).value = amount;
+                  calculateAll(original_option_id);
+                }
 
                 $(".alert-danger p").html(result.message);
                 $(".alert-danger").removeClass("d-none");
@@ -674,10 +688,8 @@ calculateAll();
 
                   let part_qty = document.getElementById('part-qty-'+original_option_id).value ;
                   let part_price = document.getElementById('part-price-'+original_option_id).value ;
-
                   part_price = part_price.replace(/,/g,'');
                   part_qty = part_qty.replace(/[^0-9]/g, '');
-
                   console.log(part_price);
                   console.log(part_qty);
                   let amount = part_price * part_qty;
@@ -740,6 +752,7 @@ calculateAll();
     // });
   }
   function copyPayment() {
+    console.log("pasok");
      document.getElementById('balance').value = 0;
     $(".bt-save-changes").removeClass("disabled");
     sessionStorage.setItem("updateTriggered", "true");

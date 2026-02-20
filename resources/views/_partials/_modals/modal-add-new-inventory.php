@@ -46,6 +46,14 @@
           </div>
         </div>
 
+          <div class="form-floating form-floating-outline mb-4">
+            <select id="inputExempted" name="modalExempt"  class="form-select form-select-lg">
+              <option value="1">Yes</option>
+              <option value="2">No</option>
+            </select>
+              <label> Exempted?</label>
+          </div>
+
           <div class="col-12 text-center">
             <button type="button" class="btn btn-primary me-sm-3 me-1" id="btn-save-inventory" onclick="saveInventory()">Submit</button>
             <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>

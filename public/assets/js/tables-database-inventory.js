@@ -133,6 +133,7 @@ $(function () {
         { data: 'cost' },
         { data: 'part_number' },
         { data: 'stock' },
+        { data: 'exempt' },
         { data: 'stock_status' },
         { data: '' },
 
@@ -250,6 +251,25 @@ $(function () {
            
             return (
                $stock
+            );
+          }
+
+        },
+
+          {
+          responsivePriority: 5,
+          targets: 7,
+            render: function (data, type, full, meta) {
+            var $exempt = full['exempt'];
+
+            if($exempt == 1) {
+              var val = '<i class="mdi mdi-check-decagram me-1 js-textareacopybtn" style="color: green;" onclick=""></i>';
+            } else {
+              var val = "";
+            }
+            console.log($exempt);
+            return (
+               val
             );
           }
 
@@ -877,6 +897,16 @@ function showDetails(item_id) {
             document.getElementById('modalPartNumber').value = result.inventoryData.part_number;
             document.getElementById('modalStock').value = result.inventoryData.stock;
             document.getElementById('modalPrice').value = result.inventoryData.price;
+
+          var exempt = result.inventoryData.exempt;
+          const selectElement = document.getElementById('inputExempted');
+
+             if(exempt == 1) {
+          selectElement.options[0].selected = true;
+         } else {
+          selectElement.options[1].selected = true;
+         }
+
         },
       error: function (result, textStatus, errorThrown) {
           console.log(result.success);

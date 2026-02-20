@@ -628,6 +628,7 @@
             <th>Part Number</th>
             <th>SRP</th>
             <th>Stocks remaining</th>
+            <th>Exempted</th>
             <th>Stock Status</th>
             <th>Action</th>
           </tr>

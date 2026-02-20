@@ -102,6 +102,7 @@
                       <th>Part Number</th>
                       <th>Cost</th>
                       <th>Price</th>
+                      <th>Excepted</th>
                       <th class="text-end">Actions</th>
                     </tr>
                   </thead>
@@ -113,6 +114,11 @@
                       <td>{{$partsandservices->part_number}}</td>
                       <td>{{$partsandservices->cost}}</td>
                       <td>{{$partsandservices->price}}</td>
+                      @if($partsandservices->exempt == 1) 
+                      <td ><i class="mdi mdi-check-decagram me-1 js-textareacopybtn" style="color: green;" onclick=""></i></td>
+                      @else
+                        <td></td>
+                      @endif
                       <td class="text-end">
                         <div class="dropdown pe-3">
                           <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></button>

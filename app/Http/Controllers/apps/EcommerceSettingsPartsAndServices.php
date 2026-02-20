@@ -50,6 +50,8 @@ class EcommerceSettingsPartsAndServices extends Controller
         "part_number" => $_GET['modalPartNumber'],
         "cost" => $_GET['modalCost'],
         "price" => $_GET['modalPrice'],
+        "price" => $_GET['modalPrice'],
+        "exempt" => $_GET['modalExempt'],
       ]);
 
  
@@ -87,6 +89,7 @@ class EcommerceSettingsPartsAndServices extends Controller
           <td>'.$data->part_number.'</td>
           <td>'.$data->cost.'</td>
           <td>'.$data->price.'</td>
+          <td>'. (($data->exempt == 1) ? '<i class="mdi mdi-check-decagram me-1 js-textareacopybtn" style="color: green;" onclick=""></i>' : '').'</td>
           <td class="text-end">
             <div class="dropdown pe-3">
               <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></button>

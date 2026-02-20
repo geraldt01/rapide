@@ -415,6 +415,14 @@ function editPartsAndServices(parts_and_services_id) {
           document.getElementById('modalPartNumber').value = result.PartsAndServicesData.part_number;
           document.getElementById('modalCost').value = result.PartsAndServicesData.cost;
           document.getElementById('modalPrice').value = result.PartsAndServicesData.price;
+          var exempt = result.PartsAndServicesData.exempt;
+
+          const selectElement = document.getElementById('inputExempted');
+         if(exempt == 1) {
+          selectElement.options[0].selected = true;
+         } else {
+          selectElement.options[1].selected = true;
+         }
 
         document.getElementById('btn-save-parts-and-services').setAttribute('onclick', 'savePartsAndServices('+result.PartsAndServicesData.id+')');
         },
