@@ -569,6 +569,8 @@ calculateAll();
                 document.getElementById('package-manual-cost'+option_id).value = "";
                 document.getElementById('package-qty'+option_id).value = "";
                 document.getElementById('package-manual-part-number'+option_id).value = "";
+                document.getElementById('package-manual-supplier'+option_id).value = "";
+                document.getElementById('package-manual-supplier-inv'+option_id).value = "";
                 document.getElementById('package-manual-price'+option_id).value = 0;
                 var job_order_id = document.getElementById('hidden-job-order-id').value; 
 
@@ -594,6 +596,8 @@ calculateAll();
                 return false;
               } else {
 
+                document.getElementById('package-manual-supplier'+option_id).value = result.getInventory.supplier;
+                document.getElementById('package-manual-supplier-inv'+option_id).value = result.getInventory.supplier_inv;
                 document.getElementById('package-manual-cost'+option_id).value = result.getInventory.cost;
                 document.getElementById('package-qty'+option_id).value = 1;
                 let total_cost = 1 * result.getInventory.cost;

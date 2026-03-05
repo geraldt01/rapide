@@ -42,6 +42,9 @@ input.c-red, .c-red {
   display: flex !important;
 
 }
+#package-manual-item-section #item-list-packagemanual-0, #package-manual-item-section #item-list-packagemanual-1, #package-manual-item-section #item-list-packagemanual-2, #package-manual-item-section #item-list-packagemanual-3, #package-manual-item-section #item-list-packagemanual-4, #package-manual-item-section #item-list-packagemanual-5, #package-manual-item-section #item-list-packagemanual-6, #package-manual-item-section #item-list-packagemanual-7, #package-manual-item-section #item-list-packagemanual-8, #package-manual-item-section #item-list-packagemanual-9, #package-manual-item-section #item-list-packagemanual-10 {
+    margin-left: 0px !important;
+}
  #item-list-packagemanual-0 {
   display: none !important;
 }
@@ -229,15 +232,22 @@ input.c-red, .c-red {
                     <h6 class="mb-2 repeater-title fw-medium"><strong>Item</strong></h6>
                   </div>
              
-                   <div class="col-md-2 col-12 mb-md-0 mb-3">
+                   <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>Part Number</strong></h6>
                   </div>   
                     <div class="col-md-1 col-12 mb-md-0 mb-3">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>Qty</strong></h6>
-                  </div>                  
+                  </div>  
+                   <div class="col-md-1 col-12 mb-md-0 p-0 text-left">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>Supplier </strong></h6>
+                  </div>
+                   <div class="col-md-1 col-12 mb-md-0 p-0 text-left">
+                      <h6 class="mb-2 repeater-title fw-medium"><strong>Supplier Inv</strong></h6>
+                  </div>                
                   <div class="col-md-1 col-12 mb-md-0 pl-0 text-left">
                       <h6 class="mb-2 repeater-title fw-medium"><strong>Unit Cost</strong></h6>
                   </div>
+                  
                   <div class="col-md-1 col-12 mb-md-0 p-0 text-left">
                       <h6 class="mb-2 repeater-title fw-medium"><strong>Total Cost</strong></h6>
                   </div>
@@ -247,7 +257,7 @@ input.c-red, .c-red {
                     <div class="col-md-1 col-12 mb-md-0 p-0 text-left">
                       <h6 class="mb-2 repeater-title fw-medium"><strong>Total SRP </strong></h6>
                   </div>
-                  <div class="col-md-2 col-12 mb-md-0 pl-0 text-left">
+                  <div class="col-md-1 col-12 mb-md-0 pl-0 text-left">
                     <h6 class="mb-2 repeater-title fw-medium"><strong>Total Invoice<br> Amount Package</strong></h6>
                   </div>
                 

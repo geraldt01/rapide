@@ -116,16 +116,23 @@ class InvoiceEdit extends Controller
         $optionOneTwoHtml[] = '
           </select> 
         </div>
-          <div class="col-md-2 col-12">
+          <div class="col-md-1 col-12">
                 <input type="text" class="form-control packapackage-manualge mb-3" name="package-manual-part-number" id="package-manual-part-number'.$keypckgm.'" value="'.$selectedm->part_number.'" placeholder="Part Number" />
             </div>
              <div class="col-md-1 col-12">
                  <input type="hidden" name="package-manual-id" value="'.$selectedm->id.'" />
                 <input type="text" class="form-control package-manual-qty mb-3" name="package-qty" id="package-qty'.$keypckgm.'" value="'.$selectedm->qty.'" placeholder="Quantity"  onchange="calculatePackageManual('.$keypckgm.')"/>
             </div>
+               <div class="col-md-1 col-12">
+                <input type="text" class="form-control package-manual mb-3" name="package-manual-supplier" id="package-manual-supplier'.$keypckgm.'" value="'.$selectedm->supplier.'" placeholder="Supplier"  onchange="calculatePackageManual('.$keypckgm.')" />
+            </div>
+              <div class="col-md-1 col-12">
+                <input type="text" class="form-control package-manual mb-3" name="package-manual-supplier-inv" id="package-manual-supplier-inv'.$keypckgm.'" value="'.$selectedm->supplier_inv.'" placeholder="Supplier Inv"  onchange="calculatePackageManual('.$keypckgm.')" />
+            </div>
             <div class="col-md-1 col-12">
                 <input type="text" class="form-control package-manual mb-3" name="package-manual-cost" id="package-manual-cost'.$keypckgm.'" value="'.$selectedm->unit_cost.'" placeholder="Unit Cost"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
             </div>
+              
               <div class="col-md-1 col-12">
                 <input type="text" class="form-control package-manual mb-3" name="package-manual-total-cost" id="package-manual-total-cost'.$keypckgm.'" value="'.$selectedm->total_cost.'" placeholder="Total Cost"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
             </div>
@@ -136,7 +143,7 @@ class InvoiceEdit extends Controller
                 <input type="text" class="form-control package-manual mb-3" name="package-manual-total-srp" id="package-manual-total-srp'.$keypckgm.'" value="'.(($selectedm->total_srp) ? $selectedm->total_srp : 0).'" placeholder="Total SRP"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.')" />
             </div>
           
-            <div class="col-md-2 col-12 mb-md-0 mb-3 color-black d-flex">
+            <div class="col-md-1 col-12 mb-md-0 mb-3 color-black d-flex">
                <span class="pt-2 pl-2">₱</span>
                 <input type="text" class="form-control package-manual-price mb-3" name="package-manual-price" id="package-manual-price'.$keypckgm.'" value="'.(($selectedm->price) ? $selectedm->price : 0).'" placeholder="Price"  onchange="formatNumberWithCommas(this);calculatePackageManual('.$keypckgm.');recalculateAll()"/>
             
@@ -590,33 +597,7 @@ class InvoiceEdit extends Controller
           }
       }
     }
-
-    if($key== 'group-a2') {
-    foreach($value as $packageManual){
-          if($packageManual['package-sub-option'] > "") {
-            if($packageManual['package-qty'] !== '0') {
-              $details = @JobOrdersPartServiceOption::find($packageManual['package-sub-option'])["value"];
-              JobOrdersPackageManualItem::where("id", $packageManual['package-manual-id'])->update(
-                [
-                  "part_id"   => (($packageManual['package-sub-option'] > 0) ? $packageManual['package-sub-option'] : NULL),
-                  "qty"   => $packageManual['package-qty'],
-                   "details" => ((isset($details)) ? $details : NULL), 
-                  "total_cost"   => $packageManual['package-manual-total-cost'],
-                  "unit_cost"   => $packageManual['package-manual-cost'],
-                  "part_number"   => $packageManual['package-manual-part-number'],
-                  "srp_labor"   => $packageManual['package-manual-srp-labor'],
-                  "total_srp"   => $packageManual['package-manual-total-srp'],
-                   "price"   => $packageManual['package-manual-price'],
-                   "status"   => (($packageManual['package-sub-option'] > 0) ? 1 : 2),
-                ]
-              );
-            }
-           
-          }
-      }
-    }
-
-    // check first
+      // check first
     if($key== 'group-c') {
       foreach($value as $part){
           if(isset($part['part-text']) && $part['part-text'] > "") {
@@ -641,22 +622,52 @@ class InvoiceEdit extends Controller
         }
       }
 
-    // deduct proceed
-    if($key== 'group-c') {
-      if(isset($part['part-text']) && $part['part-text'] > "") {
-          if($part['part-qty'] !== '0') {
-            $getPartServiceOption = DB::table('job_orders_part_service_options')
-            ->where('id', '=', $part['part-option'])
-            ->get();
-            $stock_deduct = $getPartServiceOption[0]->stock - $part['part-qty'];
-              if(!($stock_deduct < 0)) {
-                JobOrdersPartServiceOption::where("id", $part['part-id'])->update(
-                  ["stock"   => $stock_deduct]
+
+
+    if($key== 'group-a2') {
+    foreach($value as $packageManual){
+          if($packageManual['package-sub-option'] > "") {
+            if($packageManual['package-qty'] !== '0') {
+              $details = @JobOrdersPartServiceOption::find($packageManual['package-sub-option'])["value"];
+              JobOrdersPackageManualItem::where("id", $packageManual['package-manual-id'])->update(
+                [
+                  "part_id"   => (($packageManual['package-sub-option'] > 0) ? $packageManual['package-sub-option'] : NULL),
+                  "qty"   => $packageManual['package-qty'],
+                   "details" => ((isset($details)) ? $details : NULL), 
+                  "total_cost"   => $packageManual['package-manual-total-cost'],
+                  "supplier"   => $packageManual['package-manual-supplier'],
+                  "supplier_inv"   => $packageManual['package-manual-supplier-inv'],
+                  "unit_cost"   => $packageManual['package-manual-cost'],
+                  "part_number"   => $packageManual['package-manual-part-number'],
+                  "srp_labor"   => $packageManual['package-manual-srp-labor'],
+                  "total_srp"   => $packageManual['package-manual-total-srp'],
+                   "price"   => $packageManual['package-manual-price'],
+                   "status"   => (($packageManual['package-sub-option'] > 0) ? 1 : 2),
+                ]
               );
-              }
-          } 
+            }
+           
+          }
       }
     }
+
+  
+
+    // if($key== 'group-c') {
+    //   if(isset($part['part-text']) && $part['part-text'] > "") {
+    //       if($part['part-qty'] !== '0') {
+    //         $getPartServiceOption = DB::table('job_orders_part_service_options')
+    //         ->where('id', '=', $part['part-option'])
+    //         ->get();
+    //         $stock_deduct = $getPartServiceOption[0]->stock - $part['part-qty'];
+    //           if(!($stock_deduct < 0)) {
+    //             JobOrdersPartServiceOption::where("id", $part['part-id'])->update(
+    //               ["stock"   => $stock_deduct]
+    //           );
+    //           }
+    //       } 
+    //   }
+    // }
   }
 
 

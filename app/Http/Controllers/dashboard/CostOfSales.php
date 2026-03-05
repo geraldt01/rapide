@@ -148,8 +148,8 @@ foreach($var as $ctr => $d) {
           <td>". $pmdata->qty."</td>
           <td>". $pmdata->details."</td>
           <td>". $pmdata->part_number."</td>
-          <td></td>
-          <td></td>
+          <td>". (($pmdata->supplier) ? $pmdata->supplier : "")."</td>
+          <td>". (($pmdata->supplier_inv) ? $pmdata->supplier_inv : "")."</td>
           <td>". $pmdata->unit_cost ."</td>
           <td>". $pmdata->total_cost."</td>
           <td>".$pmdata->srp_labor."</td>
