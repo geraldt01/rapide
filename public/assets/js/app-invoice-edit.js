@@ -596,8 +596,8 @@ calculateAll();
                 return false;
               } else {
 
-                document.getElementById('package-manual-supplier'+option_id).value = result.getInventory.supplier;
-                document.getElementById('package-manual-supplier-inv'+option_id).value = result.getInventory.supplier_inv;
+                document.getElementById('package-manual-supplier'+option_id).value = "";
+                document.getElementById('package-manual-supplier-inv'+option_id).value = "";
                 document.getElementById('package-manual-cost'+option_id).value = result.getInventory.cost;
                 document.getElementById('package-qty'+option_id).value = 1;
                 let total_cost = 1 * result.getInventory.cost;

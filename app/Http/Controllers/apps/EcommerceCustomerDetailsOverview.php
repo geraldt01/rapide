@@ -220,6 +220,8 @@ class EcommerceCustomerDetailsOverview extends Controller
     ->OrderBy('date', 'asc')
     ->get();
 
+   
+
       $k = 0;
       $key = 1;
       $a = 1;
@@ -230,7 +232,9 @@ class EcommerceCustomerDetailsOverview extends Controller
       $opt[$v->date][] = $v;
     }
       
+
     if(isset($opt)) {
+
      foreach ($opt as $key => $value) {
       $htmlJS = array();
       $number = array();
@@ -254,23 +258,25 @@ class EcommerceCustomerDetailsOverview extends Controller
           $status = $value[1]->status;
           $date = $value[1]->date;
         }
-      
-
       }
-         $array[] = array('id' => $jo_id,
-        'counter' => $a,
-        'order' => $number,
-        'customer' => "Gabrielle Feyer",
-        'email' => "gfeyer0@nyu.edu",
-        'avatar' => "8.png",
-        'payment' => 1,
-        'status' => $status,
-        'js_list' => $htmlJS,
-        'spent' => "-",
-        'method' => "paypal_logo",
-        'date' => $date,
-        'time' => "2:11 AM",
-        'method_number' => 6522);
+
+        if(isset($jo_id)) {
+          $array[] = array('id' => $jo_id,
+          'counter' => $a,
+          'order' => $number,
+          'customer' => "Gabrielle Feyer",
+          'email' => "gfeyer0@nyu.edu",
+          'avatar' => "8.png",
+          'payment' => 1,
+          'status' => $status,
+          'js_list' => $htmlJS,
+          'spent' => "-",
+          'method' => "paypal_logo",
+          'date' => $date,
+          'time' => "2:11 AM",
+          'method_number' => 6522);
+        }
+        
       $key++;
       $a++;
     }

@@ -944,25 +944,25 @@ class InvoiceEdit extends Controller
         ->get();
       }
 
-
     } else if($newStatus[0]->status_id == '2') {
+
       $check =  DB::table('job_orders')
-      ->where('ex_job_order_id', '=', $jobOrderInfo[0]->ex_job_order_id)
+      ->where('job_order_number', '=', $jobOrderInfo[0]->job_order_number)
       ->where('status', '=',  2)
       ->get();
 
-      if(!isset($check[0])) {
-          $check =  DB::table('job_orders')
-        ->where('ex_job_order_id', '=', $job_order_id)
-        ->where('status', '=',  2)
-        ->get();
-      }
-        if(!isset($check[0])) {
-          $check =  DB::table('job_orders')
-        ->where('id', '=', $jobOrderInfo[0]->ex_job_order_id)
-        ->where('status', '=',  2)
-        ->get();
-      }
+      // if(!isset($check[0])) {
+      //     $check =  DB::table('job_orders')
+      //   ->where('ex_job_order_id', '=', $job_order_id)
+      //   ->where('status', '=',  2)
+      //   ->get();
+      // }
+      //   if(!isset($check[0])) {
+      //     $check =  DB::table('job_orders')
+      //   ->where('id', '=', $jobOrderInfo[0]->ex_job_order_id)
+      //   ->where('status', '=',  2)
+      //   ->get();
+      // }
 
     } else if($newStatus[0]->status_id == '3') {
       $check =  DB::table('job_orders')
@@ -978,6 +978,8 @@ class InvoiceEdit extends Controller
     }
    
   
+
+
     if(!isset($check[0])) {
 
     foreach($jobOrderInfo as $data) {
