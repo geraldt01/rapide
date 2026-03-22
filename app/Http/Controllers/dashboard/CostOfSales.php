@@ -108,6 +108,7 @@ $ctr = 0;
     $overall_total_sell_price = 0;
     $total_inv_amount_package = 0;
 
+    // print_r($var);
 foreach($var as $ctr => $d) {
   foreach($d as $v) {
 
@@ -137,12 +138,12 @@ foreach($var as $ctr => $d) {
      
 
        if(isset($pmdata)) {
-  
+        if($pmdata->details > '') {
           $cosHtml[] ="<tr class='".(($ctr == 0) ? 'tbl-gray-bg' : '')."'>
           <td>".(($ctr == 0) ? $v['data']->date : '' )."</td>
           <td>".(($ctr == 0) ? $v['data']->owner_name : '' )."</td>
           <td>".(($ctr == 0) ? $v['data']->address : '' ) ."</td>
-          <td>". (($ctr == 0) ?  $v['data']->manufacturer." ". $v['data']->vehicle_model." ". $v['data']->year." ". $v['data']->transmission." ". $v['data']->fuel_type : '')."</td>
+          <td>". (($ctr == 0) ?  "<a href='/app/job-order/".$v['data']->job_order_number."'><b>".$v['data']->plate_number."</b></a> ".$v['data']->manufacturer." ". $v['data']->vehicle_model." ". $v['data']->year." ". $v['data']->transmission." ". $v['data']->fuel_type : '')."</td>
           <td>". (($ctr == 0) ? $v['data']->invoice_number : '')."</td>
           <td>". (($ctr == 0) ? $v['data']->job_order_number : '')."</td>
           <td>". $pmdata->qty."</td>
@@ -159,9 +160,16 @@ foreach($var as $ctr => $d) {
         $cosHtml[] ="<td>".(($check_counter == $ctr) ? "<a href='/app/job-order/".$v['data']->job_order_id."'><button class='btn btn-sm btn-icon'><i class='mdi mdi-pencil-outline'></i></button></a>" : '') ."</td>
           </tr>
           ";
+        $ctr++;
+
+        } else {
+          $ctr = 0;
+        }
+  
+        
+         
         }
 
-        $ctr++;
 
 
 
@@ -207,7 +215,7 @@ foreach($var as $ctr => $d) {
           <td>".(($ctr == 0) ? $v['data']->date : '' )."</td>
           <td>".(($ctr == 0) ? $v['data']->owner_name : '' )."</td>
           <td>".(($ctr == 0) ? $v['data']->address : '' ) ."</td>
-          <td>". (($ctr == 0) ?  $v['data']->manufacturer." ". $v['data']->vehicle_model." ". $v['data']->year." ". $v['data']->transmission." ". $v['data']->fuel_type : '')."</td>
+          <td>". (($ctr == 0) ? "<a href='/app/job-order/".$v['data']->job_order_number."'><b>".$v['data']->plate_number."</b></a> ".  $v['data']->manufacturer." ". $v['data']->vehicle_model." ". $v['data']->year." ". $v['data']->transmission." ". $v['data']->fuel_type : '')."</td>
           <td>". (($ctr == 0) ? $v['data']->invoice_number : '')."</td>
           <td>". (($ctr == 0) ? $v['data']->job_order_number : '')."</td>
           <td>". $pdata->part_qty."</td>

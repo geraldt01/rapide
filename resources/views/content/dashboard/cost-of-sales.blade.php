@@ -23,6 +23,9 @@
     font-size: 12px;
 
   }
+  #d-none {
+    display: none;
+  }
   </style>
 @endsection
 
