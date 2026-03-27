@@ -248,6 +248,7 @@ Route::post('/app/delete-package-item/{item_id}', [InvoiceEdit::class, 'deletePa
 Route::post('/app/delete-package-manual-item/{item_id}', [InvoiceEdit::class, 'deletePackageManualItem'])->middleware('auth');
 
 // Route::get('/app/select-package-sub/{package_id}', [InvoiceEdit::class, 'selectPackageSub'])->middleware('auth');
+Route::get('/app/invoice/check-number/{invoiceId}', [InvoiceEdit::class, 'invoiceCheckNumber'])->name('app-invoice-add');
 
 
 

@@ -222,6 +222,37 @@ $(function () {
 sessionStorage.updateTriggered = "false";
 showCurrentStatus();
 
+
+
+document.getElementById("invoiceId").addEventListener("change", function() {
+var invoiceId = document.getElementById("invoiceId").value;
+  
+    $.ajax({
+      type: "get",
+      url: '/app/invoice/check-number/'+ invoiceId,
+        data:  $("#form-job-order").serialize(),
+        success: function (result) {
+          if(result.success == false) {
+            console.log(result);
+               document.getElementById("invoiceId").value = result.revert_number;
+              $(".alert-danger p").html(result.message);
+              $(".alert-danger").removeClass("d-none");
+              setTimeout(function(){ 
+              $(".alert-danger").addClass("d-none");
+            }, 3000);
+
+
+          }
+         
+        },
+        error: function (result, textStatus, errorThrown) {
+          
+        },
+     });
+
+})
+
+
 calculateAll();
   var job_order_id = document.getElementById("hidden-job-order-id").value;
  const preview = document.getElementById("btn-preview");
@@ -1032,11 +1063,13 @@ const first = element -1;
     }
     
      if (typeof (this.className === 'form-control package-manual-qty' || this.className === 'form-control package-manual-srp-labor' || this.className === 'form-control package-manual')) {
-      calculatePackageManual(option_id);
+      if(this.className !== 'form-control invoiceId' ) {
+            calculatePackageManual(option_id);
+      }
     }
 
     if (typeof (this.className === 'form-control invoice-item-qty part' || this.className === 'form-control invoice-item-price part')) {
-      if(this.className !== 'form-control package-manual-qty mb-3' && this.className !== 'form-control package-manual mb-3') {
+      if(this.className !== 'form-control package-manual-qty mb-3' && this.className !== 'form-control package-manual mb-3' && this.className !== 'form-control invoiceId') {
         calculatePart(option_id);
       }
 

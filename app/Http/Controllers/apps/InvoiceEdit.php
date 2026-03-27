@@ -1363,8 +1363,45 @@ class InvoiceEdit extends Controller
 
 
   public function selectPackageSub($package_id) {
-echo $package_id;
+    echo $package_id;
   } 
 
+
+   public function invoiceCheckNumber($invoiceId) {
+    $job_order_id = $_GET['hidden-job-order-id'];
+    $getNumber = DB::table('repair_estimate_numbers')
+    ->where('value', '=', $invoiceId)
+    ->get();
+
+
+    $checkValid = DB::table('repair_estimate_numbers')->where('status', '=', 1)
+      ->orderBy('id','desc')
+      ->get();
+  
+
+     $revert =  DB::table('job_orders')
+    ->where('id', '=', $job_order_id)
+    ->get(); 
+
+     $rever_number = number_format($revert[0]->job_order_number);
+
+    if($invoiceId > $checkValid[0]->value) {
+      return response()->json(['success'=> false, 'message' => 'invalid number!', 'revert_number' => $rever_number ]);
+    }
+    if(isset($getNumber[0])) {
+      return response()->json(['success'=> false, 'message' => 'number not available!', 'revert_number' => $rever_number ]);
+    } else {
+
+      JobOrder::where("id", $job_order_id)->update([
+        "job_order_number" => $invoiceId,
+      ]);
+     
+      return response()->json(['success'=> true, 'message' => 'number available!' ]);
+    }
+
+  }
   
 }
+
+
+ 

@@ -142,8 +142,8 @@ input.c-red, .c-red {
                 @endif
               </dt>
               <dd class="col-sm-6">
-                <div class="input-group input-group-merge disabled">
-                  <input type="text" class="form-control" disabled placeholder="74909" value="{{$data->job_order_number}}" id="invoiceId" />
+                <div class="input-group input-group-merge">
+                  <input type="number" class="form-control invoiceId"  placeholder="74909" value="{{$data->job_order_number}}" id="invoiceId" />
                 </div>
               </dd>
               <dt class="col-sm-6 mb-2 d-md-flex align-items-center justify-content-end">
