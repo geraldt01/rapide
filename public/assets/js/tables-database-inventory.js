@@ -130,8 +130,8 @@ $(function () {
         { data: '' },
         { data: 'id' },
         { data: 'item_name' },
-        { data: 'cost' },
         { data: 'part_number' },
+        { data: 'cost' },
         { data: 'stock' },
         { data: 'exempt' },
         { data: 'stock_status' },
@@ -144,7 +144,6 @@ $(function () {
           className: 'control',
           orderable: false,
           searchable: false,
-          responsivePriority: 2,
           targets: 0,
           render: function (data, type, full, meta) {
             return '';
@@ -155,7 +154,6 @@ $(function () {
           targets: 1,
           orderable: false,
           searchable: false,
-          responsivePriority: 3,
           checkboxes: true,
           render: function () {
             return '<input type="checkbox" class="dt-checkboxes form-check-input">';
@@ -169,7 +167,6 @@ $(function () {
         {
           // Avatar image/badge, Name and post
           targets: 2,
-          responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $user_img = full['avatar'],
               $name = full['item_name'],
@@ -207,21 +204,23 @@ $(function () {
             return $row_output;
           }
         }, 
-        {
-          responsivePriority: 1,
-          targets: 3,
+
+
+           {
+          responsivePriority: 0,
             render: function (data, type, full, meta) {
-            var $cost = full['cost'];
+            var $item_name = full['item_name'];
            
             return (
-              '₱' + $cost
+              $item_name
             );
           }
 
         },
+
          {
-          responsivePriority: 2,
-          targets: 4,
+          responsivePriority: 1,
+          targets: 3,
             render: function (data, type, full, meta) {
             var $part_number = full['part_number'];
            
@@ -231,6 +230,19 @@ $(function () {
           }
 
         },
+        {
+          responsivePriority: 2,
+          targets: 4,
+            render: function (data, type, full, meta) {
+            var $cost = full['cost'];
+           
+            return (
+              '₱' + $cost
+            );
+          }
+
+        },
+   
          {
           responsivePriority: 3,
           targets: 5,
@@ -238,26 +250,42 @@ $(function () {
             var $price = full['price'];
            
             return (
-               '₱' + $price
+              '₱' + $price
             );
           }
 
         },
-        {
+    
+         {
           responsivePriority: 4,
           targets: 6,
             render: function (data, type, full, meta) {
             var $stock = full['stock'];
            
             return (
-               $stock
+              '<span style="color: black">'+$stock+'</div>'
             );
           }
 
         },
 
-          {
+        {
           responsivePriority: 5,
+            render: function (data, type, full, meta) {
+            var $exempt = full['exempt'];
+           
+            return (
+              '<span style="color: black">1</div>'
+            );
+          }
+
+        },
+    
+
+        
+        
+
+        {
           targets: 7,
             render: function (data, type, full, meta) {
             var $exempt = full['exempt'];
@@ -271,11 +299,10 @@ $(function () {
             return (
                val
             );
-          }
-
+          },
         },
-     
-     
+          
+
         {
           // Label
           targets: -2,

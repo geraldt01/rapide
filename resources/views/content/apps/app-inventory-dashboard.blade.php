@@ -37,6 +37,11 @@
 @endsection
 
 
+<style type="text/css">
+  .table-bordered td {
+    color: black !important;
+  }
+  </style>
 
 
 
@@ -624,8 +629,8 @@
             <th></th>
             <th>id</th>
             <th>Item Name</th>
-            <th>Cost</th>
             <th>Part Number</th>
+            <th>Cost</th>
             <th>SRP</th>
             <th>Stocks remaining</th>
             <th>Exempted</th>

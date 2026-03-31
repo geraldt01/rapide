@@ -445,7 +445,7 @@ calculateAll();
             setTimeout(function(){ 
               $(".alert-success").addClass("d-none");
               window.location.reload();
-          }, 3000);
+          }, 1000);
         },
         error: function (result, textStatus, errorThrown) {
           
@@ -614,7 +614,7 @@ calculateAll();
                   }, 1500)
                   setTimeout(function(){ 
                     window.location.replace("/app/job-order/"+job_order_id);
-                  }, 2000);
+                  }, 1000);
                 } else {
                   
                 }
@@ -955,7 +955,7 @@ calculateAll();
             $(".loader").removeClass("d-none");
             setTimeout(function(){ 
              window.location.replace("/app/job-order/"+result.newJobOrderId);
-            }, 3000);
+            }, 1000);
           }
         },
       error: function (result, textStatus, errorThrown) {
