@@ -816,7 +816,7 @@ class InvoiceEdit extends Controller
              "labor_qty"     => ((isset($labor['labor-qty'])) ? $labor['labor-qty'] : 1),
             "labor_value"  =>  ((isset($labor['labor-text'])) ? $labor['labor-text'] : ""),
             "font_color"  =>  ((isset($labor['font-color'])) ? $labor['font-color'][0] : NULL),
-            "cost"  =>  ((isset($labor['labor-cost'])) ? $labor['labor-cost'] : ""),
+            "cost"  =>  (($labor['labor-cost'] > '') ? $labor['labor-cost'] : 0),
             "part_number"   =>  ((isset($labor['labor-part-number'])) ? $labor['labor-part-number'] : ""),
             "labor_price"   => ((isset($labor['labor-price'])) ?  str_replace(",", "", $labor['labor-price'] ) : 0),
             "labor_amount"   => ((isset($labor['labor-amount'])) ? str_replace(",", "", $labor['labor-amount'])  : 0),
