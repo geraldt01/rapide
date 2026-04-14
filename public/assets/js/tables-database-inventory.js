@@ -368,7 +368,7 @@ $(function () {
               text: '<i class="mdi mdi-printer-outline me-1" ></i>Print',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [2, 3, 4, 5, 6, 7, 8],
+                columns: [2, 3, 4, 5, 6, 8],
                 // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
