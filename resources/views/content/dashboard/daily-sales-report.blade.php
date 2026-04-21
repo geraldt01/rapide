@@ -57,7 +57,11 @@
 <h4 class="py-3 mb-4">
   <span class="text-muted fw-light"> Daily Sales Report
 </h4>
-
+<form id="hidden-value">
+  <input type="hidden" value="" id="hidden-plate-number" />
+  <input type="hidden" value="" id="hidden-jo-id" />
+  
+</form>
 <!-- Product List Widget -->
 
 <div class="col-md-6 col-12 mb-4">

@@ -114,6 +114,23 @@ class SalesReport extends Controller
 }
 
 
+  public function getDeleteJo($jo_id) {
+    $getJo = JobOrder::find($jo_id);
+    return response()->json(['success'=> true, 'plate_number' => $getJo['plate_number'] ]);
+  }
+
+
+  public function deleteJo($jo_id) {
+
+     JobOrder::where("id", $jo_id)->update(
+    [
+      "status" => 0,
+    ]);
+    $getJo = JobOrder::find($jo_id);
+    
+    return response()->json(['success'=> true, 'message' => $getJo['plate_number']." Deleted Successfully!" ]);
+  }
+  
   public function createCashBalance($date) {
 
     $c = new DailyCashBalance();

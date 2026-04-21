@@ -356,14 +356,18 @@ nf.format(123456.789); // ‘$123,456.79’
           orderable: false,
           render: function (data, type, full, meta) {
             var $job_order_link = full['job_order_link'];
+            var $jo_id = full['jo_id'];
+            var $product_name = full['product_name'];
+            
+            console.log(full);
 
+            
             return (
               '<div class="d-inline-block text-nowrap">' +
               '<a  href="'+$job_order_link+'"><button class="btn btn-sm btn-icon"><i class="mdi mdi-pencil-outline"></i></button></a>' +
               '<button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="mdi mdi-dots-vertical me-2"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="javascript:0;" class="dropdown-item">View</a>' +
-              '<a href="javascript:0;" class="dropdown-item">Suspend</a>' +
+              '<a href="javascript:0;" onclick="deleteJobOrder('+$jo_id+')" class="dropdown-item">Delete</a>' +
               '</div>' +
               '</div>'
             );
@@ -663,6 +667,47 @@ const convertedDate = convertDateFjYtoYmd(newDate);
     window.location.replace("/app/sales-report/"+convertedDate);
 }
 
+
+function deleteJobOrder( jo_id) {
+   $.ajax({
+    type: "get",
+    url: '/app/get-deleting-jo/'+jo_id,
+      data:  $("").serialize(),
+        success: function (result) {
+          document.getElementById("hidden-jo-id").value = jo_id;
+        $("#plate-no-display").html(result.plate_number);
+           $('#deleteJobOder').modal('show');
+
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+
+}
+
+
+function doDeleteJo() {
+ var jo_id = document.getElementById("hidden-jo-id").value ;
+ $.ajax({
+    type: "get",
+    url: '/app/delete-jo/'+jo_id,
+      data:  $("").serialize(),
+        success: function (result) {
+           $('#deleteJobOder').modal('hide');
+             $(".alert-success p").html(result.message);
+              $(".alert-success").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-success").addClass("d-none");
+              location.reload();
+          }, 2000);
+
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+      },
+    });
+}
 
 function changeInvoiceNo(jo_id) {
     $('#changeInvoiceNumber').modal('show');

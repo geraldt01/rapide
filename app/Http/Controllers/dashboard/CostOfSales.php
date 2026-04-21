@@ -49,6 +49,7 @@ class CostOfSales extends Controller
     ->OrderBy('job_orders.status_display', 'Desc')
     ->get();
 
+ 
 
     $key = 0;
     $ctr = 0;
@@ -100,6 +101,9 @@ foreach($data as $key => $final) {
   'package_manual_data' => $pacakgeManualData,
   );
 }
+
+
+  
 
 
 $cosHtml = [];
@@ -242,7 +246,6 @@ foreach($var as $ctr => $d) {
 
 
 }
-
 
       return response()->json(['success'=> true, 'cosHtml' => $cosHtml]);
 

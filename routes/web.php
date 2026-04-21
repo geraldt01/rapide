@@ -315,6 +315,10 @@ Route::get('/app/inventory/save/{item_id}', [InventoryDashboard::class, 'saveInv
 
 Route::post('/user-list/store', [UserManagement::class, 'store'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/app/sales-report', [SalesReport::class, 'index'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/get-deleting-jo/{jo}', [SalesReport::class, 'getDeleteJo'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/delete-jo/{jo}', [SalesReport::class, 'deleteJo'])->name('laravel-example-user-management')->middleware('auth');
+
+
 Route::get('/app/sales-report/{date}', [SalesReport::class, 'index'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/json/sales-report/', [SalesReport::class, 'jsonSalesReportList'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/app/create/cash-balance/{date}', [SalesReport::class, 'createCashBalance'])->name('laravel-example-user-management')->middleware('auth');

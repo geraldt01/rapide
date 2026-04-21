@@ -127,3 +127,28 @@
     </div>
   </div>
 </div>
+
+
+
+
+<!-- Delete JO Modal -->
+<div class="modal fade" id="deleteJobOder" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-simple modal-add-new-address">
+    <div class="modal-content p-3 p-md-5">
+      <div class="modal-body p-md-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="text-center mb-4">
+          <h3 class="address-title mb-2 pb-1">Are you sure you want to delete JO for <b><span id="plate-no-display"></span></b> </h3>
+          <p class="address-subtitle">Are you sdure you want to change do this action?</p>
+        </div>
+        <form id="addNewAddressForm" class="row g-4" onsubmit="return false">
+
+          <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary me-sm-3 me-1" onclick="doDeleteJo()">Yes</button>
+            <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
