@@ -53,7 +53,9 @@
               <div class="col-sm-6 mb-2 d-md-flex align-items-right justify-content-end text-right">
                 @if($data->status == 1)
                   <h3>Estimate</h3>
-                @else
+                @elseif($data->status == 3)
+                  <h3>Official Receipt</h3>
+               @elseif($data->status == 2)
                   <h3>Job Order</h3>
                 @endif
               </div>
@@ -63,7 +65,9 @@
 
                   @if($data->status == 1)
                     <span class="fw-normal">EST#:</span>
-                  @else
+                   @elseif($data->status == 3)
+                    <span class="fw-normal">OR#:</span>
+                   @elseif($data->status == 2)
                     <span class="fw-normal">JO#:</span>
                   @endif
 
@@ -379,7 +383,17 @@
           Print
         </a>
         <a class="btn btn-outline-secondary d-grid w-100 mb-3" onclick="history.back()">
-          Edit Job Order
+          Edit 
+       
+
+            @if($data->status == 1)
+                  Estimate
+                @elseif($data->status == 3)
+                  Official Receipt
+               @elseif($data->status == 2)
+                 Job Order>
+                @endif
+
         </a>
         <!-- <button class="btn btn-success d-grid w-100" data-bs-toggle="offcanvas" data-bs-target="#addPaymentOffcanvas">
           <span class="d-flex align-items-center justify-content-center text-nowrap"><i class="mdi mdi-currency-usd me-1"></i>Add Payment</span>

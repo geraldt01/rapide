@@ -43,17 +43,27 @@ table.border-black {
     </div>
     <div>
       <h4 class="text-right text-uppercase "> 
-        @if($data->status == 1)
+
+
+      @if($data->status == 1)
           Estimate
-        @else
+        @elseif($data->status == 3)
+          Official Receipt
+        @elseif($data->status == 2)
           Job Order
         @endif
+
+
       </h4>
       <div class="text-right">
         @if($data->status == 1)
          <span>EST#:</span>
-        @else
+
+        @elseif($data->status == 2)
          <span>JO#:</span>
+
+          @elseif($data->status == 3)
+         <span>OR#:</span>
         @endif
 
         <span>{{$data->job_order_number}}</span>
