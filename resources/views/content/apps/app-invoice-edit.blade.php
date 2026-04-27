@@ -126,7 +126,7 @@ input.c-red, .c-red {
                            <select class="btn btn-outline-primary dropdown-toggle dropdown-menu form-select item-details mb-3 waves-effect{{$optionStatus}}" name="status" id="job-order-status" onchange="showStatus()">
                                   <option value="1" id="option1" class="bg-label-warning" {{$data->job_order_status == 1 ? 'selected' : ''}}>ESTIMATE</option>
                                   <option value="2" class="bg-label-info"  {{$data->job_order_status == 2 ? 'selected' : ''}}>JOB ORDER</option>
-                                  <option value="3" class="alert-solid-success"  {{$data->job_order_status == 3 ? 'selected' : ''}}>OFICIAL RECEIPT</option>
+                                  <!-- <option value="3" class="alert-solid-success"  {{$data->job_order_status == 3 ? 'selected' : ''}}>OFICIAL RECEIPT</option> -->
                                   <!-- <option value="4">Others</option> -->
                             </select>
                         <input type="text" class="form-control" aria-label="Text input with dropdown button" name="status-text" id="status-text" value="">
@@ -137,8 +137,10 @@ input.c-red, .c-red {
               <dt class="col-sm-6 mb-2 d-md-flex align-items-center justify-content-end">
                 @if($data->job_order_status == '1')
                 <span class="fw-normal">Repair Estimate #</span>
-                @else
+                 @elseif($data->job_order_status == '2')
                 <span class="fw-normal">Job Order #</span>
+                 @elseif($data->job_order_status == '3')
+                <span class="fw-normal">Oficial Receipt #</span>
                 @endif
               </dt>
               <dd class="col-sm-6">

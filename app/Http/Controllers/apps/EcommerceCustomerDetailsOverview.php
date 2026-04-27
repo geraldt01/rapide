@@ -260,17 +260,6 @@ class EcommerceCustomerDetailsOverview extends Controller
         }
       }
 
-       if(isset($value[2])) {
-        if($value[2]->status == '3') {
-         $jo_id = $value[2]->id;
-          $htmlJS[] = '<a href="/app/job-order/'.$value[2]->id.'"><span class="badge rounded-pill bg-label-success" text-capitalized="">'.$value[2]->status_display.'</span></a>';
-          $number[] = " OR#".$value[2]->job_order_number;
-          $status = $value[2]->status;
-          $date = $value[2]->date;
-        }
-      }
-
-
         if(isset($jo_id)) {
           $array[] = array('id' => $jo_id,
           'counter' => $a,
