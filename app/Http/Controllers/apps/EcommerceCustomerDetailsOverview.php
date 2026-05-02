@@ -111,10 +111,10 @@ class EcommerceCustomerDetailsOverview extends Controller
     ->where('date', '=', $_GET['date'])
     ->get();
 
-    if(isset($checkExistingJobOrder[0])) {
-     return response()->json(['success'=> false, 'message' => 'Job Order already exist!']);
+    // if(isset($checkExistingJobOrder[0])) {
+    //  return response()->json(['success'=> false, 'message' => 'Job Order already exist!']);
 
-    } else {
+    // } else {
       $numbers_only = preg_replace("/[^0-9]/", "", $_GET['est']);
       $checkInvoiceNumber = DB::table('repair_estimate_numbers')->where('value', '=', $numbers_only)
       ->get();
@@ -210,7 +210,7 @@ class EcommerceCustomerDetailsOverview extends Controller
 
       } 
       return response()->json(['success'=> true, 'message' => 'Job Order added successfully!']);
-      }
+      // }
   }
 
   public function jsonJobOrder($car_id) {
@@ -238,29 +238,65 @@ class EcommerceCustomerDetailsOverview extends Controller
      foreach ($opt as $key => $value) {
       $htmlJS = array();
       $number = array();
-      if(isset($value[0])) {
-        if($value[0]->status == '1') {
-         $jo_id = $value[0]->id;
 
-             $htmlJS[] = '<a href="/app/job-order/'.$value[0]->id.'"><span class="badge rounded-pill bg-label-warning" text-capitalized="">'.$value[0]->status_display.'</span></a>';
-             $number[] = "EST#".$value[0]->job_order_number;
-            $status = $value[0]->status;
-            $date = $value[0]->date;
-
-          }
+      foreach($value as $v) {
+        if($v->status == '1') {
+        $badge_status = "warning";
+        } else if($v->status == '2') {
+        $badge_status = "info";
+        } else {
+        $badge_status = "success";
         }
+          $htmlJS[] = '<a href="/app/job-order/'.$v->id.'"><span class="badge rounded-pill bg-label-'.$badge_status.'" text-capitalized="">'.$v->status_display.'</span></a>';
+            $number[] = "EST#".$v->job_order_number;
+           $status[] = $v->status;
+           $date = $key;
+           $jo_id[] = $v->id;
 
-       if(isset($value[1])) {
-        if($value[1]->status == '2') {
-         $jo_id = $value[1]->id;
-          $htmlJS[] = '<a href="/app/job-order/'.$value[1]->id.'"><span class="badge rounded-pill bg-label-info" text-capitalized="">'.$value[1]->status_display.'</span></a>';
-          $number[] = " JO#".$value[1]->job_order_number;
-          $status = $value[1]->status;
-          $date = $value[1]->date;
-        }
       }
+      // if(isset($value[0])) {
 
-        if(isset($jo_id)) {
+
+      //   if($value[0]->status == '1') {
+      //      print_r($value[0]);
+
+      //    $jo_id = $value[0]->id;
+
+      //        $htmlJS[] = '<a href="/app/job-order/'.$value[0]->id.'"><span class="badge rounded-pill bg-label-warning" text-capitalized="">'.$value[0]->status_display.'</span></a>';
+      //        $number[] = "EST#".$value[0]->job_order_number;
+      //       $status = $value[0]->status;
+      //       $date = $value[0]->date;
+
+      //     }
+      //   }
+
+      //  if(isset($value[1])) {
+
+      //   if($value[1]->status == '2') {
+      // print_r($value[1]);
+
+      //    $jo_id = $value[1]->id;
+      //     $htmlJS[] = '<a href="/app/job-order/'.$value[1]->id.'"><span class="badge rounded-pill bg-label-info" text-capitalized="">'.$value[1]->status_display.'</span></a>';
+      //     $number[] = " JO#".$value[1]->job_order_number;
+      //     $status = $value[1]->status;
+      //     $date = $value[1]->date;
+      //   }
+      // }
+
+
+      
+      //  if(isset($value[2])) {
+      // print_r($value[2]);
+
+      //   if($value[2]->status == '3') {
+
+      //    $jo_id = $value[2]->id;
+      //     $htmlJS[] = '<a href="/app/job-order/'.$value[2]->id.'"><span class="badge rounded-pill bg-label-info" text-capitalized="">'.$value[2]->status_display.'</span></a>';
+      //     $number[] = " JO#".$value[2]->job_order_number;
+      //     $status = $value[2]->status;
+      //     $date = $value[2]->date;
+      //   }
+      // }
           $array[] = array('id' => $jo_id,
           'counter' => $a,
           'order' => $number,
@@ -275,14 +311,14 @@ class EcommerceCustomerDetailsOverview extends Controller
           'date' => $date,
           'time' => "2:11 AM",
           'method_number' => 6522);
-        }
         
-      $key++;
+     
+     $key++;
       $a++;
     }
   } 
-  
 
+  
     $jo['data'] = $array;
     return response()->json($jo);
   }

@@ -260,7 +260,7 @@
               <th style="text-align: center">Order</th>
               <th style="text-align: center">Date</th>
               <th style="text-align: center">Status</th>
-              <th style="text-align: center">Actions</th>
+              <th style="text-align: center"></th>
             </tr>
           </thead>
         </table>

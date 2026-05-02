@@ -127,10 +127,11 @@ foreach($var as $ctr => $d) {
      foreach($v['package_manual_data'] as $ctr => $pmdata) {
         $unit_cost = str_replace(",", "", intval($pmdata->unit_cost));
         $unit_selling_price_with_labor =  str_replace(",", "", $pmdata->price);
-        $total_cost = $pmdata->qty * $unit_cost;
-        $total_sell_price = $pmdata->qty * $unit_selling_price_with_labor;
+        $pmdata_qty = str_replace(' ', '', $pmdata->qty);
+        $total_cost = intval($pmdata_qty) * $unit_cost;
+        $total_sell_price = intval($pmdata_qty) * intval($unit_selling_price_with_labor);
 
-        $overall_unit_selling_price_with_labor += $unit_selling_price_with_labor;
+        $overall_unit_selling_price_with_labor += intval($unit_selling_price_with_labor);
         $overall_total_sell_price  += $total_sell_price;
         $total_inv_amount_package =  $overall_total_sell_price;
        

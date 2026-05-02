@@ -153,19 +153,13 @@ $(function () {
         {
           // Actions
           targets: -1,
-          title: 'Actions',
+          title: '',
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
             var $id = full['id'];
             return (
-              '<div>' +
-              '<button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="mdi mdi-dots-vertical ms-4"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="/app/job-order/' + $id + '" class="dropdown-item">View</a>' +
-              '<a href="javascript:;" class="dropdown-item  delete-record">Delete</a>' +
-              '</div>' +
-              '</div>'
+              ''
             );
           }
         }
