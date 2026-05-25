@@ -474,7 +474,7 @@ class SalesReport extends Controller
 //////////////////
     $total_month_sales = 0;
     foreach($monthSales as $da){
-       $total_month_sales += str_replace(",", "", $da->total_amount);
+       $total_month_sales += (float) str_replace(",", "", $da->total_amount);
     }
       return response()->json(['success'=> true, 'no_of_cars_repair_and_jo' => count($arrayWithoutDuplicates),'total_sales' => $totalSales, 'total_cars' => count($totalSalesData), 'total_monthly_sales' => $total_month_sales, 'total_monthly_cars' => count($monthSales), 'total_cash' => (($totalCash > 0) ? "₱".number_format($totalCash, 2) : ''), 'total_gcash' => (($totalGcash > 0) ? "₱".number_format($totalGcash, 2) : ''), 'total_mobile_check' => (($totalMobileCheck > 0) ? "₱".number_format($totalMobileCheck, 2) : ''), 'total_others' => (($totalOthers > 0) ? "₱".number_format($totalOthers, 2) : ''), 'grand_total' => "₱".number_format($grandTotal, 2) ]);
   }
