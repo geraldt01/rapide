@@ -352,6 +352,7 @@ Route::get('/app/ecommerce/order/list', [EcommerceOrderList::class, 'index'])->n
 Route::get('app/ecommerce/order/details', [EcommerceOrderDetails::class, 'index'])->name('app-ecommerce-order-details');
 Route::get('/app/ecommerce/customer/all', [EcommerceCustomerAll::class, 'index'])->name('app-ecommerce-customer-all');
 Route::get('app/ecommerce/customer/details/overview', [EcommerceCustomerDetailsOverview::class, 'index'])->name('app-ecommerce-customer-details-overview');
+Route::get('/app/check/car/{plate_number}', [EcommerceCustomerDetailsOverview::class, 'checkCar'])->name('app-ecommerce-customer-details-overview');
 
 
 Route::get('app/ecommerce/customer/details/security', [EcommerceCustomerDetailsSecurity::class, 'index'])->name('app-ecommerce-customer-details-security');

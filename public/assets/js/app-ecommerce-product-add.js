@@ -24,6 +24,30 @@
 
 
 
+  $('#ecommerce-plate-number').blur(function() {
+          const plate_number = document.getElementById('ecommerce-plate-number').value; // Replace with your input's ID
+
+          $.ajax({
+          url: '/app/check/car/'+ plate_number,
+          type: 'GET',
+          data:  $("#form-add-car").serialize(),
+          success: function (result) {
+            if(result.success == false) {
+                      $(".new-car-alert-not-available").removeClass("d-none");
+                      const myAnchor = document.getElementById('link-to-car');
+                    myAnchor.setAttribute('href', '/app/car/view/'+result.car_id);
+            } else {
+                      $(".new-car-alert-not-available").addClass("d-none");
+
+            }
+          },
+          error: function (error) {
+            console.log(error);
+          }
+
+      });
+    });
+
 
 
 

@@ -67,7 +67,7 @@ input.c-red, .c-red {
 @section('page-script')
 <script src="{{asset('assets/js/offcanvas-add-payment.js')}}"></script>
 <script src="{{asset('assets/js/offcanvas-send-invoice.js')}}"></script>
-<script src="{{asset('assets/js/app-invoice-edit.js?v=4.51.1')}}"></script>
+<script src="{{asset('assets/js/app-invoice-edit.js?v=9.52.1')}}"></script>
 
 <script src="{{asset('assets/js/forms-selects.js')}}"></script>
 <script src="{{asset('assets/js/forms-tagify.js')}}"></script>
@@ -575,7 +575,7 @@ input.c-red, .c-red {
               <div class="d-flex justify-content-between mb-2">
                 <span class="w-px-250 text-right pt-3"><b><span id="display-payment"  style="text-transform: uppercase;">{{$data->payment_label}}</span><i class="mdi mdi-pencil me-1 js-textareacopybtn" id="note-icon" onclick="editPaymentLabel()"></i></b></span>
                 <span class="alert-coppied" id="icon-{{$k}}">Coppied!</span>
-                 @if($data->job_order_status == '2')
+                 @if($data->job_order_status == '2' || $data->job_order_status == '3')
                   <i class="mdi mdi-arrow-down-right me-1 js-textareacopybtn" id="note-icon" onclick="copyPayment()"></i><span class="alert-coppied" id="icon-{{$k}}">Coppied!</span>
                 @else
                   <div>&nbsp;&nbsp;</div>

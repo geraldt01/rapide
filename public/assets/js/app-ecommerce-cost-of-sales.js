@@ -677,15 +677,18 @@ function convertDateFormat(dateString) {
 }
 
 
-    function exportCsv() {
+    function exportCsv(type) {
 
       var pathArray = window.location.pathname.split('/');
       const dateYmd = pathArray[3];
+            $(".loader").removeClass("d-none");
        $.ajax({
         type: "get",
         url: '/app/export/cost-of-sales/'+dateYmd,
-          data:  $("#editCashBalanceForm").serialize(),
+          data:  {type: type},
           success: function (result) {
+            $(".loader").addClass("d-none");
+
            window.open('/download/'+result.fileName, '_blank').focus();
 
         },

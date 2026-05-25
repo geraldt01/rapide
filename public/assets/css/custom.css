@@ -26,10 +26,17 @@
 }
 .new-car-alert {
   position: relative !important;
-  display: block;
+  display: block !important;
   background-color: #eefbe5 !important;
     border-color: #eefbe5 !important;
     color: #67cb24 !important;
+}
+.alert-danger.new-car-alert-not-available  {
+  display: block !important;
+  position: relative !important;
+}
+.alert-danger.new-car-alert-not-available.d-none {
+  display: none !important;
 }
 .new-car-alert a {
     color: #67cb24 !important;

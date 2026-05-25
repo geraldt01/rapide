@@ -434,6 +434,21 @@ class EcommerceCustomerDetailsOverview extends Controller
   }
 
   
+  function checkCar($plate_number) {
+
+    
+    $carInfo = DB::table('cars')
+    ->where('plate_number', '=', $plate_number)
+    ->get();
+
+      if(isset($carInfo[0])) {
+           return response()->json(['success'=> false,  'message' => 'Car is already available!', 'car_id' => $carInfo[0]->id]);
+      } else {
+           return response()->json(['success'=> true,  ]);
+
+      }
+  
+  }
   
   
 }

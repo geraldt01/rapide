@@ -9,6 +9,7 @@ use DB;
 use App\Exports\SalesReportExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class CostOfSales extends Controller
 {
@@ -260,9 +261,12 @@ foreach($var as $ctr => $d) {
     
   public function exportCostOfSales($date) {
 
+     $type = $_GET['type'];
    date_default_timezone_set("Asia/Manila");
 
-    $jobOrderInfo = DB::table('cars')
+  
+  if($type == '1') {
+  $jobOrderInfo = DB::table('cars')
      ->join('job_orders', 'job_orders.car_id', '=', 'cars.id')
      ->join('owners', 'owners.id', '=', 'cars.owner_id')
      ->select('job_orders.id as job_order_id', 'job_orders.job_order_number as job_order_number', 
@@ -287,9 +291,41 @@ foreach($var as $ctr => $d) {
     'owners.mobile_number as mobile_number', 
   )
    ->where('job_orders.date', $date)
-   ->where('job_orders.status', 2)
+    ->where('job_orders.status', 2)
     ->OrderBy('job_orders.status_display', 'Desc')
     ->get();
+  } else {
+
+  $jobOrderInfo = DB::table('cars')
+     ->join('job_orders', 'job_orders.car_id', '=', 'cars.id')
+     ->join('owners', 'owners.id', '=', 'cars.owner_id')
+     ->select('job_orders.id as job_order_id', 'job_orders.job_order_number as job_order_number', 
+    'cars.id as car_id', 
+    'job_orders.date as date', 
+    'job_orders.job_order_number as job_order_number', 
+    'job_orders.invoice_number as invoice_number', 
+    'cars.plate_number as plate_number', 
+    'cars.manufacturer as manufacturer', 
+    'cars.vehicle_type as vehicle_type', 
+    'cars.vehicle_model as vehicle_model', 
+    'cars.transmission as transmission', 
+    'cars.fuel_type as fuel_type', 
+    'job_orders.mileage as mileage', 
+    // 'job_orders.status as status', 
+    'job_orders.status as status_display', 
+    'cars.owner_id as owner_id', 
+    'cars.vehicle_type as vehicle_type', 
+    'cars.year as year', 
+    'owners.owner_name as owner_name', 
+    'owners.address as address', 
+    'owners.mobile_number as mobile_number', 
+  )
+    ->whereMonth('job_orders.created_at', now()->month)
+    ->where('job_orders.status', 2)
+    ->OrderBy('job_orders.status_display', 'Desc')
+    ->get();
+  }
+  
 
 
     $key = 0;
@@ -362,8 +398,14 @@ foreach($var as $ctr => $d) {
           $get_labor_price = 0;
         }
         $unit_selling_price_with_labor = $get_labor_price  + $pdata->part_price;
-        $total_cost = $pdata->part_qty * $pdata->unit_cost;
-        $total_sell_price = $pdata->part_qty * $unit_selling_price_with_labor;
+       
+        $quantity = (int) $pdata->part_qty;
+        $unit_cost = (int) $pdata->unit_cost;
+       
+        $total_cost = $quantity * $unit_cost;
+        $unit_selling_price_with_labor = (float) $unit_selling_price_with_labor;
+
+        $total_sell_price = $quantity * $unit_selling_price_with_labor;
 
         $overall_unit_selling_price_with_labor += $unit_selling_price_with_labor;
         $overall_total_sell_price  += $total_sell_price;
@@ -374,7 +416,7 @@ foreach($var as $ctr => $d) {
      
         $items[] = array(
         (($ctr == 0) ? $v['data']->date : ''), (($ctr == 0) ? $v['data']->owner_name : ''), (($ctr == 0) ? $v['data']->address : ''), (($ctr == 0) ? $v['data']->manufacturer." ". $v['data']->vehicle_model." ". $v['data']->year." ". $v['data']->transmission." ". $v['data']->fuel_type : ''),
-        $v['data']->invoice_number, $v['data']->job_order_number, $pdata->part_qty, $pdata->part_value, $pdata->part_number, $pdata->supplier, $pdata->supplier_inv, number_format($pdata->unit_cost, 2),
+        $v['data']->invoice_number, $v['data']->job_order_number, $pdata->part_qty, $pdata->part_value, $pdata->part_number, $pdata->supplier, $pdata->supplier_inv, number_format($unit_cost, 2),
         number_format($total_cost, 2), number_format($unit_selling_price_with_labor, 2), number_format($total_sell_price, 2), number_format($total_inv_amount_package, 2), ''
         );
 

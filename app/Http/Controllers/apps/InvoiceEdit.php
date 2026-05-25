@@ -164,6 +164,8 @@ class InvoiceEdit extends Controller
     $jobOrderLaborSelected = DB::table('job_orders_labors')
     // ->where('status', '=', 1)
     ->where('job_order_id', '=', $job_order_id)
+    ->where('status', '!=', 0)
+
     ->get();
 
     
@@ -264,6 +266,7 @@ class InvoiceEdit extends Controller
     $jobOrderPartSelected = DB::table('job_orders_part_services')
     // ->where('status', '=', 1)
     ->where('job_order_id', '=', $job_order_id)
+    ->where('status', '!=', 0)
     ->get();
 
 
@@ -460,6 +463,7 @@ class InvoiceEdit extends Controller
             "part_price"  =>  0,
             "part_amount"   =>  0,
             "part_code"   =>  NULL,
+            "status"   =>  0,
           ] );
      return response()->json(['success'=> true, 'message' => 'Item deleted!']);
 
@@ -475,6 +479,8 @@ class InvoiceEdit extends Controller
             "labor_price"   => 0,
             "labor_amount"   => 0,
             "labor_code"   =>  NULL,
+            "status"   =>  0,
+
           ] );
      return response()->json(['success'=> true, 'message' => 'Item deleted!']);
 
@@ -490,6 +496,7 @@ class InvoiceEdit extends Controller
             "package_note"  =>  NULL,
             "package_note2"   =>  NULL,
             "package_price"   => 0,
+            "status"   =>  0,
           ] );
      return response()->json(['success'=> true, 'message' => 'Item deleted!']);
 
@@ -1162,6 +1169,7 @@ class InvoiceEdit extends Controller
 
     $job_order_id = $_GET['job_order_id'];
     $itemNum = $_GET['itemNum'];
+
     if($type == 'package') {
        JobOrdersPackage::where("job_order_id", $job_order_id)->where("item_number", $itemNum)->update([
         "status" => 1,
@@ -1182,7 +1190,6 @@ class InvoiceEdit extends Controller
         "status" => 1,
       ]);
     }
-    echo "pasok";
 
   }
 

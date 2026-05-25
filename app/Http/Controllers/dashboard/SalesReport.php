@@ -37,8 +37,10 @@ class SalesReport extends Controller
     }
 
     $jobOrderSales = DB::table('job_orders')
+    ////////////////
+    ->WhereIn('status', [3, 2])
     ->where('date', $date_today)
-    ->where('status', 2)
+    ->distinct()
     ->get();
 
   
@@ -320,15 +322,15 @@ class SalesReport extends Controller
 
   public function getTotal(Request $request, $date) {
     $totalSalesData = DB::table('job_orders')
-    ->where('date', $date)
     ->where('payment', '>', 0)
-    ->where('status', 2)
+    ->WhereIn('status', [3, 2])
+    ->where('date', $date)
     ->get();
 
     $totalSalesData2 = DB::table('job_orders')
-    ->where('date', $date)
     ->where('payment2', '>', 0)
-    ->where('status', 2)
+       ->WhereIn('status', [3, 2])
+    ->where('date', $date)
     ->get();
 
 
@@ -348,15 +350,16 @@ class SalesReport extends Controller
     ->where('date', $date)
     ->where('payment', '>', 0)
     ->where('mode_of_payment', 'cash')
-    ->where('status', 2)
+    ->WhereIn('status', [2, 3])
     ->get();
 
     $totalCashData2 = DB::table('job_orders')
     ->where('date', $date)
     ->where('payment2', '>', 0)
     ->where('mode_of_payment2', 'cash')
-    ->where('status', 2)
+        ->WhereIn('status', [2, 3])
     ->get();
+
 
     $grandTotal = 0;
     $totalCash = 0;
@@ -376,14 +379,14 @@ class SalesReport extends Controller
     ->where('date', $date)
     ->where('payment', '>', 0)
     ->where('mode_of_payment', 'gcash')
-    ->where('status', 2)
+    ->WhereIn('status', [3, 2])
     ->get();
 
     $totalGcashData2 = DB::table('job_orders')
     ->where('date', $date)
     ->where('payment2', '>', 0)
     ->where('mode_of_payment2', 'gcash')
-    ->where('status', 2)
+    ->WhereIn('status', [3, 2])
     ->get();
     
     $totalGcash = 0;
@@ -401,14 +404,14 @@ class SalesReport extends Controller
     ->where('date', $date)
     ->where('payment', '>', 0)
     ->where('mode_of_payment', 'mobile')
-    ->where('status', 2)
+    ->WhereIn('status', [3, 2])
     ->get();
 
      $totalMobileCheckData2 = DB::table('job_orders')
     ->where('date', $date)
     ->where('payment2', '>', 0)
     ->where('mode_of_payment2', 'mobile')
-    ->where('status', 2)
+    ->WhereIn('status', [3, 2])
     ->get();
 
     $totalMobileCheck = 0;
@@ -427,14 +430,14 @@ class SalesReport extends Controller
     ->where('date', $date)
     ->where('payment', '>', 0)
     ->where('mode_of_payment', 'check_others')
-    ->where('status', 2)
+    ->WhereIn('status', [3, 2])
     ->get();
 
     $totalOthersData2 = DB::table('job_orders')
     ->where('date', $date)
     ->where('payment2', '>', 0)
     ->where('mode_of_payment2', 'check_others')
-    ->where('status', 2)
+    ->WhereIn('status', [3, 2])
     ->get();
     $totalOthers = 0;
     foreach($totalOthersData as $dataoh) {
@@ -450,7 +453,7 @@ class SalesReport extends Controller
     $last_date = date('Y-m-d',strtotime('last day of this month'));
 
 
-    $monthSales = JobOrder::whereBetween('date', [$first_date, $last_date])->where('status', 2)->get();
+    $monthSales = JobOrder::whereBetween('date', [$first_date, $last_date])->WhereIn('status', [3, 2])->get();
     $monthSales2 = JobOrder::whereBetween('date', [$first_date, $last_date])->where('status', 1)->get();
 
 

@@ -401,6 +401,17 @@
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
           </button>
         </div>
+
+
+        
+  <div class="alert alert-danger new-car-alert-not-available d-none alert-dismissible" role="alert">
+  <h4 class="alert-heading d-flex align-items-center"><i class="mdi mdi-check-circle-outline mdi-24px me-2"></i>Alert!</h4>
+<hr>
+  <p class="mb-0">Car already have record.</p>
+   <p class="mb-0">click here to view <u><a href="" id="link-to-car">click here</a></u></p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+    </button>
+  </div>
       <!-- Pricing Card -->
       </div>
       <!-- /Pricing Card -->

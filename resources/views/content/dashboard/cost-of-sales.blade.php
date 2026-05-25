@@ -10,6 +10,14 @@
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/select2/select2.css')}}" />
 
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/flatpickr/flatpickr.css')}}" />
+
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/select2/select2.css')}}" />
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/tagify/tagify.css')}}" />
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css')}}" />
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/typeahead-js/typeahead.css')}}" />
+<link rel="stylesheet" href="{{asset('assets/vendor/css/pages/app-invoice.css')}}" />
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/spinkit/spinkit.css')}}" />
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/flatpickr/flatpickr.css')}}" />
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css')}}" />
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.css')}}" />
 
@@ -127,7 +135,8 @@
 
 
       <div class="table-responsive text-nowrap">
-<button class="btn btn-secondary btn-export-csv btn-label-secondary dropdown-toggle me-3 waves-effect waves-light float-right" tabindex="0" aria-controls="DataTables_Table_0" type="button" onclick="exportCsv()"><span><i class="mdi mdi-export-variant me-1"></i><span class="d-none d-sm-inline-block">Export </span></span><span class="dt-down-arrow"></span></button>
+<button class="btn btn-secondary btn-export-csv btn-label-secondary dropdown-toggle me-3 waves-effect waves-light float-right" tabindex="0" aria-controls="DataTables_Table_0" type="button" onclick="exportCsv('1')"><span><i class="mdi mdi-export-variant me-1"></i><span class="d-none d-sm-inline-block">Export Daily</span></span><span class="dt-down-arrow"></span></button>
+<button class="btn btn-secondary btn-export-csv btn-label-secondary dropdown-toggle me-3 waves-effect waves-light float-right" tabindex="0" aria-controls="DataTables_Table_0" type="button" onclick="exportCsv('2')"><span><i class="mdi mdi-export-variant me-1"></i><span class="d-none d-sm-inline-block">Export Month</span></span><span class="dt-down-arrow"></span></button>
 
     <table class="table">
       <thead>
@@ -448,5 +457,14 @@
   <!--/ Top Referral Source  -->
 
 
+<div class="loader d-none">
+<div class="sk-wave sk-primary">
+    <div class="sk-wave-rect"></div>
+    <div class="sk-wave-rect"></div>
+    <div class="sk-wave-rect"></div>
+    <div class="sk-wave-rect"></div>
+    <div class="sk-wave-rect"></div>
+</div>
+</div>
 
 @endsection

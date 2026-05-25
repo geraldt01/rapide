@@ -273,7 +273,14 @@ calculateAll();
      
       } else if (type == 'labor') {
           setTimeout(function(){ 
-            document.getElementById('labor-qty-'+total).value = 1;
+            alert(total);
+            // document.getElementById('labor-qty-'+total).value = 1;
+
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('labor-qty-'+total).value = 1;
+            });
+
+
           }, 800);
 
       } else {
@@ -387,11 +394,13 @@ calculateAll();
       url: '/app/delete-labor-item/'+ delete_item_id,
         data:  $("#form-job-order").serialize(),
         success: function (result) {
+            $(".loader").removeClass("d-none");
             $(".alert-success p").html(result.message);
             $(".alert-success").removeClass("d-none");
             setTimeout(function(){ 
               $(".alert-success").addClass("d-none");
-          }, 3000);
+              window.location.reload();
+          }, 1000);
         },
         error: function (result, textStatus, errorThrown) {
           
@@ -439,7 +448,6 @@ calculateAll();
         data:  $("#form-job-order").serialize(),
         success: function (result) {
             $(".loader").removeClass("d-none");
-
             $(".alert-success p").html(result.message);
             $(".alert-success").removeClass("d-none");
             setTimeout(function(){ 
@@ -481,6 +489,12 @@ calculateAll();
               setTimeout(function(){ 
               $(".alert-danger").addClass("d-none");
               const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
+            }, 3000);
+            } else {
+               $(".alert-danger p").html("Autosave failed! "+result.message);
+              $(".alert-danger").removeClass("d-none");
+              setTimeout(function(){ 
+              $(".alert-danger").addClass("d-none");
             }, 3000);
             }
           }
@@ -1082,7 +1096,6 @@ const first = element -1;
 
   setInterval(function(){
   var job_order_id = document.getElementById("hidden-job-order-id").value;
-  console.log("test");
     saveInvoice(job_order_id, 1)
   }, 60000)
 
