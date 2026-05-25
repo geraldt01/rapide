@@ -51,7 +51,7 @@ class SalesReport extends Controller
     $total_cars = count($jobOrderSales);
 
     foreach ($jobOrderSales as $key => $value) {
-    $today_total_sales += str_replace(",", "", $value->total_amount);
+    $today_total_sales += (float) str_replace(",", "", $value->total_amount);
         $showCash = 0;
         $showGcash = 0;
         $showMobile = 0;
