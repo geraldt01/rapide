@@ -1190,7 +1190,6 @@ class InvoiceEdit extends Controller
         "status" => 1,
       ]);
     }
-
   }
 
   
