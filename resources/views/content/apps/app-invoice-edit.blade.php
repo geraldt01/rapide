@@ -713,9 +713,9 @@ input.c-red, .c-red {
         </a>
         <a href="#" id="btn-preview" class="btn btn-outline-secondary w-100 me-2 mb-3">Preview</a>
         <button type="button" class="btn btn-success w-100 mb-3 bt-save-changes disabled" onclick="saveInvoice({{$job_order_id}})">Save</button>
-        <!-- <button class="btn btn-success d-grid w-100 mb-3" data-bs-toggle="offcanvas" data-bs-target="#addPaymentOffcanvas">
-          <span class="d-flex align-items-center justify-content-center text-nowrap"><i class="mdi mdi-currency-usd me-1"></i>Add Payment</span>
-        </button> -->
+        <button type="button" class="btn btn-danger d-grid w-100 mb-3"  onclick="deleteInvoiceShowModal()" >
+          <span class="d-flex align-items-center justify-content-center text-nowrap">Delete</span>
+        </button>
       </div>
     </div>
      <div class="card mb-4">

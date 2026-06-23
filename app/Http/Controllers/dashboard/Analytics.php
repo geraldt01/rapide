@@ -40,6 +40,7 @@ class Analytics extends Controller
     'owners.mobile_number as mobile_number', 
   )
    ->where('job_orders.date', $date_today)
+   ->where('job_orders.status', '!=', '0')
     ->OrderBy('job_orders.status_display', 'Desc')
     ->get();
 

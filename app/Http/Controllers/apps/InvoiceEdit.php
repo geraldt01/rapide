@@ -519,6 +519,16 @@ class InvoiceEdit extends Controller
   }
 
   
+  public function deleteJobOrder($job_order_id){
+     JobOrder::find($job_order_id)->delete();
+    JobOrdersPackage::where('job_order_id', $job_order_id)->delete();
+    JobOrdersLabor::where('job_order_id', $job_order_id)->delete();
+    JobOrdersPackageManualItem::where('job_order_id', $job_order_id)->delete();
+    JobOrdersPartService::where('job_order_id', $job_order_id)->delete();
+     return response()->json(['success'=> true, 'message' => 'Item deleted!']);
+
+  }
+  
   public function saveJobOrderItem($job_order_id){
     
     $jobOrderInfo = DB::table('job_orders')

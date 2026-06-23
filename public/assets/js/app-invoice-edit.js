@@ -273,7 +273,6 @@ calculateAll();
      
       } else if (type == 'labor') {
           setTimeout(function(){ 
-            alert(total);
             // document.getElementById('labor-qty-'+total).value = 1;
 
             document.addEventListener('DOMContentLoaded', function () {
@@ -507,6 +506,37 @@ calculateAll();
             setTimeout(function(){ 
               $(".alert-danger").addClass("d-none");
               const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
+          }, 3000);
+      },
+    });
+  }
+
+  function deleteInvoiceShowModal() {
+    $('#deleteJobOrderModal').modal('show');
+  }
+
+  function deleteInvoice(job_order_id, car_id) {
+    $.ajax({
+      type: "post",
+      url: '/app/delete-job-order/'+ job_order_id,
+        data:  $("#form-job-order").serialize(),
+        success: function (result) {
+          if(result.success == true) {
+          
+            $(".alert-success p").html(result.message);
+            $(".alert-success").removeClass("d-none");
+            setTimeout(function(){
+              window.location.replace("/app/car/view/"+car_id);
+            }, 1000);
+          }  
+            
+        },
+      error: function (result, textStatus, errorThrown) {
+          console.log(result.success);
+              $(".alert-danger p").html(result.message);
+            $(".alert-danger").removeClass("d-none");
+            setTimeout(function(){ 
+              $(".alert-danger").addClass("d-none");
           }, 3000);
       },
     });
@@ -1283,91 +1313,91 @@ const first = element -1;
     
       //Labor
     const myElementLabor1 = document.getElementById('labor-amount-1');
-    if (myElementLabor1) {
+    if (myElementLabor1 && myElementLabor1 !== null) {
         var labor_amount1 = myElementLabor1.value.replace(/,/g, '') ;
     } else {
         var labor_amount1  = 0;
     }
     const myElementLabor2 = document.getElementById('labor-amount-2');
-    if (myElementLabor2) {
+    if (myElementLabor2 && myElementLabor2 !== null) {
         var labor_amount2 = myElementLabor2.value.replace(/,/g, '');
     } else {
         var labor_amount2  = 0;
     }
     const myElementLabor3 = document.getElementById('labor-amount-3');
-    if (myElementLabor3) {
+    if (myElementLabor3 && myElementLabor3 !== null) {
         var labor_amount3 = myElementLabor3.value.replace(/,/g, '');
     } else {
         var labor_amount3  = 0;
     }
      const myElementLabor4 = document.getElementById('labor-amount-4');
-    if (myElementLabor4) {
+    if (myElementLabor4 && myElementLabor4 !== null) {
         var labor_amount4 = myElementLabor4.value.replace(/,/g, '');
     } else {
         var labor_amount4  = 0;
     }
      const myElementLabor5 = document.getElementById('labor-amount-5');
-    if (myElementLabor5) {
+    if (myElementLabor5 && myElementLabor5 !== null) {
         var labor_amount5 = myElementLabor5.value.replace(/,/g, '');
     } else {
         var labor_amount5  = 0;
     }
     const myElementLabor6 = document.getElementById('labor-amount-6');
-    if (myElementLabor6) {
+    if (myElementLabor6 && myElementLabor6 !== null) {
         var labor_amount6 = myElementLabor6.value.replace(/,/g, '');
     } else {
         var labor_amount6  = 0;
     }
      const myElementLabor7 = document.getElementById('labor-amount-7');
-    if (myElementLabor7) {
+    if (myElementLabor7 && myElementLabor7 !== null) {
         var labor_amount7 = myElementLabor7.value.replace(/,/g, '');
     } else {
         var labor_amount7  = 0;
     }
      const myElementLabor8 = document.getElementById('labor-amount-8');
-    if (myElementLabor8) {
+    if (myElementLabor8 && myElementLabor8 !== null) {
         var labor_amount8 = myElementLabor8.value.replace(/,/g, '');
     } else {
         var labor_amount8  = 0;
     }
      const myElementLabor9 = document.getElementById('labor-amount-9');
-    if (myElementLabor9) {
+    if (myElementLabor9 && myElementLabor9 !== null) {
         var labor_amount9 = myElementLabor9.value.replace(/,/g, '');
     } else {
         var labor_amount9  = 0;
     }
      const myElementLabor10 = document.getElementById('labor-amount-10');
-    if (myElementLabor10) {
+    if (myElementLabor10 && myElementLabor10 !== null) {
         var labor_amount10 = myElementLabor10.value.replace(/,/g, '');
     } else {
         var labor_amount10  = 0;
     }
      const myElementLabor11 = document.getElementById('labor-amount-11');
-    if (myElementLabor11) {
+    if (myElementLabor11 && myElementLabor11 !== null) {
         var labor_amount11 = myElementLabor11.value.replace(/,/g, '');
     } else {
         var labor_amount11  = 0;
     }
      const myElementLabor12 = document.getElementById('labor-amount-12');
-    if (myElementLabor12) {
+    if (myElementLabor12 && myElementLabor12 !== null) {
         var labor_amount12 = myElementLabor12.value.replace(/,/g, '');
     } else {
         var labor_amount12  = 0;
     }
     const myElementLabor13 = document.getElementById('labor-amount-13');
-    if (myElementLabor13) {
+    if (myElementLabor13 && myElementLabor13 !== null) {
         var labor_amount13 = myElementLabor13.value.replace(/,/g, '');
     } else {
         var labor_amount13  = 0;
     }
     const myElementLabor14 = document.getElementById('labor-amount-14');
-    if (myElementLabor14) {
+    if (myElementLabor14 && myElementLabor14 !== null) {
         var labor_amount14 = myElementLabor14.value.replace(/,/g, '');
     } else {
         var labor_amount14  = 0;
     }
     const myElementLabor15 = document.getElementById('labor-amount-15');
-    if (myElementLabor15) {
+    if (myElementLabor15 && myElementLabor15 !== null) {
         var labor_amount15 = myElementLabor15.value.replace(/,/g, '');
     } else {
         var labor_amount15  = 0;
@@ -1375,31 +1405,31 @@ const first = element -1;
 
 
       const myElementLabor16 = document.getElementById('labor-amount-16');
-    if (myElementLabor16) {
+    if (myElementLabor16 && myElementLabor16 !== null) {
         var labor_amount16 = myElementLabor16.value.replace(/,/g, '');
     } else {
         var labor_amount16  = 0;
     }
       const myElementLabor17 = document.getElementById('labor-amount-17');
-    if (myElementLabor17) {
+    if (myElementLabor17 && myElementLabor17 !== null) {
         var labor_amount17 = myElementLabor17.value.replace(/,/g, '');
     } else {
-        var labor_amount15  = 0;
+        var labor_amount17  = 0;
     }
       const myElementLabor18 = document.getElementById('labor-amount-18');
-    if (myElementLabor18) {
+    if (myElementLabor18 && myElementLabor18 !== null) {
         var labor_amount18 = myElementLabor18.value.replace(/,/g, '');
     } else {
         var labor_amount18  = 0;
     }
       const myElementLabor19 = document.getElementById('labor-amount-19');
-    if (myElementLabor19) {
+    if (myElementLabor19 && myElementLabor19 !== null) {
         var labor_amount19 = myElementLabor19.value.replace(/,/g, '');
     } else {
         var labor_amount19  = 0;
     }
       const myElementLabor20 = document.getElementById('labor-amount-20');
-    if (myElementLabor20) {
+    if (myElementLabor20 && myElementLabor20 !== null) {
         var labor_amount20 = myElementLabor20.value.replace(/,/g, '');
     } else {
         var labor_amount20  = 0;
@@ -1412,123 +1442,123 @@ const first = element -1;
 
     //Parts
     const myElementPart1 = document.getElementById('part-amount-1');
-    if (myElementPart1) {
+    if (myElementPart1 && myElementPart1 !== null) {
         var prt_amount1 = myElementPart1.value.replace(/,/g, '');
     } else {
         var prt_amount1  = 0;
     }
     const myElementPart2 = document.getElementById('part-amount-2');
-    if (myElementPart2) {
+    if (myElementPart2 && myElementPart2 !== null) {
         var prt_amount2 = myElementPart2.value.replace(/,/g, '');
     } else {
         var prt_amount2  = 0;
     }
     const myElementPart3 = document.getElementById('part-amount-3');
-    if (myElementPart3) {
+    if (myElementPart3 && myElementPart3 !== null) {
         var prt_amount3 = myElementPart3.value.replace(/,/g, '');
     } else {
         var prt_amount3  = 0;
     }
      const myElementPart4 = document.getElementById('part-amount-4');
-    if (myElementPart4) {
+    if (myElementPart4 && myElementPart4 !== null) {
         var prt_amount4 = myElementPart4.value.replace(/,/g, '');
     } else {
         var prt_amount4  = 0;
     }
      const myElementPart5 = document.getElementById('part-amount-5');
-    if (myElementPart5) {
+    if (myElementPart5 && myElementPart5 !== null) {
         var prt_amount5 = myElementPart5.value.replace(/,/g, '');
     } else {
         var prt_amount5  = 0;
     }
     const myElementPart6 = document.getElementById('part-amount-6');
-    if (myElementPart6) {
+    if (myElementPart6 && myElementPart6 !== null) {
         var prt_amount6 = myElementPart6.value.replace(/,/g, '');
     } else {
         var prt_amount6  = 0;
     }
      const myElementPart7 = document.getElementById('part-amount-7');
-    if (myElementPart7) {
+    if (myElementPart7 && myElementPart7 !== null) {
         var prt_amount7 = myElementPart7.value.replace(/,/g, '');
     } else {
         var prt_amount7  = 0;
     }
      const myElementPart8 = document.getElementById('part-amount-8');
-    if (myElementPart8) {
+    if (myElementPart8 && myElementPart8 !== null) {
         var prt_amount8 = myElementPart8.value.replace(/,/g, '');
     } else {
         var prt_amount8  = 0;
     }
      const myElementPart9 = document.getElementById('part-amount-9');
-    if (myElementPart9) {
+    if (myElementPart9 && myElementPart9 !== null) {
         var prt_amount9 = myElementPart9.value.replace(/,/g, '');
     } else {
         var prt_amount9  = 0;
     }
      const myElementPart10 = document.getElementById('part-amount-10');
-    if (myElementPart10) {
+    if (myElementPart10 && myElementPart10 !== null) {
         var prt_amount10 = myElementPart10.value.replace(/,/g, '');
     } else {
         var prt_amount10  = 0;
     }
      const myElementPart11 = document.getElementById('part-amount-11');
-    if (myElementPart11) {
+    if (myElementPart11 && myElementPart11 !== null) {
         var prt_amount11 = myElementPart11.value.replace(/,/g, '');
     } else {
         var prt_amount11  = 0;
     }
      const myElementPart12 = document.getElementById('part-amount-12');
-    if (myElementPart12) {
+    if (myElementPart12 && myElementPart12 !== null) {
         var prt_amount12 = myElementPart12.value.replace(/,/g, '');
     } else {
         var prt_amount12  = 0;
     }
     const myElementPart13 = document.getElementById('part-amount-13');
-    if (myElementPart13) {
+    if (myElementPart13 && myElementPart13 !== null) {
         var prt_amount13 = myElementPart13.value.replace(/,/g, '');
     } else {
         var prt_amount13  = 0;
     }
     const myElementPart14 = document.getElementById('part-amount-14');
-    if (myElementPart14) {
+    if (myElementPart14 && myElementPart14 !== null) {
         var prt_amount14 = myElementPart14.value.replace(/,/g, '');
     } else {
         var prt_amount14  = 0;
     }
     const myElementPart15 = document.getElementById('part-amount-15');
-    if (myElementPart15) {
+    if (myElementPart15 && myElementPart15 !== null) {
         var prt_amount15 = myElementPart15.value.replace(/,/g, '');
     } else {
         var prt_amount15  = 0;
     }
 
       const myElementPart16 = document.getElementById('part-amount-16');
-    if (myElementPart16) {
+    if (myElementPart16 && myElementPart16 !== null) {
         var prt_amount16 = myElementPart16.value.replace(/,/g, '');
     } else {
         var prt_amount16  = 0;
     }
       const myElementPart17 = document.getElementById('part-amount-17');
-    if (myElementPart17) {
+    if (myElementPart17 && myElementPart17 !== null) {
         var prt_amount17 = myElementPart17.value.replace(/,/g, '');
     } else {
         var prt_amount17  = 0;
     }
       const myElementPart18 = document.getElementById('part-amount-18');
-    if (myElementPart18) {
+    if (myElementPart18 && myElementPart18 !== null) {
         var prt_amount18 = myElementPart18.value.replace(/,/g, '');
     } else {
         var prt_amount18  = 0;
     }
       const myElementPart19 = document.getElementById('part-amount-19');
-    if (myElementPart19) {
+    if (myElementPart19 && myElementPart19 !== null) {
         var prt_amount19 = myElementPart19.value.replace(/,/g, '');
     } else {
         var prt_amount19  = 0;
     }
 
       const myElementPart20 = document.getElementById('part-amount-20');
-    if (myElementPart20) {
+    if (myElementPart20 && myElementPart20 !== null) {
         var prt_amount20 = myElementPart20.value.replace(/,/g, '');
     } else {
         var prt_amount20  = 0;

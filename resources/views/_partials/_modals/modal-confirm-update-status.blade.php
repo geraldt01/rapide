@@ -43,4 +43,25 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+<div class="modal fade" id="deleteJobOrderModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-simple modal-add-new-address">
+    <div class="modal-content p-3 p-md-5">
+      <div class="modal-body p-md-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        
+           <h3 class="address-subtitle text-center">Are you sure you want to delete this?</h3>
+          <div class="col-12 text-center">
+            <a class="btn btn-danger me-sm-3 me-1"  onclick="deleteInvoice({{$job_order_id}}, {{$data->car_id}})">Delete</a>
+            <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 <!--/ Add New Address Modal -->

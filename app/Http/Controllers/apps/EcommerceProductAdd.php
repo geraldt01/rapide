@@ -81,10 +81,16 @@ class EcommerceProductAdd extends Controller
   }
 
   function dashboardData($date) {
+    date_default_timezone_set('Asia/Manila');
+
       $totalSalesData = DB::table('job_orders')
     ->where('date', $date)
+    ->where('status', '>', '0')
     ->get();
     $key = 0;
+
+   
+ 
     foreach($totalSalesData as  $d) {
        $data[$d->plate_number][] = $d;
     }
@@ -103,6 +109,7 @@ class EcommerceProductAdd extends Controller
       }
       $var[$key][] = $final[0];
     }
+
 
     $totalCars = $estimateTotal + $jobOrderTotal;
      return response()->json(['success'=> true, 'total_estimate' =>  $estimateTotal, 'total_job_order' =>  $jobOrderTotal, 'total_cars' => $totalCars ]);

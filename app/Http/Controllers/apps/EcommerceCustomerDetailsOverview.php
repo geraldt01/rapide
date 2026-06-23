@@ -165,7 +165,7 @@ class EcommerceCustomerDetailsOverview extends Controller
       ]
       );
 
-      for($x=0;$x<=19;$x++) {
+      for($x=0;$x<=24;$x++) {
         if($x == 0) {
           $pck = new JobOrdersPackage();
           $pck->item_number = 1;
