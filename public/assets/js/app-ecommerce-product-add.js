@@ -53,6 +53,14 @@
 
   const addCar = document.querySelector('.btn-add-car');
     $('.btn-add-car').on('click',  function () {
+        var $btn = $(this);
+
+        if ($btn.hasClass('disabled')) {
+          return;
+        }
+
+        $btn.addClass('disabled');
+
         $.ajax({
           url: '/app/save/car/',
           type: 'GET',
@@ -64,9 +72,9 @@
               $(".alert-success p").html(result.message);
                 const myAnchor = document.getElementById('link-new-car');
                 myAnchor.setAttribute('href', '/app/car/view/'+result.new_car_id);
-              
+
                   $(".alert-success").removeClass("d-none");
-                setTimeout(function(){ 
+                setTimeout(function(){
                   $(".alert-success").addClass("d-none");
                   const form = document.getElementById('form-add-car'); // Replace 'myForm' with your form's ID
                   form.reset();
@@ -77,16 +85,20 @@
                   var selectElement2 = document.getElementById('select-vehicle-type');
                   selectElement2.innerHTML = '';
 
+                  $btn.removeClass('disabled');
 
               }, 2000);
-              
+
+            } else {
+              $btn.removeClass('disabled');
             }
           },
           error: function (error) {
             console.log(error);
+            $btn.removeClass('disabled');
           }
         }
-      ); 
+      );
   });
 
 
