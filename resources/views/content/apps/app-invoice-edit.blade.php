@@ -160,6 +160,12 @@ input.c-red, .c-red {
               <dd class="col-sm-6">
                 <input type="text" class="form-control due-date" name="expire_date" placeholder="YYYY-MM-DD" />
               </dd>
+              <dt class="col-sm-6 mb-2 d-md-flex align-items-center justify-content-end">
+                <span class="fw-normal">Stock Status:</span>
+              </dt>
+              <dd class="col-sm-6">
+                <span id="stock-status-label" class="badge {{ ($data->status_inventory_deduction == 1) ? 'bg-label-success' : 'bg-label-warning' }}">{{ ($data->status_inventory_deduction == 1) ? 'Deducted' : 'Not Deducted' }}</span>
+              </dd>
             </dl>
           </div>
         </div>
@@ -712,6 +718,15 @@ input.c-red, .c-red {
             <span class="d-flex align-items-center justify-content-center text-nowrap"><i class="mdi mdi-step-backward scaleX-n1-rtl me-2"></i>Back to &nbsp;<i class="mdi mdi-train-car-flatbed-car scaleX-n1-rtl me-2 pl-2"></i></span>
         </a>
         <a href="#" id="btn-preview" class="btn btn-outline-secondary w-100 me-2 mb-3">Preview</a>
+        @php
+          $isJobOrderStatus = ($data->status == 2 || $data->status_display == 'job order');
+          $canDeductStock = ($isJobOrderStatus && $data->balance == 0 && $data->status_inventory_deduction == 0);
+        @endphp
+        <input type="hidden" id="hidden-status-inventory-deduction" value="{{$data->status_inventory_deduction}}" />
+        <input type="hidden" id="hidden-is-job-order-status" value="{{ $isJobOrderStatus ? '1' : '0' }}" />
+        <button type="button" id="btn-deduct-stock" class="btn btn-warning d-grid w-100 mb-3 {{ $canDeductStock ? '' : 'disabled' }}" {{ $canDeductStock ? '' : 'disabled' }} {{ ($data->status_inventory_deduction == 1) ? 'title=Inventory stock already deducted for this job order' : (!$isJobOrderStatus ? 'title=Inventory stock can only be deducted when the status is Job Order' : '') }} onclick="deductInventoryStock({{$job_order_id}})">
+          <span class="d-flex align-items-center justify-content-center text-nowrap"><i class="mdi mdi-package-variant-closed me-2"></i>{{ ($data->status_inventory_deduction == 1) ? 'Stock Deducted' : 'Deduct Stock' }}</span>
+        </button>
         <button type="button" class="btn btn-success w-100 mb-3 bt-save-changes disabled" onclick="saveInvoice({{$job_order_id}})">Save</button>
         <button type="button" class="btn btn-danger d-grid w-100 mb-3"  onclick="deleteInvoiceShowModal()" >
           <span class="d-flex align-items-center justify-content-center text-nowrap">Delete</span>

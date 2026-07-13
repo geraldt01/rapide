@@ -265,6 +265,7 @@ class InvoiceEdit extends Controller
    
     $jobOrderPartSelected = DB::table('job_orders_part_services')
     // ->where('status', '=', 1)
+    ->orderByRaw('part_id IS NULL')
     ->where('job_order_id', '=', $job_order_id)
     ->where('status', '!=', 0)
     ->get();
@@ -451,7 +452,7 @@ class InvoiceEdit extends Controller
   public function deleteJobOrderItem($item_id){
     JobOrdersPartService::where("id", $item_id)->update(
           [
-            "part_qty"     => 1,
+            "part_qty"     => 0,
             "part_value"   =>  NULL,
             "part_id"   =>  NULL,
             "part_note"   =>  NULL,
@@ -465,7 +466,7 @@ class InvoiceEdit extends Controller
             "part_code"   =>  NULL,
             "status"   =>  0,
           ] );
-     return response()->json(['success'=> true, 'message' => 'Item deleted!']);
+     return response()->json(['success'=> true, 'message' => 'Item deleted!', 'item_id' => $item_id]);
 
   }
 
@@ -688,12 +689,9 @@ class InvoiceEdit extends Controller
   }
 
 
-    //check inventory stock deduction
-  if($status_display == "job order" && $_POST['balance'] == 0 && $jobOrderInfo[0]->status_inventory_deduction == 0) {
-    $check = 1;
-   } else {
+    // Inventory stock deduction no longer happens automatically on save.
+    // It is now triggered explicitly via the "Deduct Stock" button (see deductInventoryStock()).
     $check = 0;
-   }
 
     $invoice_date = $_POST['invoice_date']; // Example date in m/d/Y format
     // Create a DateTime object from the original format
@@ -727,8 +725,7 @@ class InvoiceEdit extends Controller
         "mode_of_payment" => (($_POST['mop']) ?  $_POST['mop'] : ''),
         "mode_of_payment2" => (($_POST['mop2']) ?  $_POST['mop2'] : ''),
         "customer_name" => (($_POST['customer_name']) ?  $_POST['customer_name'] : ''),
-        "status_inventory_deduction" => $check,
-        
+
       ]
     );
   
@@ -838,6 +835,7 @@ class InvoiceEdit extends Controller
             "labor_price"   => ((isset($labor['labor-price'])) ?  str_replace(",", "", $labor['labor-price'] ) : 0),
             "labor_amount"   => ((isset($labor['labor-amount'])) ? str_replace(",", "", $labor['labor-amount'])  : 0),
             "labor_code"  =>  ((isset($labor['labor-code'])) ? strtoupper($labor['labor-code']) : ""),
+            "status"  =>  1,
           
           
             ]
@@ -868,6 +866,8 @@ class InvoiceEdit extends Controller
             "part_price"  => ((isset($part['part-price'])) ? intval(str_replace(",", "", $part['part-price'] ))  : 0),
             "part_amount"   => ((isset($part['part-amount'])) ? intval(str_replace(",", "", $part['part-amount'] )) : 0),
             "part_code"  =>  ((isset($part['part-code'])) ? strtoupper($part['part-code']) : ""),
+            "status"      => ((isset($part['part-option']))? 1 : ""),
+
 
           ] );
 
@@ -899,6 +899,90 @@ class InvoiceEdit extends Controller
 
     }
      return response()->json(['success'=> true, 'message' => 'Job Order Updated!']);
+  }
+
+  public function deductInventoryStock($job_order_id) {
+
+    $jobOrderInfo = DB::table('job_orders')
+    ->where('id', '=', $job_order_id)
+    ->get();
+
+    if(!isset($jobOrderInfo[0])) {
+      return response()->json(['success'=> false, 'message' => 'Job order not found!']);
+    }
+
+    if(!($jobOrderInfo[0]->status == 2 || $jobOrderInfo[0]->status_display == 'job order')) {
+      return response()->json(['success'=> false, 'message' => 'Inventory stock can only be deducted when the status is Job Order.']);
+    }
+
+    if(floatval(str_replace(",", "", $jobOrderInfo[0]->balance)) != 0) {
+      return response()->json(['success'=> false, 'message' => 'Balance must be zero before deducting inventory stock.']);
+    }
+
+    if($jobOrderInfo[0]->status_inventory_deduction == 1) {
+      return response()->json(['success'=> false, 'message' => 'Inventory stock has already been deducted for this job order.']);
+    }
+
+    $deductedItems = [];
+
+    try {
+      DB::transaction(function () use ($job_order_id, &$deductedItems) {
+
+        // PACKAGE section (package sub-items with a linked inventory part)
+        $packageManualItems = DB::table('job_orders_package_manual_items')
+        ->where('job_order_id', '=', $job_order_id)
+        ->where('status', '=', 1)
+        ->whereNotNull('part_id')
+        ->get();
+
+        foreach($packageManualItems as $item) {
+          $option = JobOrdersPartServiceOption::where('id', $item->part_id)->lockForUpdate()->first();
+
+          if(!$option) {
+            throw new \Exception('One of the package items no longer exists in inventory.');
+          }
+
+          if($option->exempt == 0 && $option->stock == 0) {
+            throw new \Exception('Insufficient stock for '.$option->value.'. Inventory deduction cancelled.');
+          }
+
+          $option->stock = $option->stock - $item->qty;
+          $option->save();
+
+          $deductedItems[] = ['part' => $option->value, 'qty' => $item->qty, 'remaining_stock' => $option->stock, 'section' => 'package'];
+        }
+
+        // PARTS & MATERIALS section
+        $partServices = DB::table('job_orders_part_services')
+        ->where('job_order_id', '=', $job_order_id)
+        ->where('status', '=', 1)
+        ->whereNotNull('part_id')
+        ->get();
+
+        foreach($partServices as $part) {
+          $option = JobOrdersPartServiceOption::where('id', $part->part_id)->lockForUpdate()->first();
+
+          if(!$option) {
+            throw new \Exception('One of the part items no longer exists in inventory.');
+          }
+
+          if($option->exempt == 0 && $option->stock == 0) {
+            throw new \Exception('Insufficient stock for '.$option->value.'. Inventory deduction cancelled.');
+          }
+
+          $option->stock = $option->stock - $part->part_qty;
+          $option->save();
+
+          $deductedItems[] = ['part' => $option->value, 'qty' => $part->part_qty, 'remaining_stock' => $option->stock, 'section' => 'part'];
+        }
+
+        JobOrder::where('id', $job_order_id)->update(['status_inventory_deduction' => 1]);
+      });
+    } catch (\Exception $e) {
+      return response()->json(['success'=> false, 'message' => $e->getMessage()]);
+    }
+
+    return response()->json(['success'=> true, 'message' => 'Inventory stock deducted successfully!', 'deducted' => $deductedItems]);
   }
 
   public function getJobOrderItemprice($job_order_id) {

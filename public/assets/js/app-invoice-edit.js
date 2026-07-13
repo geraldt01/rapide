@@ -461,6 +461,77 @@ calculateAll();
     }
      
   }
+  function toggleDeductStockButton(balance) {
+    var btn = document.getElementById('btn-deduct-stock');
+    if (!btn) {
+      return;
+    }
+    var alreadyDeducted = document.getElementById('hidden-status-inventory-deduction').value == '1';
+    var isJobOrderStatusEl = document.getElementById('hidden-is-job-order-status');
+    var isJobOrderStatus = isJobOrderStatusEl ? isJobOrderStatusEl.value == '1' : true;
+
+    // Once deducted, the button stays disabled permanently regardless of any later balance change.
+    if (alreadyDeducted || !isJobOrderStatus) {
+      $(btn).addClass('disabled').prop('disabled', true);
+      return;
+    }
+
+    var roundedBalance = Math.round((parseFloat(balance) || 0) * 100) / 100;
+
+    if (roundedBalance === 0) {
+      $(btn).removeClass('disabled').prop('disabled', false);
+    } else {
+      $(btn).addClass('disabled').prop('disabled', true);
+    }
+  }
+
+  function deductInventoryStock(job_order_id) {
+    var btn = document.getElementById('btn-deduct-stock');
+    if ($(btn).hasClass('disabled') || btn.disabled) {
+      return;
+    }
+
+    if (!confirm('This will deduct the inventory stock for the parts and packages used in this job order. This action can only be done once. Proceed?')) {
+      return;
+    }
+
+    $(btn).addClass('disabled').prop('disabled', true);
+
+    $.ajax({
+      type: "post",
+      url: '/app/job-order/deduct-inventory-stock/' + job_order_id,
+      data: $("#form-job-order").serialize(),
+      success: function (result) {
+        if (result.success == true) {
+          document.getElementById('hidden-status-inventory-deduction').value = '1';
+          $(btn).find('span').html('<i class="mdi mdi-package-variant-closed me-2"></i>Stock Deducted');
+          $("#stock-status-label").removeClass('bg-label-warning').addClass('bg-label-success').text('Deducted');
+          $(".alert-success p").html(result.message);
+          $(".alert-success").removeClass("d-none");
+          setTimeout(function () {
+            $(".alert-success").addClass("d-none");
+          }, 3000);
+        } else {
+          // Deduction failed (e.g. insufficient stock) — not permanently deducted, so re-evaluate normally.
+          toggleDeductStockButton(document.getElementById('balance').value.replace(/,/g, ''));
+          $(".alert-danger p").html(result.message);
+          $(".alert-danger").removeClass("d-none");
+          setTimeout(function () {
+            $(".alert-danger").addClass("d-none");
+          }, 3000);
+        }
+      },
+      error: function (result, textStatus, errorThrown) {
+        toggleDeductStockButton(document.getElementById('balance').value.replace(/,/g, ''));
+        $(".alert-danger p").html("Failed to deduct inventory stock.");
+        $(".alert-danger").removeClass("d-none");
+        setTimeout(function () {
+          $(".alert-danger").addClass("d-none");
+        }, 3000);
+      },
+    });
+  }
+
   function saveInvoice(job_order_id, autosave) {
     $.ajax({
       type: "post",
@@ -849,6 +920,10 @@ calculateAll();
     $(".bt-save-changes").removeClass("disabled");
     sessionStorage.setItem("updateTriggered", "true");
    document.getElementById("payment").value = document.getElementById("total-amount").value;
+    toggleDeductStockButton(0);
+
+    var job_order_id = document.getElementById("hidden-job-order-id").value;
+    saveInvoice(job_order_id);
   }
 
   function duplicateParts(job_order_id) {
@@ -1616,8 +1691,9 @@ const first = element -1;
 
     console.log(balance);
     console.log(balance);
-    document.getElementById('balance').value =  balance.toLocaleString(undefined, options); 
+    document.getElementById('balance').value =  balance.toLocaleString(undefined, options);
 
+    toggleDeductStockButton(balance);
 
  if(id) {
        const unit_cost = document.getElementById('part-unit-cost-'+id).value ;

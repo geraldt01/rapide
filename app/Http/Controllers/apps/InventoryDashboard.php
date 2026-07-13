@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Inventory;
 use App\Models\JobOrdersPartServiceOption;
+use App\Imports\InventoryImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 use DB;
 
@@ -76,6 +78,34 @@ class InventoryDashboard extends Controller
     }
      return response()->json(['success'=> true, 'message' => $message]);
   }
-  
+
+  public function importInventory(Request $request) {
+    $request->validate([
+      'file' => 'required|file',
+    ]);
+
+    $extension = strtolower($request->file('file')->getClientOriginalExtension());
+    if (!in_array($extension, ['xlsx', 'xls', 'csv'])) {
+      return response()->json([
+        'success' => false,
+        'message' => 'The file must be an xlsx, xls, or csv file.',
+      ], 422);
+    }
+
+    $import = new InventoryImport();
+    Excel::import($import, $request->file('file'));
+
+    $message = "Inventory updated: {$import->updated} item(s).";
+    if (count($import->notFound)) {
+      $message .= ' Part # not found: ' . implode(', ', $import->notFound);
+    }
+
+    return response()->json([
+      'success' => true,
+      'message' => $message,
+      'updated' => $import->updated,
+      'not_found' => $import->notFound,
+    ]);
+  }
 
 }

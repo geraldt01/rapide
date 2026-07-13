@@ -242,6 +242,7 @@ Route::get('/app/job-order/get-selected-part/{part_id}', [InvoiceEdit::class, 'g
 Route::get('/app/job-order/{job_order_id}', [InvoiceEdit::class, 'index'])->name('app-invoice-edit')->middleware('auth');
 Route::post('/app/job-order/{job_order_id}', [InvoiceEdit::class, 'index'])->name('app-invoice-edit')->middleware('auth');
 Route::post('/app/save-job-order-item/{job_order_id}', [InvoiceEdit::class, 'saveJobOrderItem'])->middleware('auth');
+Route::post('/app/job-order/deduct-inventory-stock/{job_order_id}', [InvoiceEdit::class, 'deductInventoryStock'])->middleware('auth');
 Route::post('/app/delete-job-order/{job_order_id}', [InvoiceEdit::class, 'deleteJobOrder'])->middleware('auth');
 Route::post('/app/delete-job-order-item/{item_id}', [InvoiceEdit::class, 'deleteJobOrderItem'])->middleware('auth');
 Route::post('/app/delete-labor-item/{item_id}', [InvoiceEdit::class, 'deleteLaborItem'])->middleware('auth');
@@ -313,6 +314,7 @@ Route::get('/app/inventory/dashboard', [InventoryDashboard::class, 'index'])->na
 Route::get('/json/inventory-dashboard', [InventoryDashboard::class, 'jsonInventoryList'])->middleware('auth');
 Route::get('/app/inventory/view-details/{item_id}', [InventoryDashboard::class, 'viewInventoryDetails'])->middleware('auth');
 Route::get('/app/inventory/save/{item_id}', [InventoryDashboard::class, 'saveInventory'])->middleware('auth');
+Route::post('/app/inventory/import', [InventoryDashboard::class, 'importInventory'])->middleware('auth');
 
 Route::post('/user-list/store', [UserManagement::class, 'store'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/app/sales-report', [SalesReport::class, 'index'])->name('laravel-example-user-management')->middleware('auth');

@@ -499,6 +499,10 @@ $(function () {
           ]
         },
         {
+          text: '<i class="mdi mdi-file-upload-outline me-sm-1"></i> <span class="d-none d-sm-inline-block" onclick="importInventoryModal()">Import Inventory</span>',
+          className: ' btn btn-label-primary waves-effect waves-light me-2'
+        },
+        {
           text: '<i class="mdi mdi-plus me-sm-1"></i> <span class="d-none d-sm-inline-block" onclick="addNewItem()">Add New Item</span>',
           className: ' btn btn-primary waves-effect waves-light'
         }
@@ -970,6 +974,52 @@ function addNewItem() {
   document.getElementById('modalStock').value ="";
   document.getElementById('modalPrice').value ="";
   $("#addNewInventory #label-action").html("Adding New ");
+}
+
+function importInventoryModal() {
+  document.getElementById('formImportInventory').reset();
+  $("#importInventoryModal").modal("show");
+}
+
+function importInventory() {
+  var fileInput = document.getElementById('importInventoryFile');
+  if (!fileInput.files.length) {
+    alert('Please select an Excel file to import.');
+    return;
+  }
+
+  var formData = new FormData();
+  formData.append('file', fileInput.files[0]);
+
+  var $btn = $('#btn-import-inventory');
+  $btn.prop('disabled', true).text('Importing...');
+
+  $.ajax({
+    type: 'POST',
+    url: '/app/inventory/import',
+    data: formData,
+    processData: false,
+    contentType: false,
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    success: function (result) {
+      $('#importInventoryModal').modal('hide');
+      $(".alert-success p").html(result.message);
+      $(".alert-success").removeClass("d-none");
+      setTimeout(function () {
+        $(".alert-success").addClass("d-none");
+        location.reload();
+      }, 3000);
+    },
+    error: function (xhr) {
+      var message = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Import failed.';
+      alert(message);
+    },
+    complete: function () {
+      $btn.prop('disabled', false).text('Import');
+    }
+  });
 }
 
 function saveInventory(item_id) {

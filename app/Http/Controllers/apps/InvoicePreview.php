@@ -30,6 +30,7 @@ class InvoicePreview extends Controller
     ->get();
 
     $jobOrderPartSelected = DB::table('job_orders_part_services')
+    ->orderByRaw('part_id IS NULL')
     ->where('status', '=', 1)
     ->where('job_order_id', '=', $job_order_id)
     ->get();
