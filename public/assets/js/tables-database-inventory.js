@@ -984,7 +984,7 @@ function importInventoryModal() {
 function importInventory() {
   var fileInput = document.getElementById('importInventoryFile');
   if (!fileInput.files.length) {
-    alert('Please select an Excel file to import.');
+    alert('Please select a PDF or Excel file to import.');
     return;
   }
 

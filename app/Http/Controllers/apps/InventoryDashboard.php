@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\Inventory;
 use App\Models\JobOrdersPartServiceOption;
 use App\Imports\InventoryImport;
-use Maatwebsite\Excel\Facades\Excel;
 
 use DB;
 
@@ -85,19 +84,26 @@ class InventoryDashboard extends Controller
     ]);
 
     $extension = strtolower($request->file('file')->getClientOriginalExtension());
-    if (!in_array($extension, ['xlsx', 'xls', 'csv'])) {
+    if (!in_array($extension, ['pdf', 'xlsx', 'xls'], true)) {
       return response()->json([
         'success' => false,
-        'message' => 'The file must be an xlsx, xls, or csv file.',
+        'message' => 'The file must be a PDF or Excel (.xlsx/.xls) file.',
       ], 422);
     }
 
     $import = new InventoryImport();
-    Excel::import($import, $request->file('file'));
+    if ($extension === 'pdf') {
+      $import->importFile($request->file('file')->getRealPath());
+    } else {
+      $import->importExcelFile($request->file('file')->getRealPath());
+    }
 
     $message = "Inventory updated: {$import->updated} item(s).";
     if (count($import->notFound)) {
       $message .= ' Part # not found: ' . implode(', ', $import->notFound);
+    }
+    if (count($import->unparsed)) {
+      $message .= ' Unrecognized lines (skipped): ' . implode(' | ', $import->unparsed);
     }
 
     return response()->json([
@@ -105,6 +111,7 @@ class InventoryDashboard extends Controller
       'message' => $message,
       'updated' => $import->updated,
       'not_found' => $import->notFound,
+      'unparsed' => $import->unparsed,
     ]);
   }
 

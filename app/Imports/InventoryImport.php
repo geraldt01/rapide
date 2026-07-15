@@ -3,100 +3,65 @@
 namespace App\Imports;
 
 use App\Models\JobOrdersPartServiceOption;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Smalot\PdfParser\Parser;
 
-class InventoryImport implements ToCollection
+class InventoryImport
 {
     public $updated = 0;
     public $notFound = [];
+    public $unparsed = [];
     public $debug = [];
 
-    public function collection(Collection $rows)
+    // Excel columns are 1-indexed: B = Part # (2), M = End Inv. (13).
+    // Column B is matched against job_orders_part_service_options.part_number.
+    // Column M updates job_orders_part_service_options.stock.
+    const EXCEL_PART_NUMBER_COLUMN = 2;
+    const EXCEL_END_INV_COLUMN = 13;
+
+    public function importExcelFile(string $path)
     {
-        Log::info('InventoryImport: raw rows received', ['rowCount' => $rows->count(), 'first3' => $rows->take(3)->toArray()]);
+        $lookup = $this->buildLookup();
 
-        $header = $rows->first();
-        if (!$header) {
-            $this->debug[] = 'No rows found in file.';
-            return;
-        }
+        $spreadsheet = IOFactory::load($path);
+        $sheet = $spreadsheet->getActiveSheet();
 
-        $fixedPartCol = $this->columnIndex('B');
-        $fixedEndInvCol = $this->columnIndex('M');
-
-        if ($header->has($fixedPartCol) && $header->has($fixedEndInvCol)) {
-            // Fixed layout: Part # in column B, End Inv. in column M.
-            $partCol = $fixedPartCol;
-            $endInvCol = $fixedEndInvCol;
-        } else {
-            // Fallback: detect columns by header label for shorter exports.
-            $partCol = null;
-            $endInvCol = null;
-            $nameFallbackCol = null;
-            $stockFallbackCol = null;
-
-            foreach ($header as $index => $cell) {
-                $label = strtolower(trim((string) $cell));
-
-                if ($partCol === null && str_contains($label, 'part')) {
-                    $partCol = $index;
-                }
-
-                if ($endInvCol === null && (str_contains($label, 'end inv') || str_contains($label, 'ending inv'))) {
-                    $endInvCol = $index;
-                }
-
-                if ($nameFallbackCol === null && $label === 'name') {
-                    $nameFallbackCol = $index;
-                }
-
-                if ($stockFallbackCol === null && $label === 'stock') {
-                    $stockFallbackCol = $index;
-                }
-            }
-
-            // Some exports use plain "name"/"stock" columns instead of "Part #"/"End Inv."
-            if ($partCol === null) {
-                $partCol = $nameFallbackCol;
-            }
-            if ($endInvCol === null) {
-                $endInvCol = $stockFallbackCol;
-            }
-        }
-
-        Log::info('InventoryImport: header parsed', ['header' => $header->toArray(), 'partCol' => $partCol, 'endInvCol' => $endInvCol]);
-
-        if ($partCol === null || $endInvCol === null) {
-            $this->debug[] = 'Could not find "Part #" and/or "End Inv." columns in the header row: ' . implode(' | ', $header->toArray());
-            return;
-        }
-
-        $lookup = [];
-        foreach (JobOrdersPartServiceOption::select('id', 'value', 'stock')->get() as $item) {
-            $lookup[$this->normalize($item->value)] = $item;
-        }
-
-        foreach ($rows->skip(1) as $rowIndex => $row) {
-            $partNumber = trim((string) ($row[$partCol] ?? ''));
-            if ($partNumber === '') {
+        foreach ($sheet->getRowIterator() as $row) {
+            $rowIndex = $row->getRowIndex();
+            if ($rowIndex === 1) {
+                // Header row.
                 continue;
             }
 
-            $endInv = $row[$endInvCol] ?? null;
-            if ($endInv === null || $endInv === '') {
+            $partNumber = trim((string) $sheet->getCellByColumnAndRow(self::EXCEL_PART_NUMBER_COLUMN, $rowIndex)->getValue());
+            $endInvRaw = $sheet->getCellByColumnAndRow(self::EXCEL_END_INV_COLUMN, $rowIndex)->getValue();
+
+            if ($partNumber === '' || $endInvRaw === null || $endInvRaw === '') {
                 continue;
             }
 
-            $item = $lookup[$this->normalize($partNumber)] ?? null;
+            if (!is_numeric($endInvRaw)) {
+                $this->unparsed[] = "Row {$rowIndex}: {$partNumber} {$endInvRaw}";
+                continue;
+            }
 
-            Log::info('InventoryImport: row processed', [
-                'rowIndex' => $rowIndex,
+            $endInv = (int) $endInvRaw;
+            $normalizedPart = $this->normalize($partNumber);
+            $item = $lookup[$normalizedPart] ?? null;
+            $wordMatches = null;
+
+            if (!$item) {
+                [$item, $wordMatches] = $this->findFuzzyMatch($normalizedPart, $lookup);
+            }
+
+            Log::info('InventoryImport: excel row processed', [
+                'row' => $rowIndex,
                 'partNumber' => $partNumber,
                 'endInv' => $endInv,
                 'matched' => (bool) $item,
                 'matchedId' => $item ? $item->id : null,
+                'wordMatches' => $wordMatches,
             ]);
 
             if ($item) {
@@ -109,18 +74,123 @@ class InventoryImport implements ToCollection
         }
     }
 
+    public function importFile(string $path)
+    {
+        $parser = new Parser();
+        $pdf = $parser->parseFile($path);
+
+        $lookup = $this->buildLookup();
+
+        $pages = $pdf->getPages();
+        if (!count($pages)) {
+            $this->debug[] = 'No pages found in file.';
+            return;
+        }
+
+        foreach ($pages as $pageIndex => $page) {
+            $lines = preg_split('/\r\n|\r|\n/', $page->getText());
+
+            foreach ($lines as $line) {
+                $line = trim(preg_replace('/\s+/', ' ', (string) $line));
+                if ($line === '') {
+                    continue;
+                }
+
+                // Skip repeated "PART #" / "END INV." table headers.
+                $upper = strtoupper($line);
+                if ($upper === 'PART #' || $upper === 'END INV.' || $upper === 'PART # END INV.') {
+                    continue;
+                }
+
+                // Each data row is "<part number> <end inv. quantity>".
+                if (!preg_match('/^(.*\S)\s+(\d+)$/', $line, $matches)) {
+                    $this->unparsed[] = $line;
+                    continue;
+                }
+
+                $partNumber = trim($matches[1]);
+                $endInv = (int) $matches[2];
+
+                $item = $lookup[$this->normalize($partNumber)] ?? null;
+
+                Log::info('InventoryImport: row processed', [
+                    'page' => $pageIndex,
+                    'partNumber' => $partNumber,
+                    'endInv' => $endInv,
+                    'matched' => (bool) $item,
+                    'matchedId' => $item ? $item->id : null,
+                ]);
+
+                if ($item) {
+                    $item->stock = $endInv;
+                    $item->save();
+                    $this->updated++;
+                } else {
+                    $this->notFound[] = $partNumber;
+                }
+            }
+        }
+    }
+
+    private function buildLookup()
+    {
+        $lookup = [];
+        foreach (JobOrdersPartServiceOption::select('id', 'part_number', 'stock')->get() as $item) {
+            if (trim((string) $item->part_number) === '') {
+                continue;
+            }
+            $lookup[$this->normalize($item->part_number)] = $item;
+        }
+
+        return $lookup;
+    }
+
+    // Falls back to a fuzzy match when no exact PART # match exists. A candidate
+    // is considered a match when either:
+    // - at least one whole word is shared with the imported part number, or
+    // - the words are more than 60% similar overall (covers jumbled/reordered
+    //   or slightly misspelled words) — compared after sorting each side's
+    //   words so word order doesn't matter.
+    private function findFuzzyMatch(string $normalizedPart, array $lookup): array
+    {
+        $partWords = $this->words($normalizedPart);
+        $partSorted = $partWords;
+        sort($partSorted);
+        $partSortedString = implode(' ', $partSorted);
+
+        $bestItem = null;
+        $bestWordMatches = 0;
+        $bestPercent = 0.0;
+
+        foreach ($lookup as $key => $candidate) {
+            $keyWords = $this->words($key);
+            $wordMatches = count(array_intersect($partWords, $keyWords));
+
+            $keySorted = $keyWords;
+            sort($keySorted);
+            similar_text($partSortedString, implode(' ', $keySorted), $percent);
+
+            $isMatch = $wordMatches >= 1 || $percent > 60;
+            $isBetter = $wordMatches > $bestWordMatches
+                || ($wordMatches === $bestWordMatches && $percent > $bestPercent);
+
+            if ($isMatch && ($isBetter || !$bestItem)) {
+                $bestItem = $candidate;
+                $bestWordMatches = $wordMatches;
+                $bestPercent = $percent;
+            }
+        }
+
+        return $bestItem ? [$bestItem, $bestWordMatches] : [null, null];
+    }
+
+    private function words(string $value): array
+    {
+        return array_values(array_filter(explode(' ', $value), fn ($w) => $w !== ''));
+    }
+
     private function normalize($value)
     {
         return strtolower(trim(preg_replace('/\s+/', ' ', (string) $value)));
-    }
-
-    private function columnIndex($letter)
-    {
-        $letter = strtoupper($letter);
-        $index = 0;
-        for ($i = 0; $i < strlen($letter); $i++) {
-            $index = $index * 26 + (ord($letter[$i]) - ord('A') + 1);
-        }
-        return $index - 1;
     }
 }

@@ -74,11 +74,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="text-center mb-4">
           <h3 class="mb-2">Import Inventory</h3>
-          <p class="pt-1">Upload an Excel file with a <strong>Part #</strong> column and an <strong>End Inv.</strong> column. Stocks will be updated for matching part numbers.</p>
+          <p class="pt-1">Upload a PDF or Excel (.xlsx/.xls) file with a <strong>Part #</strong> column and an <strong>End Inv.</strong> column. Stocks will be updated for matching part numbers.</p>
         </div>
         <form id="formImportInventory" class="row g-4" onsubmit="return false">
           <div class="col-12 col-md-12 mb-4">
-            <input type="file" id="importInventoryFile" name="file" class="form-control" accept=".xlsx,.xls,.csv" />
+            <input type="file" id="importInventoryFile" name="file" class="form-control" accept=".pdf,.xlsx,.xls" />
           </div>
           <div class="col-12 text-center">
             <button type="button" class="btn btn-primary me-sm-3 me-1" id="btn-import-inventory" onclick="importInventory()">Import</button>
