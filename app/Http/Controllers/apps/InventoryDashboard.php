@@ -105,6 +105,9 @@ class InventoryDashboard extends Controller
     if (count($import->unparsed)) {
       $message .= ' Unrecognized lines (skipped): ' . implode(' | ', $import->unparsed);
     }
+    if (count($import->conflicts)) {
+      $message .= ' Conflicts (skipped): ' . implode(' | ', $import->conflicts);
+    }
 
     return response()->json([
       'success' => true,
@@ -112,6 +115,7 @@ class InventoryDashboard extends Controller
       'updated' => $import->updated,
       'not_found' => $import->notFound,
       'unparsed' => $import->unparsed,
+      'conflicts' => $import->conflicts,
     ]);
   }
 
