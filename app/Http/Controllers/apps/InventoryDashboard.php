@@ -20,9 +20,11 @@ class InventoryDashboard extends Controller
 
   public function jsonInventoryList() {
     $Inventory = DB::table('job_orders_part_service_options')
-    ->where('status', '=',1)
-   
+    ->select('id', 'value', 'part_number', 'cost', 'price', 'stock', 'exempt', 'status')
+    ->where('status', '=', 1)
     ->get();
+
+    $array = [];
     foreach($Inventory as $value) {
       $array[] = array(
         '' => $value->id,
@@ -46,8 +48,8 @@ class InventoryDashboard extends Controller
     $Inventory = DB::table('job_orders_part_service_options')
     ->where('id', '=', $item_id)
     ->where('status', '=', 1)
-    ->get();
-    return response()->json(['success'=> true, 'inventoryData' => $Inventory[0]]);
+    ->first();
+    return response()->json(['success'=> true, 'inventoryData' => $Inventory]);
   }
 
   public function saveInventory($item_id) {

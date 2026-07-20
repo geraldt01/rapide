@@ -49,6 +49,7 @@ class InvoiceEdit extends Controller
       $optionStatus = "bg-label-success";
     }
     $jobOrderPackageOption = DB::table('job_orders_package_options')
+    ->select('id', 'value')
     ->where('status', '=', 1)
     ->get();
     $jobOrderPackageSelected = DB::table('job_orders_packages')
@@ -64,6 +65,7 @@ class InvoiceEdit extends Controller
 
 
      $jobOrderPartServiceOption = DB::table('job_orders_part_service_options')
+    ->select('id', 'value')
     ->where('status', '=', 1)
     ->orderBy('value','asc')
     ->get();
@@ -404,32 +406,14 @@ class InvoiceEdit extends Controller
     }
 
 
-    $countEnabledPackageData = DB::table('job_orders_packages')
-    ->where('status', '=', 1)
-    ->where('job_order_id', '=', $job_order_id)
-    ->get();
-
-   $countEnabledPackageManualData = DB::table('job_orders_package_manual_items')
-    ->where('status', '=', 1)
-    ->where('job_order_id', '=', $job_order_id)
-    ->get();
-
-    $countEnabledLaborData = DB::table('job_orders_labors')
-    ->where('status', '=', 1)
-    ->where('job_order_id', '=', $job_order_id)
-    ->get();
-
-      $countEnabledPartData = DB::table('job_orders_part_services')
-    ->where('status', '=', 1)
-    ->where('job_order_id', '=', $job_order_id)
-    ->get();
-
-
- 
-    $countEnabledPackage = count($countEnabledPackageData);
-    $countEnabledPackageManual = count($countEnabledPackageManualData);
-    $countEnabledLabor = count($countEnabledLaborData);
-    $countEnabledPart = count($countEnabledPartData);
+    // These counts used to re-query job_orders_packages / job_orders_package_manual_items /
+    // job_orders_labors / job_orders_part_services with status=1 + job_order_id, duplicating
+    // the collections already fetched above ($jobOrderPackageSelected, etc.) for this same
+    // job order. Counting in-memory removes 4 DB round trips from every page load.
+    $countEnabledPackage = $jobOrderPackageSelected->where('status', 1)->count();
+    $countEnabledPackageManual = $jobOrderPackageManualSelected->where('status', 1)->count();
+    $countEnabledLabor = $jobOrderLaborSelected->where('status', 1)->count();
+    $countEnabledPart = $jobOrderPartSelected->where('status', 1)->count();
 
     if(!empty($_POST)) {
     return response()->json(['success'=> true, 'optionOneHtml' => $optionOneHtml]);
@@ -443,9 +427,9 @@ class InvoiceEdit extends Controller
   public function getPartValue($part_id){
     $jobOrderOption = DB::table('job_orders_part_service_options')
     ->where('id', '=', $part_id)
-    ->get();
+    ->first();
 
-     return response()->json(['success'=> true, 'value' => $jobOrderOption[0]->value, 'part_number' => $jobOrderOption[0]->part_number, 'cost' => $jobOrderOption[0]->cost, 'price' => $jobOrderOption[0]->price]);
+     return response()->json(['success'=> true, 'value' => $jobOrderOption->value, 'part_number' => $jobOrderOption->part_number, 'cost' => $jobOrderOption->cost, 'price' => $jobOrderOption->price]);
   }
 
   
@@ -986,32 +970,32 @@ class InvoiceEdit extends Controller
   }
 
   public function getJobOrderItemprice($job_order_id) {
-    
+
     $jobOrderPartInfo = DB::table('job_orders_part_service_options')
     ->where('id', '=', $job_order_id)
-    ->get();
+    ->first();
 
-     return response()->json(['success'=> true, 'price' => $jobOrderPartInfo[0]->price]);
+     return response()->json(['success'=> true, 'price' => $jobOrderPartInfo->price]);
 
   }
 
 
   public function getJobOrderItemPackagePrice($package_id) {
-    
+
     $jobOrderPackageInfo = DB::table('job_orders_package_options')
     ->where('id', '=', $package_id)
-    ->get();
+    ->first();
 
-     return response()->json(['success'=> true, 'price' => $jobOrderPackageInfo[0]->package_price]);
+     return response()->json(['success'=> true, 'price' => $jobOrderPackageInfo->package_price]);
 
   }
 
   public function changeStatus($status_id) {
     $statusInfo = DB::table('job_orders_status')
     ->where('status_id', '=', $status_id)
-    ->get();
+    ->first();
 
-    return response()->json(['success'=> true, 'value' => $statusInfo[0]]);
+    return response()->json(['success'=> true, 'value' => $statusInfo]);
   }
 
   public function upgradeNewStatus($job_order_id) {
@@ -1291,11 +1275,11 @@ class InvoiceEdit extends Controller
 
     $getInventory = DB::table('job_orders_part_service_options')
     ->where('id', '=', $inventory_id)
-    ->get();
+    ->first();
 
 
 
-    if($getInventory[0]->stock > 0) {
+    if($getInventory->stock > 0) {
       $status = true;
       $message = 'Stock available';
 
@@ -1304,13 +1288,13 @@ class InvoiceEdit extends Controller
       $message = 'Part out of stock!';
     }
 
-    if($_GET['qty'] > $getInventory[0]->stock) {
+    if($_GET['qty'] > $getInventory->stock) {
       $message = 'Stock conflict! Please check stocks available.';
       $status = false;
     }
 
 
-     return response()->json(['success'=> $status, 'stock' => $getInventory[0]->stock, 'message' => $message, 'exempted' => $getInventory[0]->exempt ]);
+     return response()->json(['success'=> $status, 'stock' => $getInventory->stock, 'message' => $message, 'exempted' => $getInventory->exempt ]);
 
   }
 
@@ -1318,15 +1302,15 @@ class InvoiceEdit extends Controller
     public function checkInventoryPackageManualSelect($package_id) {
       $getInventory = DB::table('job_orders_part_service_options')
       ->where('id', '=', $package_id)
-      ->get();
- 
-      if($getInventory[0]->stock < 1) {
-        $message = $getInventory[0]->value. ' is Out of stock!';
+      ->first();
+
+      if($getInventory->stock < 1) {
+        $message = $getInventory->value. ' is Out of stock!';
         $stock_status = false;
-        return response()->json(['success'=> false, 'message' => $message,  'package_value' => $getInventory[0]->value, 'stock' => $getInventory[0]->stock, 'exempted' => $getInventory[0]->exempt   ]);
+        return response()->json(['success'=> false, 'message' => $message,  'package_value' => $getInventory->value, 'stock' => $getInventory->stock, 'exempted' => $getInventory->exempt   ]);
 
       } else {
-        return response()->json(['success'=> true, 'message' => 'stock available!', 'getInventory' => $getInventory[0], 'exempted' => $getInventory[0]->exempt ]);
+        return response()->json(['success'=> true, 'message' => 'stock available!', 'getInventory' => $getInventory, 'exempted' => $getInventory->exempt ]);
       }
     }
   
@@ -1351,23 +1335,25 @@ class InvoiceEdit extends Controller
     ->orderBy('value','asc')
     ->get();
 
+    $inventoryByPartId = DB::table('job_orders_part_service_options')
+      ->whereIn('id', $getSubPackage->pluck('part_id')->unique())
+      ->get()
+      ->keyBy('id');
+
     $stock_status = true;
     $status = array();
     foreach($getSubPackage as $sub) {
-      
-      $getInventory = DB::table('job_orders_part_service_options')
-        ->where('id', '=', $sub->part_id)
-        ->get();
 
+      $getInventory = $inventoryByPartId->get($sub->part_id);
 
-        if($getInventory[0]->stock > $sub->package_qty) {
+        if($getInventory->stock > $sub->package_qty) {
           $status[] = true;
           $message = 'Stock available';
 
 
-        } 
+        }
 
-        if($sub->package_qty > $getInventory[0]->stock) {
+        if($sub->package_qty > $getInventory->stock) {
 
           $message = 'Stock conflict! Please check stocks available.';
           $status[] = false;

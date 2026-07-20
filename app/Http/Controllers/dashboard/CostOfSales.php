@@ -66,40 +66,48 @@ class CostOfSales extends Controller
     }
 
 
-foreach($data as $key => $final) {
-  $pacakgeData = DB::table('job_orders_packages')
-  ->where('job_order_id', $final[0]->job_order_id)
+$jobOrderIds = array_unique(array_map(fn($final) => $final[0]->job_order_id, $data));
+
+$packageDataByJobOrder = DB::table('job_orders_packages')
+  ->whereIn('job_order_id', $jobOrderIds)
   ->where('package_value', '>', '')
   ->where('status', 1)
-  ->get();
+  ->get()
+  ->groupBy('job_order_id')
+  ->map->values();
 
-
-  $pacakgeManualData = DB::table('job_orders_package_manual_items')
-  ->where('job_order_id', $final[0]->job_order_id)
+$packageManualDataByJobOrder = DB::table('job_orders_package_manual_items')
+  ->whereIn('job_order_id', $jobOrderIds)
   ->where('status', 1)
-  ->get();
+  ->get()
+  ->groupBy('job_order_id')
+  ->map->values();
 
-
-  $laborData = DB::table('job_orders_labors')
-  ->where('job_order_id', $final[0]->job_order_id)
+$laborDataByJobOrder = DB::table('job_orders_labors')
+  ->whereIn('job_order_id', $jobOrderIds)
   ->where('labor_value', '>', '')
   ->where('status', 1)
-  ->get();
+  ->get()
+  ->groupBy('job_order_id')
+  ->map->values();
 
-  $partData = DB::table('job_orders_part_services')
-  ->where('job_order_id', $final[0]->job_order_id)
+$partDataByJobOrder = DB::table('job_orders_part_services')
+  ->whereIn('job_order_id', $jobOrderIds)
   ->where('part_value', '>', '')
   ->where('status', 1)
-  ->get();
+  ->get()
+  ->groupBy('job_order_id')
+  ->map->values();
 
- 
+foreach($data as $key => $final) {
+  $jobOrderId = $final[0]->job_order_id;
 
   $var[$key][] = array(
   'data' => $final[0],
-  'package_data' => $pacakgeData,
-  'labor_data' => $laborData,
-  'part_data' => $partData,
-  'package_manual_data' => $pacakgeManualData,
+  'package_data' => $packageDataByJobOrder->get($jobOrderId, collect()),
+  'labor_data' => $laborDataByJobOrder->get($jobOrderId, collect()),
+  'part_data' => $partDataByJobOrder->get($jobOrderId, collect()),
+  'package_manual_data' => $packageManualDataByJobOrder->get($jobOrderId, collect()),
   );
 }
 
@@ -342,30 +350,40 @@ foreach($var as $ctr => $d) {
     }
 
 
-foreach($data as $key => $final) {
-  $pacakgeData = DB::table('job_orders_packages')
-  ->where('job_order_id', $final[0]->job_order_id)
+$jobOrderIds = array_unique(array_map(fn($final) => $final[0]->job_order_id, $data));
+
+$packageDataByJobOrder = DB::table('job_orders_packages')
+  ->whereIn('job_order_id', $jobOrderIds)
   ->where('package_value', '>', '')
   ->where('status', 1)
-  ->get();
+  ->get()
+  ->groupBy('job_order_id')
+  ->map->values();
 
-  $laborData = DB::table('job_orders_labors')
-  ->where('job_order_id', $final[0]->job_order_id)
+$laborDataByJobOrder = DB::table('job_orders_labors')
+  ->whereIn('job_order_id', $jobOrderIds)
   ->where('labor_value', '>', '')
   ->where('status', 1)
-  ->get();
+  ->get()
+  ->groupBy('job_order_id')
+  ->map->values();
 
-    $partData = DB::table('job_orders_part_services')
-  ->where('job_order_id', $final[0]->job_order_id)
+$partDataByJobOrder = DB::table('job_orders_part_services')
+  ->whereIn('job_order_id', $jobOrderIds)
   ->where('part_value', '>', '')
   ->where('status', 1)
-  ->get();
+  ->get()
+  ->groupBy('job_order_id')
+  ->map->values();
+
+foreach($data as $key => $final) {
+  $jobOrderId = $final[0]->job_order_id;
 
   $var[$key][] = array(
   'data' => $final[0],
-  'package_data' => $pacakgeData,
-  'labor_data' => $laborData,
-  'part_data' => $partData,
+  'package_data' => $packageDataByJobOrder->get($jobOrderId, collect()),
+  'labor_data' => $laborDataByJobOrder->get($jobOrderId, collect()),
+  'part_data' => $partDataByJobOrder->get($jobOrderId, collect()),
   );
 }
 
@@ -420,19 +438,17 @@ foreach($var as $ctr => $d) {
         number_format($total_cost, 2), number_format($unit_selling_price_with_labor, 2), number_format($total_sell_price, 2), number_format($total_inv_amount_package, 2), ''
         );
 
- 
-       $export = new SalesReportExport([
-        $items
-      ]);
-
-      Excel::store($export, $file, 'public');
-
-
-
         }
 
       }
-    } 
+    }
+
+    $export = new SalesReportExport([
+      $items
+    ]);
+
+    Excel::store($export, $file, 'public');
+
     return response()->json(['fileName'=> $fileName]);
 
   }

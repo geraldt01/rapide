@@ -321,133 +321,54 @@ class SalesReport extends Controller
   }
 
   public function getTotal(Request $request, $date) {
-    $totalSalesData = DB::table('job_orders')
-    ->where('payment', '>', 0)
+    $dayOrders = DB::table('job_orders')
+    ->select('payment', 'payment2', 'mode_of_payment', 'mode_of_payment2')
+    ->where('date', $date)
     ->WhereIn('status', [3, 2])
-    ->where('date', $date)
     ->get();
 
-    $totalSalesData2 = DB::table('job_orders')
-    ->where('payment2', '>', 0)
-       ->WhereIn('status', [3, 2])
-    ->where('date', $date)
-    ->get();
-
-
+    $totalSalesCount = 0;
     $totalSales = 0;
-    foreach($totalSalesData as $data) {
-      $payment =  str_replace(",", "", $data->payment);
-      $totalSales = $totalSales + str_replace(",", "", $payment);
-
-    }
-    foreach($totalSalesData2 as $data2) {
-      $payment =  str_replace(",", "", $data2->payment2);
-      $totalSales = $totalSales + str_replace(",", "", $payment);
-
-    }
-
-    $totalCashData = DB::table('job_orders')
-    ->where('date', $date)
-    ->where('payment', '>', 0)
-    ->where('mode_of_payment', 'cash')
-    ->WhereIn('status', [2, 3])
-    ->get();
-
-    $totalCashData2 = DB::table('job_orders')
-    ->where('date', $date)
-    ->where('payment2', '>', 0)
-    ->where('mode_of_payment2', 'cash')
-        ->WhereIn('status', [2, 3])
-    ->get();
-
-
     $grandTotal = 0;
     $totalCash = 0;
-    foreach($totalCashData as $datac) {
-        $totalCash += str_replace(",", "", $datac->payment);
-    }
-     foreach($totalCashData2 as $datac2) {
-        $totalCash += str_replace(",", "", $datac2->payment2);
-    }
-    
-     $grandTotal += $totalCash;
-    $totalCash = $totalCash;
-
-
-
-    $totalGcashData = DB::table('job_orders')
-    ->where('date', $date)
-    ->where('payment', '>', 0)
-    ->where('mode_of_payment', 'gcash')
-    ->WhereIn('status', [3, 2])
-    ->get();
-
-    $totalGcashData2 = DB::table('job_orders')
-    ->where('date', $date)
-    ->where('payment2', '>', 0)
-    ->where('mode_of_payment2', 'gcash')
-    ->WhereIn('status', [3, 2])
-    ->get();
-    
     $totalGcash = 0;
-    foreach($totalGcashData as $datagc) {
-        $totalGcash += str_replace(",", "", $datagc->payment);
-    }
-    foreach($totalGcashData2 as $datagc2) {
-        $totalGcash += str_replace(",", "", $datagc2->payment2);
-    }
-    $grandTotal += $totalGcash;
-    $totalGcash = $totalGcash;
-
-
-    $totalMobileCheckData = DB::table('job_orders')
-    ->where('date', $date)
-    ->where('payment', '>', 0)
-    ->where('mode_of_payment', 'mobile')
-    ->WhereIn('status', [3, 2])
-    ->get();
-
-     $totalMobileCheckData2 = DB::table('job_orders')
-    ->where('date', $date)
-    ->where('payment2', '>', 0)
-    ->where('mode_of_payment2', 'mobile')
-    ->WhereIn('status', [3, 2])
-    ->get();
-
     $totalMobileCheck = 0;
-
-    foreach($totalMobileCheckData2 as $datamc2) {
-      $totalMobileCheck += str_replace(",", "", $datamc2->payment2);
-    }
-    foreach($totalMobileCheckData as $datamc) {
-      $totalMobileCheck += str_replace(",", "", $datamc->payment);
-    }
-    $grandTotal += $totalMobileCheck;
-    $totalMobileCheck = $totalMobileCheck;
-
-
-    $totalOthersData = DB::table('job_orders')
-    ->where('date', $date)
-    ->where('payment', '>', 0)
-    ->where('mode_of_payment', 'check_others')
-    ->WhereIn('status', [3, 2])
-    ->get();
-
-    $totalOthersData2 = DB::table('job_orders')
-    ->where('date', $date)
-    ->where('payment2', '>', 0)
-    ->where('mode_of_payment2', 'check_others')
-    ->WhereIn('status', [3, 2])
-    ->get();
     $totalOthers = 0;
-    foreach($totalOthersData as $dataoh) {
-      $totalOthers += str_replace(",", "", $dataoh->payment);
+
+    foreach($dayOrders as $order) {
+      if($order->payment > 0) {
+        $totalSalesCount++;
+        $payment = str_replace(",", "", $order->payment);
+        $totalSales += str_replace(",", "", $payment);
+
+        if($order->mode_of_payment === 'cash') {
+          $totalCash += str_replace(",", "", $order->payment);
+        } elseif($order->mode_of_payment === 'gcash') {
+          $totalGcash += str_replace(",", "", $order->payment);
+        } elseif($order->mode_of_payment === 'mobile') {
+          $totalMobileCheck += str_replace(",", "", $order->payment);
+        } elseif($order->mode_of_payment === 'check_others') {
+          $totalOthers += str_replace(",", "", $order->payment);
+        }
+      }
+
+      if($order->payment2 > 0) {
+        $payment2 = str_replace(",", "", $order->payment2);
+        $totalSales += str_replace(",", "", $payment2);
+
+        if($order->mode_of_payment2 === 'cash') {
+          $totalCash += str_replace(",", "", $order->payment2);
+        } elseif($order->mode_of_payment2 === 'gcash') {
+          $totalGcash += str_replace(",", "", $order->payment2);
+        } elseif($order->mode_of_payment2 === 'mobile') {
+          $totalMobileCheck += str_replace(",", "", $order->payment2);
+        } elseif($order->mode_of_payment2 === 'check_others') {
+          $totalOthers += str_replace(",", "", $order->payment2);
+        }
+      }
     }
-    foreach($totalOthersData2 as $dataoh2) {
-      $totalOthers += str_replace(",", "", $dataoh2->payment2);
-    }
-    $grandTotal += $totalOthers;
-    $totalOthers = $totalOthers;
+
+    $grandTotal = $totalCash + $totalGcash + $totalMobileCheck + $totalOthers;
 
     $first_date = date('Y-m-d',strtotime('first day of this month'));
     $last_date = date('Y-m-d',strtotime('last day of this month'));
@@ -476,7 +397,7 @@ class SalesReport extends Controller
     foreach($monthSales as $da){
        $total_month_sales += (float) str_replace(",", "", $da->total_amount);
     }
-      return response()->json(['success'=> true, 'no_of_cars_repair_and_jo' => count($arrayWithoutDuplicates),'total_sales' => $totalSales, 'total_cars' => count($totalSalesData), 'total_monthly_sales' => $total_month_sales, 'total_monthly_cars' => count($monthSales), 'total_cash' => (($totalCash > 0) ? "₱".number_format($totalCash, 2) : ''), 'total_gcash' => (($totalGcash > 0) ? "₱".number_format($totalGcash, 2) : ''), 'total_mobile_check' => (($totalMobileCheck > 0) ? "₱".number_format($totalMobileCheck, 2) : ''), 'total_others' => (($totalOthers > 0) ? "₱".number_format($totalOthers, 2) : ''), 'grand_total' => "₱".number_format($grandTotal, 2) ]);
+      return response()->json(['success'=> true, 'no_of_cars_repair_and_jo' => count($arrayWithoutDuplicates),'total_sales' => $totalSales, 'total_cars' => $totalSalesCount, 'total_monthly_sales' => $total_month_sales, 'total_monthly_cars' => count($monthSales), 'total_cash' => (($totalCash > 0) ? "₱".number_format($totalCash, 2) : ''), 'total_gcash' => (($totalGcash > 0) ? "₱".number_format($totalGcash, 2) : ''), 'total_mobile_check' => (($totalMobileCheck > 0) ? "₱".number_format($totalMobileCheck, 2) : ''), 'total_others' => (($totalOthers > 0) ? "₱".number_format($totalOthers, 2) : ''), 'grand_total' => "₱".number_format($grandTotal, 2) ]);
   }
 
 
