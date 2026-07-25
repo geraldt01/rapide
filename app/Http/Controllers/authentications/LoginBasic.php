@@ -46,6 +46,7 @@ class LoginBasic extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $request->session()->forget('two_factor_passed');
 
            return redirect()->intended('/dashboard');
         }
@@ -54,9 +55,10 @@ class LoginBasic extends Controller
 
 
 
-  public function doLogout()
+  public function doLogout(Request $request)
   {
     	Auth::logout();
+    	$request->session()->forget(['two_factor_passed', 'two_factor_pending_secret']);
     $pageConfigs = ['myLayout' => 'blank'];
     return view('content.authentications.auth-login-basic', ['pageConfigs' => $pageConfigs]);
   }

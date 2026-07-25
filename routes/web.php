@@ -87,6 +87,7 @@ use App\Http\Controllers\pages\MiscComingSoon;
 use App\Http\Controllers\pages\MiscNotAuthorized;
 use App\Http\Controllers\pages\MiscServerError;
 use App\Http\Controllers\authentications\LoginBasic;
+use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\authentications\LoginCover;
 use App\Http\Controllers\authentications\RegisterBasic;
 use App\Http\Controllers\authentications\RegisterCover;
@@ -177,6 +178,16 @@ Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm')->midd
 Route::get('/json/job-order-dashboard', [Analytics::class, 'jsonJobOrderList'])->middleware('auth');
 Route::post('/doLogin', [LoginBasic::class, 'doLogin']);
  Route::get('logout', [LoginBasic::class, 'doLogout']);
+
+// Two-factor authentication (authenticator app / TOTP) — reachable only once logged in,
+// enforced globally by EnsureTwoFactorAuthentication for every other authenticated route.
+Route::middleware('auth')->group(function () {
+    Route::get('/2fa/setup', [TwoFactorAuthenticationController::class, 'setup'])->name('2fa.setup');
+    Route::post('/2fa/setup', [TwoFactorAuthenticationController::class, 'confirm'])->name('2fa.setup.confirm');
+    Route::get('/2fa/recovery-codes', [TwoFactorAuthenticationController::class, 'showRecoveryCodes'])->name('2fa.recovery-codes');
+    Route::get('/2fa/challenge', [TwoFactorAuthenticationController::class, 'challenge'])->name('2fa.challenge');
+    Route::post('/2fa/challenge', [TwoFactorAuthenticationController::class, 'verify'])->name('2fa.challenge.verify');
+});
 
 // Route::get('logout', function(){
 // })->name('auth-login-basic');
