@@ -380,6 +380,7 @@ calculateAll();
     }
     
     else if(type == 1) {
+      var job_order_id = document.getElementById('hidden-job-order-id').value;
       document.getElementById('labor-text-'+id).value = "";
       document.getElementById('labor-cost-'+id).value = 0;
       document.getElementById('labor-price-'+id).value = 0;
@@ -388,22 +389,25 @@ calculateAll();
       document.getElementById('labor-code-'+id).value = "";
       // document.getElementById('labor-part-number-'+id).value = "";
       calculateLabor(id);
-       $.ajax({
-      type: "post",
-      url: '/app/delete-labor-item/'+ delete_item_id,
-        data:  $("#form-job-order").serialize(),
-        success: function (result) {
-            $(".loader").removeClass("d-none");
-            $(".alert-success p").html(result.message);
-            $(".alert-success").removeClass("d-none");
-            setTimeout(function(){ 
-              $(".alert-success").addClass("d-none");
-              window.location.reload();
-          }, 1000);
-        },
-        error: function (result, textStatus, errorThrown) {
-          
-        },
+      // Save the job order first so unsaved changes aren't lost/out of sync before the labor item is deleted.
+      saveInvoice(job_order_id, 1, function() {
+        $.ajax({
+        type: "post",
+        url: '/app/delete-labor-item/'+ delete_item_id,
+          data:  $("#form-job-order").serialize(),
+          success: function (result) {
+              $(".loader").removeClass("d-none");
+              $(".alert-success p").html(result.message);
+              $(".alert-success").removeClass("d-none");
+              setTimeout(function(){
+                $(".alert-success").addClass("d-none");
+                window.location.reload();
+            }, 1000);
+          },
+          error: function (result, textStatus, errorThrown) {
+
+          },
+        });
       });
     } else {
    
@@ -532,7 +536,7 @@ calculateAll();
     });
   }
 
-  function saveInvoice(job_order_id, autosave) {
+  function saveInvoice(job_order_id, autosave, onSuccess) {
     $.ajax({
       type: "post",
       url: '/app/save-job-order-item/'+ job_order_id,
@@ -546,12 +550,14 @@ calculateAll();
             if(autosave !== 1) {
             $(".alert-success p").html(result.message);
               $(".alert-success").removeClass("d-none");
-              setTimeout(function(){ 
+              setTimeout(function(){
               $(".alert-success").addClass("d-none");
                 const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
               }, 3000);
             }
-        
+            if(typeof onSuccess === 'function') {
+              onSuccess(result);
+            }
           } else {
             if(autosave !== 1) {
              $(".alert-danger p").html(result.message);
@@ -702,10 +708,11 @@ calculateAll();
     
       // const package_id  =  document.getElementsByName('group-a2['+option_id+'][package-sub-option]');
        const elementValue = element.value;
+       const job_order_id = document.getElementById('hidden-job-order-id').value;
       $.ajax({
       type: "get",
       url: '/app/check-inventory-package-manual-select/'+ elementValue,
-        data:  {},
+        data:  {job_order_id: job_order_id},
         success: function (result) {
               if(result.success == false) {
                 
@@ -819,11 +826,12 @@ calculateAll();
      let get_part_qty = document.getElementById('part-qty-'+original_option_id).value;
 
     var inventory_id = inputElementsPart[0].value;
+    var job_order_id = document.getElementById('hidden-job-order-id').value;
     if(inventory_id > '') {
     $.ajax({
       type: "get",
       url: '/app/check-inventory/'+ inventory_id,
-        data:  {qty: get_part_qty},
+        data:  {qty: get_part_qty, job_order_id: job_order_id},
         success: function (result) {
               if(result.success == false) {
                 if(result.exempted == 0) {

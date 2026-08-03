@@ -534,11 +534,14 @@ class InvoiceEdit extends Controller
     }
 
     // check stock
+    // Estimates don't reserve/consume inventory yet, so skip stock validation entirely for status == 1.
+    $isEstimate = (isset($_POST['status']) && $_POST['status'] == 1);
+
     foreach($_POST as $key => $value) {
     $arrayPart = array();
     $checkProceedArray = array();
 
-    if($key== 'group-a') {
+    if($key== 'group-a' && !$isEstimate) {
 
       $stock_status = true;
       $status_pak = array();
@@ -600,7 +603,7 @@ class InvoiceEdit extends Controller
       }
     }
       // check first
-    if($key== 'group-c') {
+    if($key== 'group-c' && !$isEstimate) {
       foreach($value as $part){
           if(isset($part['part-text']) && $part['part-text'] > "") {
             if($part['part-qty'] !== '0') {
@@ -1277,7 +1280,13 @@ class InvoiceEdit extends Controller
     ->where('id', '=', $inventory_id)
     ->first();
 
-
+    // Estimates don't reserve/consume inventory yet, so skip stock validation entirely.
+    if(isset($_GET['job_order_id'])) {
+      $jobOrder = DB::table('job_orders')->where('id', '=', $_GET['job_order_id'])->first();
+      if($jobOrder && ($jobOrder->status == 1 || $jobOrder->status_display == 'estimate')) {
+        return response()->json(['success'=> true, 'stock' => $getInventory->stock, 'message' => 'Stock available', 'exempted' => $getInventory->exempt ]);
+      }
+    }
 
     if($getInventory->stock > 0) {
       $status = true;
@@ -1304,7 +1313,14 @@ class InvoiceEdit extends Controller
       ->where('id', '=', $package_id)
       ->first();
 
-      if($getInventory->stock < 1) {
+      // Estimates don't reserve/consume inventory yet, so skip stock validation entirely.
+      $isEstimate = false;
+      if(isset($_GET['job_order_id'])) {
+        $jobOrder = DB::table('job_orders')->where('id', '=', $_GET['job_order_id'])->first();
+        $isEstimate = ($jobOrder && ($jobOrder->status == 1 || $jobOrder->status_display == 'estimate'));
+      }
+
+      if(!$isEstimate && $getInventory->stock < 1) {
         $message = $getInventory->value. ' is Out of stock!';
         $stock_status = false;
         return response()->json(['success'=> false, 'message' => $message,  'package_value' => $getInventory->value, 'stock' => $getInventory->stock, 'exempted' => $getInventory->exempt   ]);
@@ -1315,8 +1331,12 @@ class InvoiceEdit extends Controller
     }
   
   public function checkInventoryPackage($package_id) {
- 
+
     $job_order_id = $_GET['job_order_id'];
+
+    // Estimates don't reserve/consume inventory yet, so skip stock validation entirely.
+    $jobOrder = DB::table('job_orders')->where('id', '=', $job_order_id)->first();
+    $isEstimate = ($jobOrder && ($jobOrder->status == 1 || $jobOrder->status_display == 'estimate'));
 
     $getSubPackage = DB::table('package_sub_items')
     ->where('package_id', '=', $package_id)
@@ -1353,7 +1373,7 @@ class InvoiceEdit extends Controller
 
         }
 
-        if($sub->package_qty > $getInventory->stock) {
+        if(!$isEstimate && $sub->package_qty > $getInventory->stock) {
 
           $message = 'Stock conflict! Please check stocks available.';
           $status[] = false;
