@@ -7,24 +7,24 @@
         <div class="text-center mb-4">
           <h3 class="mb-2">Edit Customer</h3>
         </div>
-        <form id="editCustomerInfoForm" class="row g-4" onsubmit="return false">
+        <form id="editCustomerInfoForm" class="row g-4" autocomplete="off" onsubmit="return false">
           <input type="hidden" name="hidden-customer-id-edit" id="hidden-customer-id-edit" value="{{$customerInfo->owner_id}}" />
 
           <div class="col-12 col-md-12">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalEditCustomerName" name="modalEditCustomerName" class="form-control" />
+              <input type="text" id="modalEditCustomerName" name="modalEditCustomerName" class="form-control" autocomplete="off" />
               <label for="modalEditCustomerName">Customer Name</label>
             </div>
           </div>
            <div class="col-12 col-md-12">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalEditContact" name="modalEditContact" class="form-control" />
+              <input type="text" id="modalEditContact" name="modalEditContact" class="form-control" autocomplete="off" />
               <label for="modalEditContact">Contact</label>
             </div>
           </div>
             <div class="col-12 col-md-12">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalEditAddress" name="modalEditAddress" class="form-control" />
+              <input type="text" id="modalEditAddress" name="modalEditAddress" class="form-control" autocomplete="off" />
               <label for="modalEditAddress">Address</label>
             </div>
           </div>

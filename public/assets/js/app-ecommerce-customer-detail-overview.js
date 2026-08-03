@@ -392,9 +392,9 @@ function editCustomerInfo() {
         $('#editCustomerInfo').modal('hide');
         $(".alert-success p").html(result.message);
         $(".alert-success").removeClass("d-none");
-      setTimeout(function(){ 
+      setTimeout(function(){
         $(".alert-success").addClass("d-none");
-        const form = document.getElementById('editUserForm'); // Replace 'myForm' with your form's ID
+        location.reload();
     }, 3000);
 
 
