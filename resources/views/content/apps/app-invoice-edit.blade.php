@@ -48,6 +48,15 @@ input.c-red, .c-red {
  #item-list-packagemanual-0 {
   display: none !important;
 }
+.item-select-checkbox-wrap {
+  display: block;
+}
+.item-select-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  margin: 0;
+}
   </style>
 @section('vendor-script')
 <script src="{{asset('assets/vendor/libs/flatpickr/flatpickr.js')}}"></script>
@@ -67,7 +76,7 @@ input.c-red, .c-red {
 @section('page-script')
 <script src="{{asset('assets/js/offcanvas-add-payment.js')}}"></script>
 <script src="{{asset('assets/js/offcanvas-send-invoice.js')}}"></script>
-<script src="{{asset('assets/js/app-invoice-edit.js?v=9.52.1')}}"></script>
+<script src="{{asset('assets/js/app-invoice-edit.js?v=9.53.0')}}"></script>
 
 <script src="{{asset('assets/js/forms-selects.js')}}"></script>
 <script src="{{asset('assets/js/forms-tagify.js')}}"></script>
@@ -730,6 +739,12 @@ input.c-red, .c-red {
         <button type="button" class="btn btn-success w-100 mb-3 bt-save-changes disabled" onclick="saveInvoice({{$job_order_id}})">Save</button>
         <button type="button" class="btn btn-danger d-grid w-100 mb-3"  onclick="deleteInvoiceShowModal()" >
           <span class="d-flex align-items-center justify-content-center text-nowrap">Delete</span>
+        </button>
+        <button type="button" id="btn-delete-selected-items" class="btn btn-outline-danger d-grid w-100 mb-2" onclick="handleDeleteSelectedItemsClick()">
+          <span class="d-flex align-items-center justify-content-center text-nowrap">Delete Selected Items</span>
+        </button>
+        <button type="button" id="btn-cancel-delete-selected" class="btn btn-outline-secondary d-grid w-100 mb-3 d-none" onclick="cancelDeleteSelectedItems()">
+          <span class="d-flex align-items-center justify-content-center text-nowrap">Cancel</span>
         </button>
       </div>
     </div>

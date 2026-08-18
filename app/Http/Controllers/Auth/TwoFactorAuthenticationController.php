@@ -60,6 +60,14 @@ class TwoFactorAuthenticationController extends Controller
 
         $secretKey = $request->session()->get('two_factor_pending_secret');
 
+        \Log::info('2FA DEBUG confirm attempt', [
+            'secretKey' => $secretKey,
+            'submittedCode' => $request->input('code'),
+            'currentValidCode' => $secretKey ? $this->engine()->getCurrentOtp($secretKey) : null,
+            'verifyResult' => $secretKey ? $this->engine()->verifyKey($secretKey, $request->input('code')) : null,
+            'time' => now()->toDateTimeString(),
+        ]);
+
         if (! $secretKey || ! $this->engine()->verifyKey($secretKey, $request->input('code'))) {
             return back()
                 ->withErrors(['code' => 'That code is incorrect or has expired. Please try again with the current code shown in your app.'])

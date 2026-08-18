@@ -612,15 +612,90 @@ calculateAll();
           console.log(result.success);
               $(".alert-danger p").html(result.message);
             $(".alert-danger").removeClass("d-none");
-            setTimeout(function(){ 
+            setTimeout(function(){
               $(".alert-danger").addClass("d-none");
           }, 3000);
       },
     });
   }
 
+  var bulkDeleteSelectMode = false;
 
-  
+  function handleDeleteSelectedItemsClick() {
+    if (!bulkDeleteSelectMode) {
+      bulkDeleteSelectMode = true;
+      $('.item-select-checkbox-wrap').removeClass('d-none');
+      $('.item-select-checkbox').prop('checked', true);
+      $('#btn-delete-selected-items span').text('Delete Now');
+      $('#btn-delete-selected-items').removeClass('btn-outline-danger').addClass('btn-danger');
+      $('#btn-cancel-delete-selected').removeClass('d-none');
+    } else {
+      deleteSelectedItemsNow();
+    }
+  }
+
+  function cancelDeleteSelectedItems() {
+    bulkDeleteSelectMode = false;
+    $('.item-select-checkbox-wrap').addClass('d-none');
+    $('.item-select-checkbox').prop('checked', false);
+    $('#btn-delete-selected-items span').text('Delete Selected Items');
+    $('#btn-delete-selected-items').removeClass('btn-danger').addClass('btn-outline-danger');
+    $('#btn-cancel-delete-selected').addClass('d-none');
+  }
+
+  function deleteSelectedItemsNow() {
+    var deleteEndpoints = {
+      package: '/app/delete-package-item/',
+      packagemanual: '/app/delete-package-manual-item/',
+      labor: '/app/delete-labor-item/',
+      part: '/app/delete-job-order-item/'
+    };
+
+    var selectedItems = [];
+    $('.item-select-checkbox:checked').each(function () {
+      var itemType = $(this).data('itemType');
+      var itemId = $(this).data('itemId');
+      if (itemId) {
+        selectedItems.push({ type: itemType, id: itemId });
+      }
+    });
+
+    if (selectedItems.length === 0) {
+      alert('No items selected for deletion.');
+      return;
+    }
+
+    if (!confirm('Delete ' + selectedItems.length + ' selected item(s)? This cannot be undone.')) {
+      return;
+    }
+
+    $(".loader").removeClass("d-none");
+    var formData = $("#form-job-order").serialize();
+
+    var requests = selectedItems.map(function (item) {
+      var url = deleteEndpoints[item.type];
+      if (!url) {
+        return $.Deferred().resolve().promise();
+      }
+      return $.ajax({ type: 'post', url: url + item.id, data: formData });
+    });
+
+    $.when.apply($, requests).always(function () {
+      $(".loader").addClass("d-none");
+      bulkDeleteSelectMode = false;
+      $('#btn-delete-selected-items span').text('Delete Selected Items');
+      $('#btn-delete-selected-items').removeClass('btn-danger').addClass('btn-outline-danger');
+      $('#btn-cancel-delete-selected').addClass('d-none');
+      $(".alert-success p").html('Selected items deleted successfully.');
+      $(".alert-success").removeClass("d-none");
+      setTimeout(function () {
+        window.location.reload();
+      }, 1000);
+    });
+  }
+
+
+
   // function selectSub() {
   //   const inputElementsPackage  =  document.getElementsByName('group-a[0][package-option]');
   //   var package_id = inputElementsPackage[0].value;

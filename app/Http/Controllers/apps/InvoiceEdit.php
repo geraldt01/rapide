@@ -107,8 +107,9 @@ class InvoiceEdit extends Controller
     if(isset($jobOrderPackageManualSelected[0]->job_order_id)) {
 
       foreach($jobOrderPackageManualSelected as $keypckgm => $selectedm) {
-        $optionOneTwoHtml[] = '<div class="border row w-100  p-2 '.(($selectedm->status == 2) ? 'disable-packagemanual-item' : '').'" id="item-list-packagemanual-'.$keypckgm.'"data-repeater-item>
+        $optionOneTwoHtml[] = '<div class="border row w-100  p-2 '.(($selectedm->status == 2) ? 'disable-packagemanual-item' : '').'" id="item-list-packagemanual-'.$keypckgm.'" data-repeater-item>
         <div class="col-md-3 col-12 mb-md-0 mb-3">
+          <div class="item-select-checkbox-wrap d-none mb-2"><input type="checkbox" class="form-check-input item-select-checkbox" data-item-type="packagemanual" data-item-id="'.$selectedm->id.'" /></div>
           <input type="hidden" name="package-sub-id" value="'.$selectedm->id.'" />
           <select id="package-sub-option-'.$keypckgm.' select2Basic'.$keypckgm.'" name="package-sub-option" class="select2" data-allow-clear="true"  onchange="calculatePackageManualItem('.$keypckgm.', this)">
             <option value="" id="package-sub-selected-'.$keypckgm.'">Select Parts</option>';
@@ -181,6 +182,7 @@ class InvoiceEdit extends Controller
                 @$sub_amount = $selectedLabor->labor_price * $selectedLabor->labor_qty;
                 $optionTwoHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedLabor->status == 2) ? 'disable-labor-item' : '').'" style="padding-right: 0px !important;" id="item-list-labor-'.$keyl.'"  data-repeater-item>
                  <div class="col-md-1 col-12 mb-md-0 mb-3 color-black"  style="width: 4.333333%;">
+                    <div class="item-select-checkbox-wrap d-none mb-1"><input type="checkbox" class="form-check-input item-select-checkbox" data-item-type="labor" data-item-id="'.$selectedLabor->id.'" /></div>
                     <span id="item-counter-font labor-counter-'.$keyl.'" style="font-size: 12px;padding-top: 15px;">'.$keyl.'</span>
                   </div>
                   <div class="col-md-4 col-12 mb-md-0 mb-3">
@@ -287,6 +289,7 @@ class InvoiceEdit extends Controller
 
                 $optionThreeHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedPart->status == 2) ? 'disable-part-item' : '').'" style="padding-right: 0px !important;"  id="item-list-part-'.$keyprt.'"  data-repeater-item>
                  <div class="col-md-1 mumber col-12 mb-md-0 mb-3 color-black" style="width: 2.333333%;">
+                     <div class="item-select-checkbox-wrap d-none mb-1"><input type="checkbox" class="form-check-input item-select-checkbox" data-item-type="part" data-item-id="'.$selectedPart->id.'" /></div>
                      <span id="item-counter-font part-counter-'.$keyprt.'" style="font-size: 13px;margin-top: 25px;">'.$keyprt.'</span>
                   </div>
                   <div class="col-md-2 col-12 mb-md-0 mb-3 " id="refresh-div-'.$keyl.'">
@@ -448,7 +451,7 @@ class InvoiceEdit extends Controller
             "part_price"  =>  0,
             "part_amount"   =>  0,
             "part_code"   =>  NULL,
-            "status"   =>  0,
+            "status"   =>  2,
           ] );
      return response()->json(['success'=> true, 'message' => 'Item deleted!', 'item_id' => $item_id]);
 
@@ -464,7 +467,7 @@ class InvoiceEdit extends Controller
             "labor_price"   => 0,
             "labor_amount"   => 0,
             "labor_code"   =>  NULL,
-            "status"   =>  0,
+            "status"   =>  2,
 
           ] );
      return response()->json(['success'=> true, 'message' => 'Item deleted!']);
@@ -481,7 +484,7 @@ class InvoiceEdit extends Controller
             "package_note"  =>  NULL,
             "package_note2"   =>  NULL,
             "package_price"   => 0,
-            "status"   =>  0,
+            "status"   =>  2,
           ] );
      return response()->json(['success'=> true, 'message' => 'Item deleted!']);
 
