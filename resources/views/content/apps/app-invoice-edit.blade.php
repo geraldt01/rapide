@@ -729,7 +729,7 @@ input.c-red, .c-red {
         <a href="#" id="btn-preview" class="btn btn-outline-secondary w-100 me-2 mb-3">Preview</a>
         @php
           $isJobOrderStatus = ($data->status == 2 || $data->status_display == 'job order');
-          $canDeductStock = ($isJobOrderStatus && $data->balance == 0 && $data->status_inventory_deduction == 0);
+          $canDeductStock = ($isJobOrderStatus && $data->status_inventory_deduction == 0);
         @endphp
         <input type="hidden" id="hidden-status-inventory-deduction" value="{{$data->status_inventory_deduction}}" />
         <input type="hidden" id="hidden-is-job-order-status" value="{{ $isJobOrderStatus ? '1' : '0' }}" />

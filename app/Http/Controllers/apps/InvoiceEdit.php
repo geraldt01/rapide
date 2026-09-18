@@ -905,10 +905,6 @@ class InvoiceEdit extends Controller
       return response()->json(['success'=> false, 'message' => 'Inventory stock can only be deducted when the status is Job Order.']);
     }
 
-    if(floatval(str_replace(",", "", $jobOrderInfo[0]->balance)) != 0) {
-      return response()->json(['success'=> false, 'message' => 'Balance must be zero before deducting inventory stock.']);
-    }
-
     if($jobOrderInfo[0]->status_inventory_deduction == 1) {
       return response()->json(['success'=> false, 'message' => 'Inventory stock has already been deducted for this job order.']);
     }
@@ -925,23 +921,6 @@ class InvoiceEdit extends Controller
         ->whereNotNull('part_id')
         ->get();
 
-        foreach($packageManualItems as $item) {
-          $option = JobOrdersPartServiceOption::where('id', $item->part_id)->lockForUpdate()->first();
-
-          if(!$option) {
-            throw new \Exception('One of the package items no longer exists in inventory.');
-          }
-
-          if($option->exempt == 0 && $option->stock == 0) {
-            throw new \Exception('Insufficient stock for '.$option->value.'. Inventory deduction cancelled.');
-          }
-
-          $option->stock = $option->stock - $item->qty;
-          $option->save();
-
-          $deductedItems[] = ['part' => $option->value, 'qty' => $item->qty, 'remaining_stock' => $option->stock, 'section' => 'package'];
-        }
-
         // PARTS & MATERIALS section
         $partServices = DB::table('job_orders_part_services')
         ->where('job_order_id', '=', $job_order_id)
@@ -949,21 +928,44 @@ class InvoiceEdit extends Controller
         ->whereNotNull('part_id')
         ->get();
 
+        $deductionItems = [];
+        $requiredQuantities = [];
+
+        foreach($packageManualItems as $item) {
+          $quantity = (float) $item->qty;
+          $deductionItems[] = ['part_id' => $item->part_id, 'qty' => $quantity, 'section' => 'package'];
+          $requiredQuantities[$item->part_id] = ($requiredQuantities[$item->part_id] ?? 0) + $quantity;
+        }
+
         foreach($partServices as $part) {
-          $option = JobOrdersPartServiceOption::where('id', $part->part_id)->lockForUpdate()->first();
+          $quantity = (float) $part->part_qty;
+          $deductionItems[] = ['part_id' => $part->part_id, 'qty' => $quantity, 'section' => 'part'];
+          $requiredQuantities[$part->part_id] = ($requiredQuantities[$part->part_id] ?? 0) + $quantity;
+        }
+
+        $options = JobOrdersPartServiceOption::whereIn('id', array_keys($requiredQuantities))
+          ->lockForUpdate()
+          ->get()
+          ->keyBy('id');
+
+        foreach($requiredQuantities as $partId => $requiredQuantity) {
+          $option = $options->get($partId);
 
           if(!$option) {
-            throw new \Exception('One of the part items no longer exists in inventory.');
+            throw new \Exception('One of the items no longer exists in inventory.');
           }
 
-          if($option->exempt == 0 && $option->stock == 0) {
+          if($option->exempt == 0 && ($option->stock <= 0 || $option->stock < $requiredQuantity)) {
             throw new \Exception('Insufficient stock for '.$option->value.'. Inventory deduction cancelled.');
           }
+        }
 
-          $option->stock = $option->stock - $part->part_qty;
+        foreach($deductionItems as $deductionItem) {
+          $option = $options->get($deductionItem['part_id']);
+          $option->stock = $option->stock - $deductionItem['qty'];
           $option->save();
 
-          $deductedItems[] = ['part' => $option->value, 'qty' => $part->part_qty, 'remaining_stock' => $option->stock, 'section' => 'part'];
+          $deductedItems[] = ['part' => $option->value, 'qty' => $deductionItem['qty'], 'remaining_stock' => $option->stock, 'section' => $deductionItem['section']];
         }
 
         JobOrder::where('id', $job_order_id)->update(['status_inventory_deduction' => 1]);

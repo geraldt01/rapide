@@ -480,13 +480,7 @@ calculateAll();
       return;
     }
 
-    var roundedBalance = Math.round((parseFloat(balance) || 0) * 100) / 100;
-
-    if (roundedBalance === 0) {
-      $(btn).removeClass('disabled').prop('disabled', false);
-    } else {
-      $(btn).addClass('disabled').prop('disabled', true);
-    }
+    $(btn).removeClass('disabled').prop('disabled', false);
   }
 
   function deductInventoryStock(job_order_id) {
