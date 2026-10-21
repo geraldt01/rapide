@@ -19,6 +19,7 @@ use File;
 use Mail;
 use Illuminate\Support\Facades\Http;
 use App\Services\FileDownloader; 
+use Carbon\Carbon;
 
 
 class SalesReport extends Controller
@@ -26,6 +27,85 @@ class SalesReport extends Controller
   public function index()
   {
     return view('content.dashboard.daily-sales-report');
+  }
+
+  public function monthlyIndex()
+  {
+    return view('content.dashboard.monthly-sales-report', ['month' => date('Y-m')]);
+  }
+
+  public function jsonMonthlySalesReportList(Request $request)
+  {
+    $month = $request->query('month', date('Y-m'));
+    if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $month)) {
+      return response()->json(['message' => 'Month must use YYYY-MM format.'], 422);
+    }
+
+    $startDate = Carbon::createFromFormat('!Y-m', $month)->startOfMonth()->toDateString();
+    $endDate = Carbon::createFromFormat('!Y-m', $month)->endOfMonth()->toDateString();
+    $orders = DB::table('job_orders')
+      ->whereBetween('date', [$startDate, $endDate])
+      ->whereIn('status', [3, 2])
+      ->orderBy('date')
+      ->orderBy('invoice_number')
+      ->get();
+
+    $totals = [
+      'cash' => 0,
+      'gcash' => 0,
+      'mobile' => 0,
+      'others' => 0,
+      'order_total' => 0,
+      'collected' => 0,
+    ];
+    $rows = [];
+
+    foreach ($orders as $order) {
+      $payments = ['cash' => 0, 'gcash' => 0, 'mobile' => 0, 'others' => 0];
+      foreach ([['payment', 'mode_of_payment'], ['payment2', 'mode_of_payment2']] as [$amountField, $modeField]) {
+        $amount = (float) str_replace(',', '', $order->{$amountField} ?? 0);
+        $mode = $order->{$modeField};
+        $paymentType = [
+          'cash' => 'cash',
+          'gcash' => 'gcash',
+          'mobile' => 'mobile',
+          'check_others' => 'others',
+        ][$mode] ?? null;
+
+        if ($paymentType && $amount > 0) {
+          $payments[$paymentType] += $amount;
+          $totals[$paymentType] += $amount;
+          $totals['collected'] += $amount;
+        }
+      }
+
+      $orderTotal = (float) str_replace(',', '', $order->total_amount ?? 0);
+      $totals['order_total'] += $orderTotal;
+      $rows[] = [
+        'date' => $order->date,
+        'invoice_number' => $order->invoice_number,
+        'customer_name' => $order->customer_name,
+        'plate_number' => $order->plate_number,
+        'cash' => $payments['cash'],
+        'gcash' => $payments['gcash'],
+        'mobile' => $payments['mobile'],
+        'others' => $payments['others'],
+        'order_total' => $orderTotal,
+      ];
+    }
+
+    return response()->json([
+      'data' => $rows,
+      'summary' => [
+        'order_count' => count($rows),
+        'order_total' => $totals['order_total'],
+        'collected' => $totals['collected'],
+        'cash' => $totals['cash'],
+        'gcash' => $totals['gcash'],
+        'mobile' => $totals['mobile'],
+        'others' => $totals['others'],
+      ],
+    ]);
   }
 
   public function jsonSalesReportList() {
@@ -88,6 +168,7 @@ class SalesReport extends Controller
         'id' => $value->plate_number,
         'jo_id' => $value->id,
         'job_order_number' => '<span id="inv-'.$value->id.'">'.$value->invoice_number.'</span> <i class="mdi mdi-note-edit" onclick="changeInvoiceNo('.$value->id.')"></i>' ,
+        'customer_name' => $value->customer_name,
         'product_name' => $value->plate_number,
         'stock' => $value->mileage,
         'amount' =>   "₱". $value->total_amount ,

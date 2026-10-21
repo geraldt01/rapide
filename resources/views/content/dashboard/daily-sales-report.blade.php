@@ -272,6 +272,7 @@
       <thead class="table-light">
         <tr>
           <th><b>Invoice Number</b></th>
+          <th><b>Customer Name</b></th>
           <th><b>plate number</b></th>
           <th><b>Cash</b></th>
           <th><b>Gcash</b></th>
@@ -285,6 +286,7 @@
       <tfoot class="table-border-bottom-0">
         <tr style="background: #f4f4f6;">
           <th><b>Sales</b></th>
+          <th></th>
           <th></th>
           <th><span id="total-cash"></span></th>
           <th><span id="total-gcash"></span></th>

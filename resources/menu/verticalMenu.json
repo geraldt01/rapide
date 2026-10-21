@@ -22,6 +22,12 @@
       "icon": "menu-icon tf-icons mdi mdi-chart-bar",
       "slug": "app-sales-report"
     },
+      {
+        "url": "app/monthly-sales-report",
+        "name": "Monthly Sales Report",
+        "icon": "menu-icon tf-icons mdi mdi-chart-bar",
+        "slug": "app-monthly-sales-report"
+      },
     {
       "url": "app/inventory/dashboard",
       "name": "Inventory",

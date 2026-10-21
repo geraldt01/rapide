@@ -173,11 +173,12 @@ nf.format(123456.789); // ‘$123,456.79’
       columns: [
         // columns according to JSON
         { data: 'job_order_number' },
+        { data: 'customer_name' },
         { data: 'product_name' },
         { data: 'cash' },
         { data: 'gcash' },
         { data: 'mobile_check' },
-        { data: 'status' },
+        { data: 'others' },
         { data: 'amount' },
         { data: 'jo_id' }
       ],
@@ -199,7 +200,7 @@ nf.format(123456.789); // ‘$123,456.79’
         },
         {
           // Product name and product_brand
-          targets: 1,
+          targets: 2,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $name = full['product_name'],
@@ -251,7 +252,7 @@ nf.format(123456.789); // ‘$123,456.79’
 
          {
           // Sku
-          targets: 2,
+          targets: 3,
           render: function (data, type, full, meta) {
             var $cash = full['cash'];
             if($cash > 0) {
@@ -265,7 +266,7 @@ nf.format(123456.789); // ‘$123,456.79’
 
          {
           // Sku
-          targets: 3,
+          targets: 4,
           render: function (data, type, full, meta) {
             var $gcash = full['gcash'];
             if($gcash > 0) {
@@ -278,7 +279,7 @@ nf.format(123456.789); // ‘$123,456.79’
         },
         {
           // Sku
-          targets: 4,
+          targets: 5,
           render: function (data, type, full, meta) {
             var $mobile_check = full['mobile_check'];
              if($mobile_check > 0) {
@@ -291,7 +292,7 @@ nf.format(123456.789); // ‘$123,456.79’
         },
           {
           // Sku
-          targets: 5,
+          targets: 6,
           render: function (data, type, full, meta) {
             var $others = full['others'];
             if($others > 0) {
@@ -305,7 +306,7 @@ nf.format(123456.789); // ‘$123,456.79’
 
          {
           // Sku
-          targets: 6,
+          targets: 7,
           render: function (data, type, full, meta) {
             var $amount = full['amount'];
 
@@ -333,21 +334,6 @@ nf.format(123456.789); // ‘$123,456.79’
         //     return '<span>' + $qty + '</span>';
         //   }
         // },
-        {
-          // Status
-          targets: -2,
-          render: function (data, type, full, meta) {
-            var $status = full['status'];
-
-            return (
-              '<span class="badge rounded-pill ' +
-              statusObj[$status].class +
-              '" text-capitalized>' +
-              statusObj[$status].title +
-              '</span>'
-            );
-          }
-        },
         {
           // Actions
           targets: -1,

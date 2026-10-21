@@ -335,6 +335,8 @@ Route::get('/app/delete-jo/{jo}', [SalesReport::class, 'deleteJo'])->name('larav
 
 Route::get('/app/sales-report/{date}', [SalesReport::class, 'index'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/json/sales-report/', [SalesReport::class, 'jsonSalesReportList'])->name('laravel-example-user-management')->middleware('auth');
+Route::get('/app/monthly-sales-report', [SalesReport::class, 'monthlyIndex'])->middleware('auth');
+Route::get('/json/monthly-sales-report', [SalesReport::class, 'jsonMonthlySalesReportList'])->middleware('auth');
 Route::get('/app/create/cash-balance/{date}', [SalesReport::class, 'createCashBalance'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/app/get/cash-balance/{date}', [SalesReport::class, 'getCashBalance'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/app/get-form/cash-balance/{date}', [SalesReport::class, 'getFormCashBalance'])->name('laravel-example-user-management')->middleware('auth');
