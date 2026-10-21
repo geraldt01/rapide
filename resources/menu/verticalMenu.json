@@ -25,7 +25,7 @@
       {
         "url": "app/monthly-sales-report",
         "name": "Monthly Sales Report",
-        "icon": "menu-icon tf-icons mdi mdi-chart-bar",
+        "icon": "menu-icon tf-icons mdi mdi-calendar-month-outline",
         "slug": "app-monthly-sales-report"
       },
     {
