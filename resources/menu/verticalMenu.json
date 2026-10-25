@@ -16,6 +16,12 @@
       "icon": "menu-icon tf-icons mdi mdi-cash",
       "slug": "app-cost-of-sales"
     },
+    {
+      "url": "app/monthly-cost-of-sales",
+      "name": "Monthly Cost of Sales",
+      "icon": "menu-icon tf-icons mdi mdi-calendar-month-outline",
+      "slug": "app-monthly-cost-of-sales"
+    },
       {
       "url": "app/sales-report",
       "name": "Daily Sales Report",

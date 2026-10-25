@@ -242,6 +242,8 @@ Route::get('app/cost-of-sales/', [CostOfSales::class, 'index'])->name('cost-of-s
 Route::get('app/cost-of-sales/{date}', [CostOfSales::class, 'index'])->name('cost-of-sales')->middleware('auth');
 Route::get('/json/cost-of-sales/{date}', [CostOfSales::class, 'jsonCostOfSalesList'])->name('cost-of-sales')->middleware('auth');
 Route::get('/json/cost-of-sales/{date}', [CostOfSales::class, 'jsonCostOfSalesList'])->name('cost-of-sales')->middleware('auth');
+Route::get('/app/monthly-cost-of-sales/{month?}', [CostOfSales::class, 'monthlyIndex'])->name('app-monthly-cost-of-sales')->middleware('auth');
+Route::get('/json/monthly-cost-of-sales', [CostOfSales::class, 'jsonMonthlyCostOfSalesList'])->middleware('auth');
 Route::get('/app/export/cost-of-sales/{date}', [CostOfSales::class, 'exportCostOfSales'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/cost-of-sales/download/{filename}', [CostOfSales::class, 'download'])->name('laravel-example-user-management')->middleware('auth');
 
@@ -337,6 +339,7 @@ Route::get('/app/sales-report/{date}', [SalesReport::class, 'index'])->name('lar
 Route::get('/json/sales-report/', [SalesReport::class, 'jsonSalesReportList'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/app/monthly-sales-report', [SalesReport::class, 'monthlyIndex'])->middleware('auth');
 Route::get('/json/monthly-sales-report', [SalesReport::class, 'jsonMonthlySalesReportList'])->middleware('auth');
+Route::get('/app/export/monthly-sales-report', [SalesReport::class, 'exportMonthlySalesReport'])->middleware('auth');
 Route::get('/app/create/cash-balance/{date}', [SalesReport::class, 'createCashBalance'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/app/get/cash-balance/{date}', [SalesReport::class, 'getCashBalance'])->name('laravel-example-user-management')->middleware('auth');
 Route::get('/app/get-form/cash-balance/{date}', [SalesReport::class, 'getFormCashBalance'])->name('laravel-example-user-management')->middleware('auth');

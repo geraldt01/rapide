@@ -18,6 +18,129 @@ class CostOfSales extends Controller
     return view('content.dashboard.cost-of-sales');
   }
 
+  public function monthlyIndex(Request $request, $month = null)
+  {
+    $month = $month ?? $request->query('month', date('Y-m'));
+    if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $month)) {
+      $month = date('Y-m');
+    }
+
+    return view('content.dashboard.monthly-cost-of-sales', ['month' => $month]);
+  }
+
+  public function jsonMonthlyCostOfSalesList(Request $request)
+  {
+    $month = $request->query('month', date('Y-m'));
+    if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $month)) {
+      return response()->json(['message' => 'Month must use YYYY-MM format.'], 422);
+    }
+
+    $startDate = Carbon::createFromFormat('!Y-m', $month)->startOfMonth()->toDateString();
+    $endDate = Carbon::createFromFormat('!Y-m', $month)->endOfMonth()->toDateString();
+    $orders = DB::table('job_orders')
+      ->join('cars', 'job_orders.car_id', '=', 'cars.id')
+      ->join('owners', 'owners.id', '=', 'cars.owner_id')
+      ->select(
+        'job_orders.id as job_order_id',
+        'job_orders.date',
+        'job_orders.invoice_number',
+        'job_orders.job_order_number',
+        'cars.plate_number',
+        'cars.manufacturer',
+        'cars.vehicle_model',
+        'cars.year',
+        'cars.transmission',
+        'cars.fuel_type',
+        'owners.owner_name',
+        'owners.address'
+      )
+      ->whereBetween('job_orders.date', [$startDate, $endDate])
+      ->where('job_orders.status', 2)
+      ->orderBy('job_orders.date')
+      ->orderBy('job_orders.id')
+      ->get();
+
+    $jobOrderIds = $orders->pluck('job_order_id');
+    $partsByOrder = DB::table('job_orders_part_services')
+      ->whereIn('job_order_id', $jobOrderIds)
+      ->where('part_value', '>', '')
+      ->where('status', 1)
+      ->get()
+      ->groupBy('job_order_id');
+    $manualItemsByOrder = DB::table('job_orders_package_manual_items')
+      ->whereIn('job_order_id', $jobOrderIds)
+      ->where('status', 1)
+      ->get()
+      ->groupBy('job_order_id');
+
+    $rows = [];
+    $summary = ['item_count' => 0, 'total_cost' => 0, 'total_sell_price' => 0];
+
+    foreach ($orders as $order) {
+      $items = [];
+      foreach ($manualItemsByOrder->get($order->job_order_id, collect()) as $item) {
+        if (trim((string) $item->details) === '') {
+          continue;
+        }
+
+        $quantity = (float) str_replace(',', '', $item->qty ?? 0);
+        $unitCost = (float) str_replace(',', '', $item->unit_cost ?? 0);
+        $items[] = [
+          'qty' => $item->qty,
+          'details' => $item->details,
+          'part_number' => $item->part_number,
+          'supplier' => $item->supplier,
+          'supplier_invoice' => $item->supplier_inv,
+          'unit_cost' => $unitCost,
+          'total_cost' => (float) str_replace(',', '', $item->total_cost ?? ($quantity * $unitCost)),
+          'unit_selling_price' => (float) str_replace(',', '', $item->srp_labor ?? 0),
+          'total_sell_price' => (float) str_replace(',', '', $item->total_srp ?? ($quantity * (float) str_replace(',', '', $item->price ?? 0))),
+        ];
+      }
+
+      foreach ($partsByOrder->get($order->job_order_id, collect()) as $item) {
+        $quantity = (float) str_replace(',', '', $item->part_qty ?? 0);
+        $unitCost = (float) str_replace(',', '', $item->unit_cost ?? 0);
+        $unitSellingPrice = (float) str_replace(',', '', $item->part_price ?? 0);
+        $items[] = [
+          'qty' => $item->part_qty,
+          'details' => $item->part_value,
+          'part_number' => $item->part_number,
+          'supplier' => $item->supplier,
+          'supplier_invoice' => $item->supplier_inv,
+          'unit_cost' => $unitCost,
+          'total_cost' => $quantity * $unitCost,
+          'unit_selling_price' => $unitSellingPrice,
+          'total_sell_price' => $quantity * $unitSellingPrice,
+        ];
+      }
+
+      foreach ($items as $index => $item) {
+        $rows[] = array_merge([
+          'date' => $index === 0 ? $order->date : '',
+          'customer_name' => $index === 0 ? $order->owner_name : '',
+          'address' => $index === 0 ? $order->address : '',
+          'car_details' => $index === 0 ? trim(implode(' ', array_filter([
+            $order->plate_number,
+            $order->manufacturer,
+            $order->vehicle_model,
+            $order->year,
+            $order->transmission,
+            $order->fuel_type,
+          ]))) : '',
+          'job_order_id' => $index === 0 ? $order->job_order_id : null,
+          'invoice_number' => $index === 0 ? $order->invoice_number : '',
+          'job_order_number' => $index === 0 ? $order->job_order_number : '',
+        ], $item);
+        $summary['item_count']++;
+        $summary['total_cost'] += $item['total_cost'];
+        $summary['total_sell_price'] += $item['total_sell_price'];
+      }
+    }
+
+    return response()->json(['success' => true, 'data' => $rows, 'summary' => $summary]);
+  }
+
   public function jsonCostOfSalesList($date) {
     date_default_timezone_set("Asia/Manila");
 

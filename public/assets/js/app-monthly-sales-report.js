@@ -54,4 +54,9 @@ $(function () {
   $(monthInput).on('change', function () {
     if (monthInput.value) table.ajax.reload();
   });
+
+  $('#export-month').on('click', function () {
+    if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(monthInput.value)) return;
+    window.location.href = `/app/export/monthly-sales-report?month=${encodeURIComponent(monthInput.value)}`;
+  });
 });

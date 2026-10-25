@@ -33,6 +33,9 @@
     <div class="col-auto mt-3 mt-sm-0">
       <button type="button" class="btn btn-primary" id="apply-month">View Report</button>
     </div>
+    <div class="col-auto mt-3 mt-sm-0">
+      <button type="button" class="btn btn-secondary" id="export-month"><i class="mdi mdi-file-excel-outline me-1"></i>Export Excel</button>
+    </div>
   </div>
 
   <div class="card mb-4">

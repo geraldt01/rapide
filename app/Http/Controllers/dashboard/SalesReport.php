@@ -108,6 +108,73 @@ class SalesReport extends Controller
     ]);
   }
 
+  public function exportMonthlySalesReport(Request $request)
+  {
+    $month = $request->query('month', date('Y-m'));
+    if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $month)) {
+      return response()->json(['message' => 'Month must use YYYY-MM format.'], 422);
+    }
+
+    $startDate = Carbon::createFromFormat('!Y-m', $month)->startOfMonth()->toDateString();
+    $endDate = Carbon::createFromFormat('!Y-m', $month)->endOfMonth()->toDateString();
+    $orders = DB::table('job_orders')
+      ->whereBetween('date', [$startDate, $endDate])
+      ->whereIn('status', [3, 2])
+      ->orderBy('date')
+      ->orderBy('invoice_number')
+      ->get();
+
+    $items = [['DATE', 'INVOICE NUMBER', 'CUSTOMER NAME', 'PLATE NUMBER', 'CASH', 'GCASH', 'MOBILE', 'CHECK/OTHERS', 'TOTAL']];
+    $totals = ['cash' => 0, 'gcash' => 0, 'mobile' => 0, 'others' => 0, 'order_total' => 0];
+
+    foreach ($orders as $order) {
+      $payments = ['cash' => 0, 'gcash' => 0, 'mobile' => 0, 'others' => 0];
+      foreach ([['payment', 'mode_of_payment'], ['payment2', 'mode_of_payment2']] as [$amountField, $modeField]) {
+        $amount = (float) str_replace(',', '', $order->{$amountField} ?? 0);
+        $paymentType = [
+          'cash' => 'cash',
+          'gcash' => 'gcash',
+          'mobile' => 'mobile',
+          'check_others' => 'others',
+        ][$order->{$modeField}] ?? null;
+
+        if ($paymentType && $amount > 0) {
+          $payments[$paymentType] += $amount;
+          $totals[$paymentType] += $amount;
+        }
+      }
+
+      $orderTotal = (float) str_replace(',', '', $order->total_amount ?? 0);
+      $totals['order_total'] += $orderTotal;
+      $items[] = [
+        $order->date,
+        $order->invoice_number,
+        $order->customer_name,
+        $order->plate_number,
+        $payments['cash'] > 0 ? number_format($payments['cash'], 2) : '',
+        $payments['gcash'] > 0 ? number_format($payments['gcash'], 2) : '',
+        $payments['mobile'] > 0 ? number_format($payments['mobile'], 2) : '',
+        $payments['others'] > 0 ? number_format($payments['others'], 2) : '',
+        number_format($orderTotal, 2),
+      ];
+    }
+
+    $items[] = [
+      'Sales',
+      '',
+      '',
+      '',
+      $totals['cash'] > 0 ? number_format($totals['cash'], 2) : '',
+      $totals['gcash'] > 0 ? number_format($totals['gcash'], 2) : '',
+      $totals['mobile'] > 0 ? number_format($totals['mobile'], 2) : '',
+      $totals['others'] > 0 ? number_format($totals['others'], 2) : '',
+      $totals['order_total'] > 0 ? number_format($totals['order_total'], 2) : '',
+    ];
+
+    $export = new SalesReportExport([$items]);
+    return Excel::download($export, 'monthly_sales_report-'.$month.'.xlsx');
+  }
+
   public function jsonSalesReportList() {
     date_default_timezone_set("Asia/Manila");
     if(isset($_GET['date'])) {
