@@ -47,7 +47,7 @@
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/app-daily-sales-report.js')}}"></script>
+<script src="{{ asset('assets/js/app-daily-sales-report.js') }}?v={{ filemtime(public_path('assets/js/app-daily-sales-report.js')) }}"></script>
 <script src="{{asset('assets/js/forms-pickers.js')}}"></script>
 
 @endsection
