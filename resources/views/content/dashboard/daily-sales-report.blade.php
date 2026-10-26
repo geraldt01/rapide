@@ -282,6 +282,7 @@
           <th><b>actions</b></th>
         </tr>
       </thead>
+      <tbody></tbody>
 
       <tfoot class="table-border-bottom-0">
         <tr style="background: #f4f4f6;">

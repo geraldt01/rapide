@@ -165,6 +165,7 @@ nf.format(123456.789); // ‘$123,456.79’
   // E-commerce Products datatable
 
   if (dt_product_table.length) {
+    dt_product_table.find('tbody').empty();
     var pathArray = window.location.pathname.split('/');
     var date = pathArray[3];
     var dt_products = dt_product_table.DataTable({
