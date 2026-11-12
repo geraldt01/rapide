@@ -179,6 +179,10 @@ class InvoiceEdit extends Controller
       foreach($jobOrderLaborSelected as $keyl => $selectedLabor) {
 
                 $keyl++;
+                $laborPrice = str_replace(',', '', trim((string) $selectedLabor->labor_price));
+                $laborPrice = is_numeric($laborPrice) ? (float) $laborPrice : 0.0;
+                $laborAmount = str_replace(',', '', trim((string) $selectedLabor->labor_amount));
+                $laborAmount = is_numeric($laborAmount) ? (float) $laborAmount : 0.0;
                 $optionTwoHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedLabor->status == 2) ? 'disable-labor-item' : '').'" style="padding-right: 0px !important;" id="item-list-labor-'.$keyl.'"  data-repeater-item>
                  <div class="col-md-1 col-12 mb-md-0 mb-3 color-black"  style="width: 4.333333%;">
                     <div class="item-select-checkbox-wrap d-none mb-1"><input type="checkbox" class="form-check-input item-select-checkbox" data-item-type="labor" data-item-id="'.$selectedLabor->id.'" /></div>
@@ -207,13 +211,13 @@ class InvoiceEdit extends Controller
                     <input type="text" class="form-control invoice-item-qty labor" name="labor-qty" id="labor-qty-'.$keyl.'" value="'.$selectedLabor->labor_qty.'" placeholder="1" min="1" max=""  onchange="calculateLabor('.$keyl.')"/>
                   </div>
                   <div class="col-md-1 col-12 mb-md-0 mb-3">
-                    <input type="text" class="form-control  labor mb-3" name="labor-price" id="labor-price-'.$keyl.'" value="'.number_format($selectedLabor->labor_price, 2, '.', ',').'" placeholder="" min=""  onchange="calculateLabor('.$keyl.');formatNumberWithCommas(this)" />
+                    <input type="text" class="form-control  labor mb-3" name="labor-price" id="labor-price-'.$keyl.'" value="'.number_format($laborPrice, 2, '.', ',').'" placeholder="" min=""  onchange="calculateLabor('.$keyl.');formatNumberWithCommas(this)" />
                     
                   </div>
                
                   <div class="col-md-1 col-12 pe-0">
                     <p class="mb-0 pt-2 color-black amount-labor-sub d-flex" id="amount-labor-sub-'.$keyl.'">₱
-                    <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="labor-amount" id="labor-amount-'.$keyl.'" value="'.number_format($selectedLabor->labor_amount, 2, '.', ',').'"  placeholder="" min="12" onchange="formatNumberWithCommas(this)"/>
+                    <input type="text" class="form-control invoice-item-amount mb-3 p-0 border-0 pe-none" name="labor-amount" id="labor-amount-'.$keyl.'" value="'.number_format($laborAmount, 2, '.', ',').'"  placeholder="" min="12" onchange="formatNumberWithCommas(this)"/>
                     </p>
                   </div>
 
