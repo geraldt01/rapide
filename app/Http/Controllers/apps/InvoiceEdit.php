@@ -179,7 +179,6 @@ class InvoiceEdit extends Controller
       foreach($jobOrderLaborSelected as $keyl => $selectedLabor) {
 
                 $keyl++;
-                @$sub_amount = $selectedLabor->labor_price * $selectedLabor->labor_qty;
                 $optionTwoHtml[] = '<div class="border row w-100 p-3 pr-0 '.(($selectedLabor->status == 2) ? 'disable-labor-item' : '').'" style="padding-right: 0px !important;" id="item-list-labor-'.$keyl.'"  data-repeater-item>
                  <div class="col-md-1 col-12 mb-md-0 mb-3 color-black"  style="width: 4.333333%;">
                     <div class="item-select-checkbox-wrap d-none mb-1"><input type="checkbox" class="form-check-input item-select-checkbox" data-item-type="labor" data-item-id="'.$selectedLabor->id.'" /></div>
